@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="
+      http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <context:component-scan base-package="com.springgoals.*"/>
+    <mvc:annotation-driven/>
+    <bean id="userDAO" class="com.springgoals.dao.impl.UserDAOImpl"/>
+    <bean id="userService" class="com.springgoals.service.impl.UserServiceImpl"/>
+
+
+    <!--<bean id="universityServiceImpl" class="com.springgoals.service.impl.UniversityServiceImpl"/>
+    <bean id="facultyServiceImpl" class="com.springgoals.service.impl.FacultyServiceImpl"/>
+    <bean id="profesorServiceImpl" class="com.springgoals.service.impl.ProfesorServiceImpl"/>
+    <bean id="studentServiceImpl" class="com.springgoals.service.impl.StudentServiceImpl"/>
+    <bean id="subjectServiceImpl" class="com.springgoals.service.impl.SubjectServiceImpl"/>
+    <bean id="userServiceImpl" class="com.springgoals.service.impl.UserServiceImpl"/>
+    <bean id="loginServiceImpl" class="com.springgoals.service.impl.LoginServiceImpl"/>
+    <bean id="tokenManager" class="com.springgoals.security.TokenManager"/>
+    <bean id="universityAspect" class="com.springgoals.model.dto.UniversityAspect"/>
+    <bean id="universityDAO" class="com.springgoals.dao.UniversityDAO"/>
+    <bean id="facultyDAO" class="com.springgoals.dao.FacultyDAO"/>
+    <bean id="profesorDAO" class="com.springgoals.dao.ProfesorDAO"/>
+    <bean id="studentDAO" class="com.springgoals.dao.StudentDAO"/>
+    <bean id="subjectDAO" class="com.springgoals.dao.SubjectDAO"/>
+    <bean id="userDAO" class="com.springgoals.dao.UserDAO"/>
+-->
+
+
+
+
+
+
+
+    <!--    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
+    <!--        <property name="prefix" value="/WEB-INF/jsp/"/>-->
+    <!--        <property name="suffix" value=".jsp" />-->
+    <!--    </bean>-->
+</beans>
