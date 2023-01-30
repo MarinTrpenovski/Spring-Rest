@@ -2,7 +2,9 @@ package com.springgoals.controller;
 
 import com.springgoals.model.User;
 import com.springgoals.service.impl.UserServiceImpl;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -25,36 +27,40 @@ public class UserController {
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<User> getUsers() {
+    public ResponseEntity<List<User>> getUsers() {
         List<User> users = userService.getAll();
         init();
-        return this.users;
+        return ResponseEntity.status(HttpStatus.OK).body(this.users);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public User getById(@PathVariable("id") Integer id) {
-        return userService.getById(id);
+    public ResponseEntity<User> getById(@PathVariable("id") Integer id) {
+        User user = userService.getById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public void add(@RequestBody User user) {
+    public ResponseEntity<String> add(@RequestBody User user) {
         users.add(user);
         userService.save(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Successfully Created");
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public void update(@RequestBody User country) {
+    public ResponseEntity<String> update(@RequestBody User country) {
         userService.update(country);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public void deleteCountry(@PathVariable("id") Integer id) {
+    public ResponseEntity<String> deleteCountry(@PathVariable("id") Integer id) {
         for(User user : users) {
             if(user.getId() == id) {
                 users.remove(user);
             }
         }
         userService.delete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted");
     }
 
 }
