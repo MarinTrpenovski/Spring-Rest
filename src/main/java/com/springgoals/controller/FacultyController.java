@@ -1,7 +1,7 @@
 package com.springgoals.controller;
-
 import com.springgoals.model.Faculty;
 import com.springgoals.service.impl.FacultyServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/faculty")
+@RequestMapping(value = "/api/faculty")
 public class FacultyController {
 
-    private FacultyServiceImpl facultyService = new FacultyServiceImpl();
+    @Autowired
+    private FacultyServiceImpl facultyService;
 
     private static List<Faculty> facultys;
 
@@ -28,7 +29,7 @@ public class FacultyController {
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Faculty>> getFaculties() throws SQLException {
-        List<Faculty> facultys = facultyService.getAll();
+        List<Faculty> faculties = facultyService.getAll();
         init();
         return ResponseEntity.status(HttpStatus.OK).body(this.facultys);
     }

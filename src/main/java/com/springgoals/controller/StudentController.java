@@ -1,7 +1,9 @@
 package com.springgoals.controller;
 
 import com.springgoals.model.Student;
+import com.springgoals.service.impl.ProfessorServiceImpl;
 import com.springgoals.service.impl.StudentServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +17,8 @@ import java.util.List;
 @RequestMapping("/api/student")
 public class StudentController {
 
-
-    private StudentServiceImpl studentService = new StudentServiceImpl();
+    @Autowired
+    private StudentServiceImpl studentService;
 
     private static List<Student> students;
 

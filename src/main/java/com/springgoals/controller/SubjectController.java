@@ -2,6 +2,7 @@ package com.springgoals.controller;
 
 import com.springgoals.model.Subject;
 import com.springgoals.service.impl.SubjectServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +16,8 @@ import java.util.List;
 @RequestMapping("/api/subject")
 public class SubjectController {
 
-
-    private SubjectServiceImpl subjectService = new SubjectServiceImpl();
+    @Autowired
+    private SubjectServiceImpl subjectService;
 
     private static List<Subject> subjects;
 

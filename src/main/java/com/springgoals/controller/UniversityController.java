@@ -1,7 +1,9 @@
 package com.springgoals.controller;
 
 import com.springgoals.model.University;
+import com.springgoals.service.impl.SubjectServiceImpl;
 import com.springgoals.service.impl.UniversityServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +17,9 @@ import java.util.List;
 @RequestMapping("/api/university")
 public class UniversityController {
 
-    private UniversityServiceImpl universityService = new UniversityServiceImpl();
+    @Autowired
+    private UniversityServiceImpl universityService;
+
 
     private static List<University> universities;
 
