@@ -1,33 +1,34 @@
 package com.springgoals.controller;
 
 import com.springgoals.model.University;
+
 import com.springgoals.service.impl.UniversityServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
+
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/university")
 public class UniversityController {
 
-    private UniversityServiceImpl universityService = new UniversityServiceImpl();
+    @Autowired
+    private UniversityServiceImpl universityService;
 
     private static List<University> universities;
 
-    private void init() {
-        universities = new ArrayList<>();
-        universities.add(new University("Nova", "private"));
+    private void init() throws SQLException {
+        universities = universityService.getAll();
 
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<University>> getUniversitys() throws SQLException {
-        List<University> universities = universityService.getAll();
         init();
         return ResponseEntity.status(HttpStatus.OK).body(this.universities);
     }
