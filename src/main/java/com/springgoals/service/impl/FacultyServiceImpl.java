@@ -44,4 +44,5 @@ public class FacultyServiceImpl implements FacultyService {
     public void delete(Integer id) throws SQLException {
         facultyDAO.delete(id);
     }
+
 }
