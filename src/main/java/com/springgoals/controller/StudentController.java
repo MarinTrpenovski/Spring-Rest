@@ -1,7 +1,7 @@
 package com.springgoals.controller;
 
 import com.springgoals.model.Student;
-import com.springgoals.service.impl.ProfessorServiceImpl;
+
 import com.springgoals.service.impl.StudentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
+
 import java.util.List;
 
 @RestController
@@ -22,15 +22,13 @@ public class StudentController {
 
     private static List<Student> students;
 
-    private void init() {
-        students = new ArrayList<>();
-        students.add(new Student("Alek", "Aleksovski", 140040, "center"));
+    private void init() throws SQLException {
+        students = studentService.getAll();
 
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Student>> getStudents() throws SQLException {
-        List<Student> students = studentService.getAll();
         init();
         return ResponseEntity.status(HttpStatus.OK).body(this.students);
     }

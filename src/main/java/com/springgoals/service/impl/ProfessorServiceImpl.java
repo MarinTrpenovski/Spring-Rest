@@ -1,6 +1,5 @@
 package com.springgoals.service.impl;
 
-import com.springgoals.dao.impl.FacultyDAOImpl;
 import com.springgoals.dao.impl.ProfessorDAOImpl;
 import com.springgoals.model.Professor;
 import com.springgoals.service.ProfessorService;
@@ -13,7 +12,6 @@ import java.util.List;
 
 @Service
 public class ProfessorServiceImpl implements ProfessorService {
-
 
     @Autowired
     private ProfessorDAOImpl professorDAO;

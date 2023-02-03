@@ -1,4 +1,5 @@
 package com.springgoals.controller;
+
 import com.springgoals.model.Faculty;
 import com.springgoals.service.impl.FacultyServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -18,20 +18,17 @@ public class FacultyController {
     @Autowired
     private FacultyServiceImpl facultyService;
 
-    private static List<Faculty> facultys;
+    private static List<Faculty> faculties;
 
-    private void init() {
-        facultys = new ArrayList<>();
-        facultys.add(new Faculty("economic", " center", " economics"));
-        facultys.add(new Faculty("finki", " karpos", " programmingLanguages"));
+    private void init() throws SQLException {
+        faculties = facultyService.getAll();
 
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Faculty>> getFaculties() throws SQLException {
-        List<Faculty> faculties = facultyService.getAll();
         init();
-        return ResponseEntity.status(HttpStatus.OK).body(this.facultys);
+        return ResponseEntity.status(HttpStatus.OK).body(this.faculties);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -42,7 +39,7 @@ public class FacultyController {
 
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> add(@RequestBody Faculty faculty) throws SQLException {
-        facultys.add(faculty);
+        faculties.add(faculty);
         facultyService.save(faculty);
         return ResponseEntity.status(HttpStatus.CREATED).body("Successfully Created");
     }
@@ -55,9 +52,9 @@ public class FacultyController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteCountry(@PathVariable("id") Integer id) throws SQLException {
-        for (Faculty faculty : facultys) {
+        for (Faculty faculty : faculties) {
             if (faculty.getId() == id) {
-                facultys.remove(faculty);
+                faculties.remove(faculty);
             }
         }
         facultyService.delete(id);

@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
+
 import java.util.List;
 
 @RestController
@@ -21,15 +21,13 @@ public class SubjectController {
 
     private static List<Subject> subjects;
 
-    private void init() {
-        subjects = new ArrayList<>();
-        subjects.add(new Subject("bazi", "zimski", 6));
+    private void init() throws SQLException {
+        subjects = subjectService.getAll();
 
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Subject>> getSubjects() throws SQLException {
-        List<Subject> subjects = subjectService.getAll();
         init();
         return ResponseEntity.status(HttpStatus.OK).body(this.subjects);
     }

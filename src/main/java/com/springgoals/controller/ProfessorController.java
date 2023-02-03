@@ -1,7 +1,7 @@
 package com.springgoals.controller;
 
 import com.springgoals.model.Professor;
-import com.springgoals.service.impl.FacultyServiceImpl;
+
 import com.springgoals.service.impl.ProfessorServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
+
 import java.util.List;
 
 @RestController
@@ -19,18 +19,15 @@ public class ProfessorController {
 
     @Autowired
     private ProfessorServiceImpl professorService;
-
     private static List<Professor> professors;
 
-    private void init() {
-        professors = new ArrayList<>();
-        professors.add(new Professor("Mirko", "Marinovski ", "sp", "aps", 26));
+    private void init() throws SQLException {
+        professors = professorService.getAll();
 
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Professor>> getProfessors() throws SQLException {
-        List<Professor> professors = professorService.getAll();
         init();
         return ResponseEntity.status(HttpStatus.OK).body(this.professors);
     }

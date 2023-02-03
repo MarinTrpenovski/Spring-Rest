@@ -1,6 +1,5 @@
 package com.springgoals.service.impl;
 
-import com.springgoals.dao.impl.FacultyDAOImpl;
 import com.springgoals.dao.impl.UniversityDAOImpl;
 import com.springgoals.model.University;
 import com.springgoals.service.UniversityService;

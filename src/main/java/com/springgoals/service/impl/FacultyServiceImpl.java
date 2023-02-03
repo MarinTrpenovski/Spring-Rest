@@ -21,20 +21,24 @@ public class FacultyServiceImpl implements FacultyService {
         return facultyDAO.getAll();
     }
 
+
     @Override
     public Faculty getById(Integer id) throws SQLException {
         return facultyDAO.getById(id);
     }
+
 
     @Override
     public void update(Faculty user) throws SQLException {
         facultyDAO.update(user);
     }
 
+
     @Override
     public void save(Faculty user) throws SQLException {
         facultyDAO.save(user);
     }
+
 
     @Override
     public void delete(Integer id) throws SQLException {
