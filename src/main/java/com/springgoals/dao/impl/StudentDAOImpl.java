@@ -100,7 +100,6 @@ public class StudentDAOImpl implements StudentDAO {
 
     @Override
     public void save(Student student) throws SQLException {
-        int id = 0;
 
         try {
             String sql = "INSERT INTO student (name, surname, indeks, location) VALUES (?, ?, ?, ?)";
@@ -116,13 +115,6 @@ public class StudentDAOImpl implements StudentDAO {
                 throw new SQLException("error");
             }
 
-            try (ResultSet generatedKeys = statement1.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    id = generatedKeys.getInt(1);
-                } else {
-                    throw new SQLException("error2");
-                }
-            }
         } catch (SQLException e) {
             System.out.println("error occured " + e.getMessage());
             throw e;
@@ -148,7 +140,6 @@ public class StudentDAOImpl implements StudentDAO {
             throw e;
         }
     }
-
 
 
 }

@@ -95,7 +95,6 @@ public class FacultyDAOImpl implements FacultyDAO {
     @Override
     public void save(Faculty faculty) throws SQLException {
 
-        int id = 0;
         try {
             String sql = "INSERT INTO faculty(name, location, study_field, university_id) VALUES (?, ?, ?, ?)";
             PreparedStatement statement1 = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -105,23 +104,14 @@ public class FacultyDAOImpl implements FacultyDAO {
             statement1.setInt(4, 1);
 
             int affectedRows = statement1.executeUpdate();
-
             if (affectedRows == 0) {
                 throw new SQLException("Error in faculty save with affectedRows = statement1.executeUpdate()");
             }
 
-            try (ResultSet generatedKeys = statement1.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    id = generatedKeys.getInt(1);
-                } else {
-                    throw new SQLException("Error statement1.getGeneratedKeys()");
-                }
-            }
         } catch (SQLException e) {
             System.out.println("Error " + e.getMessage());
             throw e;
         }
-
     }
 
     @Override
@@ -130,8 +120,6 @@ public class FacultyDAOImpl implements FacultyDAO {
             String sql = "DELETE FROM faculty WHERE id=?";
             PreparedStatement statement1 = connection.prepareStatement(sql);
             statement1.setInt(1, id_deleting);
-
-            int rowsUpdated = statement1.executeUpdate();
 
         } catch (SQLException e) {
             System.out.println("Error during delete faculty " + e.getMessage());
