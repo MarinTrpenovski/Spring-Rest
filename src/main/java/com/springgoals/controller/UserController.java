@@ -14,7 +14,6 @@ import java.util.List;
 @RequestMapping("/api/user")
 public class UserController {
 
-
     private UserServiceImpl userService = new UserServiceImpl();
 
     private static List<User> users;
