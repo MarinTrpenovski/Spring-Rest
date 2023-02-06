@@ -103,7 +103,6 @@ public class ProfessorDAOImpl implements ProfessorDAO {
     @Override
     public void save(Professor professor) throws SQLException {
 
-        int id = 0;
 
         try {
             String sql = "INSERT INTO professor (name, surname, primary_subject1, " +
@@ -122,13 +121,7 @@ public class ProfessorDAOImpl implements ProfessorDAO {
             if (affectedRows == 0) {
                 throw new SQLException("error in DAO save, affectedRows");
             }
-            try (ResultSet generatedKeys = statement1.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    id = generatedKeys.getInt(1);
-                } else {
-                    throw new SQLException("error2");
-                }
-            }
+
         } catch (SQLException e) {
             System.out.println("error " + e.getMessage());
             throw e;

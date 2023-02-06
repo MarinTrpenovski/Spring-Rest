@@ -100,7 +100,6 @@ public class SubjectDAOImpl implements SubjectDAO {
 
     @Override
     public void save(Subject subject) throws SQLException {
-        int id = 0;
 
         try {
             String sql = "INSERT INTO subject (name, semester, credits, subject_professor) VALUES (?, ?, ?, ?)";
@@ -109,7 +108,7 @@ public class SubjectDAOImpl implements SubjectDAO {
             statement1.setString(2, subject.getSemester());
             statement1.setInt(3, subject.getCredits());
             statement1.setInt(4, 1);
-            //statement1.setInt(4, subject.getProfessor().getId());
+
 
             int affectedRows = statement1.executeUpdate();
 
@@ -117,13 +116,6 @@ public class SubjectDAOImpl implements SubjectDAO {
                 throw new SQLException("error");
             }
 
-            try (ResultSet generatedKeys = statement1.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    id = generatedKeys.getInt(1);
-                } else {
-                    throw new SQLException("error2");
-                }
-            }
         } catch (SQLException e) {
             System.out.println("error occured " + e.getMessage());
             throw e;
@@ -150,8 +142,6 @@ public class SubjectDAOImpl implements SubjectDAO {
         }
 
     }
-
-
 
 
 }

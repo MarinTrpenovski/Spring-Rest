@@ -1,22 +1,20 @@
 package com.springgoals.dao;
 
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+
+import static com.springgoals.constants.DBConstants.*;
 
 public class SingletonConnection {
 
     private static SingletonConnection instance;
     private static Connection connection;
-    private String url = "jdbc:mysql://localhost:3306/education";
-    private String username = "root";
-    private String password = "AngjelaWork123";
 
     private SingletonConnection() throws SQLException {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            this.connection = DriverManager.getConnection(url, username, password);
+            Class.forName(dbDriver);
+            this.connection = DriverManager.getConnection(connectionString, dbUser, dbPassword);
         } catch (ClassNotFoundException ex) {
             System.out.println("Something is wrong with the DB connection String : " + ex.getMessage());
         }

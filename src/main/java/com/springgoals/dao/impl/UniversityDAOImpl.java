@@ -34,7 +34,7 @@ public class UniversityDAOImpl implements UniversityDAO {
 
             sql.append(id);
             ResultSet resultSet = statement.executeQuery(sql.toString());
-            //University university = new University();
+
             while (resultSet.next()) {
                 university.setName(resultSet.getString("name"));
                 university.setId(resultSet.getInt("id"));
@@ -102,8 +102,6 @@ public class UniversityDAOImpl implements UniversityDAO {
     @Override
     public void save(University university) throws SQLException {
 
-        int id = 0;
-
         try {
             String sql = "INSERT INTO university (name, description) VALUES (?, ?)";
             PreparedStatement statement1 = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -117,13 +115,6 @@ public class UniversityDAOImpl implements UniversityDAO {
                 throw new SQLException("error");
             }
 
-            try (ResultSet generatedKeys = statement1.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    id = generatedKeys.getInt(1);
-                } else {
-                    throw new SQLException("error2");
-                }
-            }
         } catch (SQLException e) {
             System.out.println("error occured " + e.getMessage());
             throw e;
