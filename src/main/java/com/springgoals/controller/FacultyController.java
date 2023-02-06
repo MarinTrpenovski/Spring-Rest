@@ -18,17 +18,11 @@ public class FacultyController {
     @Autowired
     private FacultyServiceImpl facultyService;
 
-    private static List<Faculty> faculties;
-
-    private void init() throws SQLException {
-        faculties = facultyService.getAll();
-
-    }
-
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Faculty>> getFaculties() throws SQLException {
-        init();
-        return ResponseEntity.status(HttpStatus.OK).body(this.faculties);
+
+        List<Faculty> faculties = facultyService.getAll();
+        return ResponseEntity.status(HttpStatus.OK).body( faculties );
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -39,7 +33,7 @@ public class FacultyController {
 
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> add(@RequestBody Faculty faculty) throws SQLException {
-        faculties.add(faculty);
+
         facultyService.save(faculty);
         return ResponseEntity.status(HttpStatus.CREATED).body("Successfully Created");
     }
@@ -52,11 +46,7 @@ public class FacultyController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteCountry(@PathVariable("id") Integer id) throws SQLException {
-        for (Faculty faculty : faculties) {
-            if (faculty.getId() == id) {
-                faculties.remove(faculty);
-            }
-        }
+
         facultyService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted");
     }

@@ -19,17 +19,12 @@ public class SubjectController {
     @Autowired
     private SubjectServiceImpl subjectService;
 
-    private static List<Subject> subjects;
-
-    private void init() throws SQLException {
-        subjects = subjectService.getAll();
-
-    }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Subject>> getSubjects() throws SQLException {
-        init();
-        return ResponseEntity.status(HttpStatus.OK).body(this.subjects);
+
+        List<Subject> subjects = subjectService.getAll();
+        return ResponseEntity.status(HttpStatus.OK).body(subjects);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -40,7 +35,7 @@ public class SubjectController {
 
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> add(@RequestBody Subject subject) throws SQLException {
-        subjects.add(subject);
+
         subjectService.save(subject);
         return ResponseEntity.status(HttpStatus.CREATED).body("Successfully Created");
     }
@@ -53,11 +48,7 @@ public class SubjectController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteCountry(@PathVariable("id") Integer id) throws SQLException {
-        for (Subject subject : subjects) {
-            if (subject.getId() == id) {
-                subjects.remove(subject);
-            }
-        }
+
         subjectService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted");
     }

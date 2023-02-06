@@ -20,17 +20,12 @@ public class StudentController {
     @Autowired
     private StudentServiceImpl studentService;
 
-    private static List<Student> students;
-
-    private void init() throws SQLException {
-        students = studentService.getAll();
-
-    }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Student>> getStudents() throws SQLException {
-        init();
-        return ResponseEntity.status(HttpStatus.OK).body(this.students);
+
+        List<Student> students = studentService.getAll();
+        return ResponseEntity.status(HttpStatus.OK).body( students );
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -41,7 +36,7 @@ public class StudentController {
 
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> add(@RequestBody Student student) throws SQLException {
-        students.add(student);
+
         studentService.save(student);
         return ResponseEntity.status(HttpStatus.CREATED).body("Successfully Created");
     }
@@ -54,11 +49,7 @@ public class StudentController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteCountry(@PathVariable("id") Integer id) throws SQLException {
-        for (Student student : students) {
-            if (student.getId() == id) {
-                students.remove(student);
-            }
-        }
+
         studentService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted");
     }
