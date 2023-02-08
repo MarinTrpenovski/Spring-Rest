@@ -1,6 +1,7 @@
 package com.springgoals.service.impl;
 
 import com.springgoals.dao.impl.FacultyDAOImpl;
+import com.springgoals.exception.CustomException;
 import com.springgoals.model.Faculty;
 import com.springgoals.service.FacultyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +9,15 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 
 @Service
 public class FacultyServiceImpl implements FacultyService {
+
+    private Validator validator;
 
     @Autowired
     private FacultyDAOImpl facultyDAO;
@@ -29,14 +36,34 @@ public class FacultyServiceImpl implements FacultyService {
 
 
     @Override
-    public void update(Faculty user) throws SQLException {
-        facultyDAO.update(user);
+    public void update(Faculty faculty) throws SQLException, CustomException {
+        Set<ConstraintViolation<Faculty>> violations = validator.validate(faculty);
+
+        if (!violations.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (ConstraintViolation<Faculty> constraintViolation : violations) {
+                sb.append(constraintViolation.getMessage());
+            }
+
+            throw new CustomException("Error occurred: " + sb.toString());
+        }
+        facultyDAO.update(faculty);
     }
 
 
     @Override
-    public void save(Faculty user) throws SQLException {
-        facultyDAO.save(user);
+    public void save(Faculty faculty) throws SQLException, CustomException {
+        Set<ConstraintViolation<Faculty>> violations = validator.validate(faculty);
+
+        if (!violations.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (ConstraintViolation<Faculty> constraintViolation : violations) {
+                sb.append(constraintViolation.getMessage());
+            }
+
+            throw new CustomException("Error occurred: " + sb.toString());
+        }
+        facultyDAO.save(faculty);
     }
 
 

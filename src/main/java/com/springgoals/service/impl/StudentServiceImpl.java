@@ -1,6 +1,7 @@
 package com.springgoals.service.impl;
 
 import com.springgoals.dao.impl.StudentDAOImpl;
+import com.springgoals.exception.CustomException;
 import com.springgoals.model.Student;
 import com.springgoals.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +9,15 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 
 @Service
 public class StudentServiceImpl implements StudentService {
+
+    private Validator validator;
 
     @Autowired
     private StudentDAOImpl studentDAO;
@@ -27,12 +34,32 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public void update(Student student) throws SQLException {
+    public void update(Student student) throws SQLException, CustomException {
+        Set<ConstraintViolation<Student>> violations = validator.validate(student);
+
+        if (!violations.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (ConstraintViolation<Student> constraintViolation : violations) {
+                sb.append(constraintViolation.getMessage());
+            }
+
+            throw new CustomException("Error occurred: " + sb.toString());
+        }
         studentDAO.update(student);
     }
 
     @Override
-    public void save(Student student) throws SQLException {
+    public void save(Student student) throws SQLException, CustomException {
+        Set<ConstraintViolation<Student>> violations = validator.validate(student);
+
+        if (!violations.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (ConstraintViolation<Student> constraintViolation : violations) {
+                sb.append(constraintViolation.getMessage());
+            }
+
+            throw new CustomException("Error occurred: " + sb.toString());
+        }
         studentDAO.save(student);
     }
 

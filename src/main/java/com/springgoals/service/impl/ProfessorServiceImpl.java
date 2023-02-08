@@ -1,6 +1,7 @@
 package com.springgoals.service.impl;
 
 import com.springgoals.dao.impl.ProfessorDAOImpl;
+import com.springgoals.exception.CustomException;
 import com.springgoals.model.Professor;
 import com.springgoals.service.ProfessorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +9,15 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 
 @Service
 public class ProfessorServiceImpl implements ProfessorService {
+
+    private Validator validator;
 
     @Autowired
     private ProfessorDAOImpl professorDAO;
@@ -27,13 +33,33 @@ public class ProfessorServiceImpl implements ProfessorService {
     }
 
     @Override
-    public void update(Professor user) throws SQLException {
-        professorDAO.update(user);
+    public void update(Professor professor) throws SQLException, CustomException {
+        Set<ConstraintViolation<Professor>> violations = validator.validate(professor);
+
+        if (!violations.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (ConstraintViolation<Professor> constraintViolation : violations) {
+                sb.append(constraintViolation.getMessage());
+            }
+
+            throw new CustomException("Error occurred: " + sb.toString());
+        }
+        professorDAO.update(professor);
     }
 
     @Override
-    public void save(Professor user) throws SQLException {
-        professorDAO.save(user);
+    public void save(Professor professor) throws SQLException, CustomException {
+        Set<ConstraintViolation<Professor>> violations = validator.validate(professor);
+
+        if (!violations.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (ConstraintViolation<Professor> constraintViolation : violations) {
+                sb.append(constraintViolation.getMessage());
+            }
+
+            throw new CustomException("Error occurred: " + sb.toString());
+        }
+        professorDAO.save(professor);
     }
 
     @Override

@@ -1,27 +1,48 @@
 package com.springgoals.model;
 
 import java.util.Objects;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
+@Entity
 public class Professor {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    @NotNull(message = "name must be between 1 and 45 characters")
+    @Size(min = 1, max = 45)
     private String name;
 
+    @NotNull(message = "surname must be between 1 and 45 characters")
+    @Size(min = 1, max = 45)
     private String surname;
 
+    @NotNull(message = "age must not be null")
+    @Min(value = 18, message = "Age should not be less than 18")
     private Integer age;
 
+    @NotNull(message = "primary_subject1 must be between 1 and 45 characters")
+    @Size(min = 1, max = 45)
     private String primary_subject1;
 
+    @NotNull(message = "primary_subject2 must be between 1 and 45 characters")
+    @Size(min = 1, max = 45)
     private String primary_subject2;
 
+    @NotNull(message = "professor_faculty must not be null")
     private Integer professor_faculty;
 
     public Professor() {
     }
 
-    public Professor( String name, String surname, String primary_subject1, String primary_subject2, Integer age) {
+    public Professor(String name, String surname, String primary_subject1, String primary_subject2, Integer age) {
 
         this.name = name;
         this.surname = surname;
