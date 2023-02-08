@@ -1,5 +1,6 @@
 package com.springgoals.service;
 
+import com.springgoals.exception.CustomException;
 import com.springgoals.model.Faculty;
 
 import java.sql.SQLException;
@@ -11,9 +12,9 @@ public interface FacultyService {
 
     Faculty getById(Integer id) throws SQLException;
 
-    void update(Faculty user) throws SQLException;
+    void update(Faculty faculty) throws SQLException, CustomException;
 
-    void save (Faculty user) throws SQLException;
+    void save (Faculty faculty) throws SQLException, CustomException;
 
     void delete(Integer id) throws SQLException;
 }

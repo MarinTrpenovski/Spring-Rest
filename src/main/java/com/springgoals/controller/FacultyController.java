@@ -1,5 +1,6 @@
 package com.springgoals.controller;
 
+import com.springgoals.exception.CustomException;
 import com.springgoals.model.Faculty;
 import com.springgoals.service.impl.FacultyServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class FacultyController {
     public ResponseEntity<List<Faculty>> getFaculties() throws SQLException {
 
         List<Faculty> faculties = facultyService.getAll();
-        return ResponseEntity.status(HttpStatus.OK).body( faculties );
+        return ResponseEntity.status(HttpStatus.OK).body(faculties);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -32,14 +33,14 @@ public class FacultyController {
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> add(@RequestBody Faculty faculty) throws SQLException {
+    public ResponseEntity<String> add(@RequestBody Faculty faculty) throws SQLException, CustomException {
 
         facultyService.save(faculty);
         return ResponseEntity.status(HttpStatus.CREATED).body("Successfully Created");
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> update(@RequestBody Faculty faculty) throws SQLException {
+    public ResponseEntity<String> update(@RequestBody Faculty faculty) throws SQLException, CustomException {
         facultyService.update(faculty);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }
