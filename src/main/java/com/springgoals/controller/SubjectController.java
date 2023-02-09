@@ -1,6 +1,6 @@
 package com.springgoals.controller;
 
-import com.springgoals.exception.CustomException;
+import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Subject;
 import com.springgoals.service.impl.SubjectServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,14 +35,14 @@ public class SubjectController {
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> add(@RequestBody Subject subject) throws SQLException, CustomException {
+    public ResponseEntity<String> add(@RequestBody Subject subject) throws SQLException, ValidationsException {
 
         subjectService.save(subject);
         return ResponseEntity.status(HttpStatus.CREATED).body("Successfully Created");
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> update(@RequestBody Subject subject) throws SQLException, CustomException {
+    public ResponseEntity<String> update(@RequestBody Subject subject) throws SQLException, ValidationsException {
         subjectService.update(subject);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }

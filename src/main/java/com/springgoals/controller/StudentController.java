@@ -1,6 +1,6 @@
 package com.springgoals.controller;
 
-import com.springgoals.exception.CustomException;
+import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Student;
 
 import com.springgoals.service.impl.StudentServiceImpl;
@@ -36,14 +36,14 @@ public class StudentController {
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> add(@RequestBody Student student) throws SQLException, CustomException {
+    public ResponseEntity<String> add(@RequestBody Student student) throws SQLException, ValidationsException {
 
         studentService.save(student);
         return ResponseEntity.status(HttpStatus.CREATED).body("Successfully Created");
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> update(@RequestBody Student student) throws SQLException, CustomException {
+    public ResponseEntity<String> update(@RequestBody Student student) throws SQLException, ValidationsException {
         studentService.update(student);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }

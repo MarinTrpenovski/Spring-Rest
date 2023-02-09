@@ -1,7 +1,7 @@
 package com.springgoals.service.impl;
 
 import com.springgoals.dao.impl.SubjectDAOImpl;
-import com.springgoals.exception.CustomException;
+import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Subject;
 import com.springgoals.service.SubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public void update(Subject subject) throws SQLException, CustomException {
+    public void update(Subject subject) throws SQLException, ValidationsException {
         Set< ConstraintViolation <Subject> > violations = validator.validate(subject);
 
         if (!violations.isEmpty()) {
@@ -44,13 +44,13 @@ public class SubjectServiceImpl implements SubjectService {
                 sb.append(constraintViolation.getMessage());
             }
 
-            throw new CustomException("Error occurred: " + sb.toString());
+            throw new ValidationsException("Error occurred: " + sb.toString());
         }
         subjectDAO.update(subject);
     }
 
     @Override
-    public void save(Subject subject) throws SQLException, CustomException {
+    public void save(Subject subject) throws SQLException, ValidationsException {
         Set< ConstraintViolation <Subject> > violations = validator.validate(subject);
 
         if (!violations.isEmpty()) {
@@ -59,7 +59,7 @@ public class SubjectServiceImpl implements SubjectService {
                 sb.append(constraintViolation.getMessage());
             }
 
-            throw new CustomException("Error occurred: " + sb.toString());
+            throw new ValidationsException("Error occurred: " + sb.toString());
         }
         subjectDAO.save(subject);
     }

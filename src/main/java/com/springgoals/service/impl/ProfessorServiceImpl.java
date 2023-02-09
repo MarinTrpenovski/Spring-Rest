@@ -1,7 +1,7 @@
 package com.springgoals.service.impl;
 
 import com.springgoals.dao.impl.ProfessorDAOImpl;
-import com.springgoals.exception.CustomException;
+import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Professor;
 import com.springgoals.service.ProfessorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class ProfessorServiceImpl implements ProfessorService {
     }
 
     @Override
-    public void update(Professor professor) throws SQLException, CustomException {
+    public void update(Professor professor) throws SQLException, ValidationsException {
         Set<ConstraintViolation<Professor>> violations = validator.validate(professor);
 
         if (!violations.isEmpty()) {
@@ -42,13 +42,13 @@ public class ProfessorServiceImpl implements ProfessorService {
                 sb.append(constraintViolation.getMessage());
             }
 
-            throw new CustomException("Error occurred: " + sb.toString());
+            throw new ValidationsException("Error occurred: " + sb.toString());
         }
         professorDAO.update(professor);
     }
 
     @Override
-    public void save(Professor professor) throws SQLException, CustomException {
+    public void save(Professor professor) throws SQLException, ValidationsException {
         Set<ConstraintViolation<Professor>> violations = validator.validate(professor);
 
         if (!violations.isEmpty()) {
@@ -57,7 +57,7 @@ public class ProfessorServiceImpl implements ProfessorService {
                 sb.append(constraintViolation.getMessage());
             }
 
-            throw new CustomException("Error occurred: " + sb.toString());
+            throw new ValidationsException("Error occurred: " + sb.toString());
         }
         professorDAO.save(professor);
     }
