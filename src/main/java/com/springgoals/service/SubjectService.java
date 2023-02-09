@@ -1,6 +1,6 @@
 package com.springgoals.service;
 
-import com.springgoals.exception.CustomException;
+import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Subject;
 
 import java.sql.SQLException;
@@ -12,9 +12,9 @@ public interface SubjectService {
 
     List<Subject> getAll() throws SQLException;
 
-    void update(Subject subject) throws SQLException, CustomException;
+    void update(Subject subject) throws SQLException, ValidationsException;
 
-    void save(Subject subject) throws SQLException, CustomException;
+    void save(Subject subject) throws SQLException, ValidationsException;
 
     void delete(Integer id ) throws SQLException;
 }

@@ -1,7 +1,7 @@
 package com.springgoals.service.impl;
 
 import com.springgoals.dao.impl.FacultyDAOImpl;
-import com.springgoals.exception.CustomException;
+import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Faculty;
 import com.springgoals.service.FacultyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class FacultyServiceImpl implements FacultyService {
 
 
     @Override
-    public void update(Faculty faculty) throws SQLException, CustomException {
+    public void update(Faculty faculty) throws SQLException, ValidationsException {
         Set<ConstraintViolation<Faculty>> violations = validator.validate(faculty);
 
         if (!violations.isEmpty()) {
@@ -45,14 +45,14 @@ public class FacultyServiceImpl implements FacultyService {
                 sb.append(constraintViolation.getMessage());
             }
 
-            throw new CustomException("Error occurred: " + sb.toString());
+            throw new ValidationsException("Error occurred: " + sb.toString());
         }
         facultyDAO.update(faculty);
     }
 
 
     @Override
-    public void save(Faculty faculty) throws SQLException, CustomException {
+    public void save(Faculty faculty) throws SQLException, ValidationsException {
         Set<ConstraintViolation<Faculty>> violations = validator.validate(faculty);
 
         if (!violations.isEmpty()) {
@@ -61,7 +61,7 @@ public class FacultyServiceImpl implements FacultyService {
                 sb.append(constraintViolation.getMessage());
             }
 
-            throw new CustomException("Error occurred: " + sb.toString());
+            throw new ValidationsException("Error occurred: " + sb.toString());
         }
         facultyDAO.save(faculty);
     }

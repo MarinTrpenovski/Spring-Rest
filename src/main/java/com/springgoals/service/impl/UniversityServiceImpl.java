@@ -1,7 +1,7 @@
 package com.springgoals.service.impl;
 
 import com.springgoals.dao.impl.UniversityDAOImpl;
-import com.springgoals.exception.CustomException;
+import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.University;
 import com.springgoals.service.UniversityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class UniversityServiceImpl implements UniversityService {
     }
 
     @Override
-    public void update(University university) throws SQLException, CustomException {
+    public void update(University university) throws SQLException, ValidationsException {
         Set<ConstraintViolation<University>> violations = validator.validate(university);
 
         if (!violations.isEmpty()) {
@@ -43,13 +43,13 @@ public class UniversityServiceImpl implements UniversityService {
                 sb.append(constraintViolation.getMessage());
             }
 
-            throw new CustomException("Error occurred: " + sb.toString());
+            throw new ValidationsException("Error occurred: " + sb.toString());
         }
         universityDAO.update(university);
     }
 
     @Override
-    public void save(University university) throws SQLException, CustomException {
+    public void save(University university) throws SQLException, ValidationsException {
         Set<ConstraintViolation<University>> violations = validator.validate(university);
 
         if (!violations.isEmpty()) {
@@ -58,7 +58,7 @@ public class UniversityServiceImpl implements UniversityService {
                 sb.append(constraintViolation.getMessage());
             }
 
-            throw new CustomException("Error occurred: " + sb.toString());
+            throw new ValidationsException("Error occurred: " + sb.toString());
         }
         universityDAO.save(university);
     }

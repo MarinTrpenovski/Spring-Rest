@@ -1,7 +1,7 @@
 package com.springgoals.service.impl;
 
 import com.springgoals.dao.impl.StudentDAOImpl;
-import com.springgoals.exception.CustomException;
+import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Student;
 import com.springgoals.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public void update(Student student) throws SQLException, CustomException {
+    public void update(Student student) throws SQLException, ValidationsException {
         Set<ConstraintViolation<Student>> violations = validator.validate(student);
 
         if (!violations.isEmpty()) {
@@ -43,13 +43,13 @@ public class StudentServiceImpl implements StudentService {
                 sb.append(constraintViolation.getMessage());
             }
 
-            throw new CustomException("Error occurred: " + sb.toString());
+            throw new ValidationsException("Error occurred: " + sb.toString());
         }
         studentDAO.update(student);
     }
 
     @Override
-    public void save(Student student) throws SQLException, CustomException {
+    public void save(Student student) throws SQLException, ValidationsException {
         Set<ConstraintViolation<Student>> violations = validator.validate(student);
 
         if (!violations.isEmpty()) {
@@ -58,7 +58,7 @@ public class StudentServiceImpl implements StudentService {
                 sb.append(constraintViolation.getMessage());
             }
 
-            throw new CustomException("Error occurred: " + sb.toString());
+            throw new ValidationsException("Error occurred: " + sb.toString());
         }
         studentDAO.save(student);
     }
