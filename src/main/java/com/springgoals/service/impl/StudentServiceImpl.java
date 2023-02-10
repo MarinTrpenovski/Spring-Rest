@@ -1,5 +1,4 @@
 package com.springgoals.service.impl;
-
 import com.springgoals.dao.impl.StudentDAOImpl;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Student;
@@ -11,10 +10,12 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 
+import javax.transaction.Transactional;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
 @Service
+
 public class StudentServiceImpl implements StudentService {
 
     private Validator validator;
@@ -34,6 +35,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Transactional
     public void update(Student student) throws SQLException, ValidationsException {
         Set<ConstraintViolation<Student>> violations = validator.validate(student);
 
@@ -45,10 +47,12 @@ public class StudentServiceImpl implements StudentService {
 
             throw new ValidationsException("Error occurred: " + sb.toString());
         }
+
         studentDAO.update(student);
     }
 
     @Override
+    @Transactional
     public void save(Student student) throws SQLException, ValidationsException {
         Set<ConstraintViolation<Student>> violations = validator.validate(student);
 
@@ -64,6 +68,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Transactional
     public void delete(Integer id) throws SQLException {
         studentDAO.delete(id);
     }

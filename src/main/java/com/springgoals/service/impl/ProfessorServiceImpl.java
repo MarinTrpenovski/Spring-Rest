@@ -11,10 +11,13 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 
+import javax.transaction.Transactional;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
+
 @Service
+
 public class ProfessorServiceImpl implements ProfessorService {
 
     private Validator validator;
@@ -33,6 +36,7 @@ public class ProfessorServiceImpl implements ProfessorService {
     }
 
     @Override
+    @Transactional
     public void update(Professor professor) throws SQLException, ValidationsException {
         Set<ConstraintViolation<Professor>> violations = validator.validate(professor);
 
@@ -48,6 +52,7 @@ public class ProfessorServiceImpl implements ProfessorService {
     }
 
     @Override
+    @Transactional
     public void save(Professor professor) throws SQLException, ValidationsException {
         Set<ConstraintViolation<Professor>> violations = validator.validate(professor);
 
@@ -63,6 +68,7 @@ public class ProfessorServiceImpl implements ProfessorService {
     }
 
     @Override
+    @Transactional
     public void delete(Integer id) throws SQLException {
         professorDAO.delete(id);
     }

@@ -11,10 +11,12 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 
+import javax.transaction.Transactional;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
 @Service
+
 public class SubjectServiceImpl implements SubjectService {
 
     private Validator validator;
@@ -35,6 +37,7 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
+    @Transactional
     public void update(Subject subject) throws SQLException, ValidationsException {
         Set< ConstraintViolation <Subject> > violations = validator.validate(subject);
 
@@ -50,6 +53,7 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
+    @Transactional
     public void save(Subject subject) throws SQLException, ValidationsException {
         Set< ConstraintViolation <Subject> > violations = validator.validate(subject);
 
@@ -65,6 +69,7 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
+    @Transactional
     public void delete(Integer id) throws SQLException {
         subjectDAO.delete(id);
     }
