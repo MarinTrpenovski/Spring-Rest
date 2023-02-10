@@ -11,8 +11,10 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 
+import javax.transaction.Transactional;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+
 
 @Service
 public class FacultyServiceImpl implements FacultyService {
@@ -28,13 +30,12 @@ public class FacultyServiceImpl implements FacultyService {
         return facultyDAO.getAll();
     }
 
-
     @Override
     public Faculty getById(Integer id) throws SQLException {
         return facultyDAO.getById(id);
     }
 
-
+    @Transactional
     @Override
     public void update(Faculty faculty) throws SQLException, ValidationsException {
         Set<ConstraintViolation<Faculty>> violations = validator.validate(faculty);
@@ -52,6 +53,7 @@ public class FacultyServiceImpl implements FacultyService {
 
 
     @Override
+    @Transactional
     public void save(Faculty faculty) throws SQLException, ValidationsException {
         Set<ConstraintViolation<Faculty>> violations = validator.validate(faculty);
 
@@ -68,6 +70,7 @@ public class FacultyServiceImpl implements FacultyService {
 
 
     @Override
+    @Transactional
     public void delete(Integer id) throws SQLException {
         facultyDAO.delete(id);
     }
