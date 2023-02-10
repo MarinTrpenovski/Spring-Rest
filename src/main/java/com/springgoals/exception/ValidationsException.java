@@ -13,7 +13,5 @@ public class ValidationsException extends Exception {
     public ValidationsException(String message) {
         super(message);
         this.message = message;
-
-
     }
 }
