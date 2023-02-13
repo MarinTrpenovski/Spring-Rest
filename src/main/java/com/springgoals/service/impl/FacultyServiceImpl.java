@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.transaction.Transactional;
@@ -28,6 +29,30 @@ public class FacultyServiceImpl implements FacultyService {
     @Override
     public List<Faculty> getAll() throws SQLException {
         return facultyDAO.getAll();
+    }
+
+
+    @Override //rest API for search creteria
+    public List<Faculty> searchFaculties(String name, String location, String study_field) throws SQLException {
+        StringBuilder sql= new StringBuilder("Select * from faculty where 1=1");
+        if(name != null && !name.equals("")){
+            sql.append(" and name = \"");
+            sql.append(name);
+            sql.append("\"");
+        }
+        if(location != null && !location.equals("")){
+            sql.append(" and location = \"");
+            sql.append(location);
+            sql.append("\"");
+        }
+        if(study_field != null && !study_field.equals("")){
+            sql.append(" and study_field = \"");
+            sql.append(study_field);
+            sql.append("\"");
+        }
+
+        return facultyDAO.searchFaculties(sql.toString());
+
     }
 
     @Override

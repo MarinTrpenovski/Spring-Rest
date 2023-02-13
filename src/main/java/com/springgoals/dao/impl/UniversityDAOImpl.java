@@ -2,6 +2,7 @@ package com.springgoals.dao.impl;
 
 import com.springgoals.dao.SingletonConnection;
 import com.springgoals.dao.UniversityDAO;
+import com.springgoals.model.Subject;
 import com.springgoals.model.University;
 import org.springframework.stereotype.Repository;
 
@@ -73,6 +74,32 @@ public class UniversityDAOImpl implements UniversityDAO {
         }
         return universityList;
 
+    }
+
+    @Override
+    public List<University> searchUniversities(String sql)
+            throws SQLException {
+        List<University> universityList = new ArrayList<>();
+        try {
+            connection = SingletonConnection.getInstance().getConnection();
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+
+
+            while (rs.next()) {
+                University university = new University();
+
+                university.setId(rs.getInt("id"));
+                university.setName(rs.getString("name"));
+                university.setDescription(rs.getString("description"));
+
+                universityList.add(university);
+            }
+        } catch (SQLException e) {
+            System.out.println("error" + e.getMessage());
+            throw e;
+        }
+        return universityList;
     }
 
     @Override

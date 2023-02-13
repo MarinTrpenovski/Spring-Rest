@@ -1,8 +1,8 @@
 package com.springgoals.controller;
 
+import com.springgoals.exception.QueryException;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Professor;
-
 import com.springgoals.service.impl.ProfessorServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
-
 import java.util.List;
 
 @RestController
@@ -24,10 +23,28 @@ public class ProfessorController {
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Professor>> getProfessors() throws SQLException {
-        List<Professor> professors  = professorService.getAll();
+        List<Professor> professors = professorService.getAll();
 
-        return ResponseEntity.status(HttpStatus.OK).body( professors);
+        return ResponseEntity.status(HttpStatus.OK).body(professors);
     }
+
+    @RequestMapping(value = "/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Professor>> searchProfessors(
+            @RequestParam("name") String name,
+            @RequestParam("surname") String surname,
+            @RequestParam("age") Integer age,
+            @RequestParam("primary_subject1") String primary_subject1,
+            @RequestParam("primary_subject2") String primary_subject2
+    ) throws SQLException, QueryException {
+        List<Professor> professors = null;
+        if (name == null && surname == null && age == null && primary_subject1 == null && primary_subject2 == null) {
+            throw new QueryException("Error occurred: not enough query parameters");
+        } else {
+            professors = professorService.searchProfessors(name, surname, age, primary_subject1, primary_subject2);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(professors);
+    }
+
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Professor> getById(@PathVariable("id") Integer id) throws SQLException {

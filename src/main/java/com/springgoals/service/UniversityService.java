@@ -12,6 +12,9 @@ public interface UniversityService {
 
     List<University> getAll() throws SQLException;
 
+    List<University> searchUniversities(String name, String description)
+            throws SQLException;
+
     void update(University university) throws SQLException, ValidationsException;
 
     void save(University university) throws SQLException, ValidationsException;

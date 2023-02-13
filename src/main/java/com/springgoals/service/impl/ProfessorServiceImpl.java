@@ -31,6 +31,40 @@ public class ProfessorServiceImpl implements ProfessorService {
     }
 
     @Override
+    public List<Professor> searchProfessors(
+            String name, String surname, Integer age, String primary_subject1, String primary_subject2)
+            throws SQLException {
+        StringBuilder sql= new StringBuilder("Select * from professor where 1=1");
+        if(name != null && !name.equals("")){
+            sql.append(" and name = \"");
+            sql.append(name);
+            sql.append("\"");
+        }
+        if(surname != null && !surname.equals("")){
+            sql.append(" and surname = \"");
+            sql.append(surname);
+            sql.append("\"");
+        }
+        if(age != null && age!=0){
+            sql.append(" and age = ");
+            sql.append(age);
+        }
+        if(primary_subject1 != null && !primary_subject1.equals("")){
+            sql.append(" and primary_subject1 = \"");
+            sql.append(primary_subject1);
+            sql.append("\"");
+        }
+        if(primary_subject2 != null && !primary_subject2.equals("")){
+            sql.append(" and primary_subject2 = \"");
+            sql.append(primary_subject2);
+            sql.append("\"");
+        }
+
+        return professorDAO.searchProfessors(sql.toString());
+
+    }
+
+    @Override
     public Professor getById(Integer id) throws SQLException {
         return professorDAO.getById(id);
     }
