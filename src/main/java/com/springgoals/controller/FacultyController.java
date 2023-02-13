@@ -29,10 +29,11 @@ public class FacultyController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Faculty> getById(@PathVariable("id") Integer id) throws SQLException {
         Faculty faculty = facultyService.getById(id);
+        System.out.println("Test commit for ");
         return ResponseEntity.status(HttpStatus.OK).body(faculty);
     }
 
-    @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+        @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> add(@RequestBody Faculty faculty) throws SQLException, ValidationsException {
 
         facultyService.save(faculty);
