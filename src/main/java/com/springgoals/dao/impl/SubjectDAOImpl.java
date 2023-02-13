@@ -71,7 +71,32 @@ public class SubjectDAOImpl implements SubjectDAO {
             throw e;
         }
         return subjectList;
+    }
 
+    @Override
+    public List<Subject> searchSubjects(String sql)
+            throws SQLException {
+        List<Subject> subjectList = new ArrayList<>();
+        try {
+            connection = SingletonConnection.getInstance().getConnection();
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+
+            while (rs.next()) {
+                Subject subject = new Subject();
+
+                subject.setId(rs.getInt("id"));
+                subject.setName(rs.getString("name"));
+                subject.setSemester(rs.getString("semester"));
+                subject.setCredits(rs.getInt("credits"));
+
+                subjectList.add(subject);
+            }
+        } catch (SQLException e) {
+            System.out.println("error" + e.getMessage());
+            throw e;
+        }
+        return subjectList;
     }
 
     @Override

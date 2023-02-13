@@ -12,6 +12,9 @@ public interface StudentDAO {
 
     List<Student> getAll() throws SQLException;
 
+    List<Student> searchStudents(String sql)
+            throws SQLException;
+
     void update(Student student) throws SQLException;
 
     void save(Student student) throws SQLException;

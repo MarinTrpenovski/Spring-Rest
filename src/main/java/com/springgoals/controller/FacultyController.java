@@ -1,5 +1,6 @@
 package com.springgoals.controller;
 
+import com.springgoals.exception.QueryException;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Faculty;
 import com.springgoals.service.impl.FacultyServiceImpl;
@@ -10,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/faculty")
@@ -23,6 +26,21 @@ public class FacultyController {
     public ResponseEntity<List<Faculty>> getFaculties() throws SQLException {
 
         List<Faculty> faculties = facultyService.getAll();
+        return ResponseEntity.status(HttpStatus.OK).body(faculties);
+    }
+
+    @RequestMapping(value = "/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Faculty>> searchFaculties(
+            @RequestParam("name") String name,
+            @RequestParam("location") String location,
+            @RequestParam("study_field") String study_field
+    ) throws SQLException, QueryException {
+        List<Faculty> faculties = null;
+        if (name == null && location == null && study_field == null) {
+            throw new QueryException("Error occurred: not enough query parameters");
+        } else {
+            faculties = facultyService.searchFaculties(name, location, study_field);
+        }
         return ResponseEntity.status(HttpStatus.OK).body(faculties);
     }
 

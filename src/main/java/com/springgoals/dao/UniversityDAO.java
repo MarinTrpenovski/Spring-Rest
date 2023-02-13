@@ -11,6 +11,9 @@ public interface UniversityDAO {
 
     List<University> getAll() throws SQLException;
 
+    List<University> searchUniversities(String sql)
+            throws SQLException;
+
     void update(University university) throws SQLException;
 
     void save(University university) throws SQLException;

@@ -12,10 +12,13 @@ public interface StudentService {
 
     List<Student> getAll() throws SQLException;
 
+    List<Student> searchStudents(String name, String surname, String location, Integer indeks)
+            throws SQLException;
+
     void update(Student student) throws SQLException, ValidationsException;
 
     void save(Student student) throws SQLException, ValidationsException;
 
-    void delete(Integer id ) throws SQLException;
+    void delete(Integer id) throws SQLException;
 
 }

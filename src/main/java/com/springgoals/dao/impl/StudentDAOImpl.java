@@ -3,6 +3,7 @@ package com.springgoals.dao.impl;
 import com.springgoals.dao.SingletonConnection;
 import com.springgoals.dao.StudentDAO;
 import com.springgoals.model.Student;
+import com.springgoals.model.Subject;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -73,6 +74,33 @@ public class StudentDAOImpl implements StudentDAO {
         }
         return studentList;
 
+    }
+
+    @Override
+    public List<Student> searchStudents(String sql)
+            throws SQLException {
+        List<Student> studentList = new ArrayList<>();
+        try {
+            connection = SingletonConnection.getInstance().getConnection();
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+
+            while (rs.next()) {
+                Student student = new Student();
+
+                student.setId(rs.getInt("id"));
+                student.setName(rs.getString("name"));
+                student.setSurname(rs.getString("surname"));
+                student.setLocation(rs.getString("location"));
+                student.setIndeks(rs.getInt("indeks"));
+
+                studentList.add(student);
+            }
+        } catch (SQLException e) {
+            System.out.println("error" + e.getMessage());
+            throw e;
+        }
+        return studentList;
     }
 
     @Override

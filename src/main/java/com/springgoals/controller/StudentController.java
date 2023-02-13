@@ -1,5 +1,6 @@
 package com.springgoals.controller;
 
+import com.springgoals.exception.QueryException;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Student;
 
@@ -26,6 +27,22 @@ public class StudentController {
     public ResponseEntity<List<Student>> getStudents() throws SQLException {
 
         List<Student> students = studentService.getAll();
+        return ResponseEntity.status(HttpStatus.OK).body(students);
+    }
+
+    @RequestMapping(value = "/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Student>> searchStudents(
+            @RequestParam("name") String name,
+            @RequestParam("surname") String surname,
+            @RequestParam("location") String location,
+            @RequestParam("indeks") Integer indeks
+    ) throws SQLException, QueryException {
+        List<Student> students = null;
+        if (name == null && surname == null && location == null && indeks == null) {
+            throw new QueryException("Error occurred: not enough query parameters");
+        } else {
+            students = studentService.searchStudents(name, surname, location, indeks);
+        }
         return ResponseEntity.status(HttpStatus.OK).body(students);
     }
 

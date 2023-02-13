@@ -37,9 +37,32 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
+    public List<Subject> searchSubjects(String name, String semester, Integer credits)
+            throws SQLException {
+        StringBuilder sql= new StringBuilder("Select * from subject where 1=1");
+        if(name != null && !name.equals("")){
+            sql.append(" and name = \"");
+            sql.append(name);
+            sql.append("\"");
+        }
+        if(semester != null && !semester.equals("")){
+            sql.append(" and semester = \"");
+            sql.append(semester);
+            sql.append("\"");
+        }
+        if(credits != null && credits!=0){
+            sql.append(" and credits = ");
+            sql.append(credits);
+        }
+
+        return subjectDAO.searchSubjects(sql.toString());
+
+    }
+
+    @Override
     @Transactional
     public void update(Subject subject) throws SQLException, ValidationsException {
-        Set< ConstraintViolation <Subject> > violations = validator.validate(subject);
+        Set<ConstraintViolation<Subject>> violations = validator.validate(subject);
 
         if (!violations.isEmpty()) {
             StringBuilder sb = new StringBuilder();
@@ -55,7 +78,7 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     @Transactional
     public void save(Subject subject) throws SQLException, ValidationsException {
-        Set< ConstraintViolation <Subject> > violations = validator.validate(subject);
+        Set<ConstraintViolation<Subject>> violations = validator.validate(subject);
 
         if (!violations.isEmpty()) {
             StringBuilder sb = new StringBuilder();

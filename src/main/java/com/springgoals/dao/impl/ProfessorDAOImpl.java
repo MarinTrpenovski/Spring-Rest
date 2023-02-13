@@ -3,6 +3,7 @@ package com.springgoals.dao.impl;
 import com.springgoals.dao.ProfessorDAO;
 import com.springgoals.dao.SingletonConnection;
 import com.springgoals.model.Professor;
+
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -75,6 +76,33 @@ public class ProfessorDAOImpl implements ProfessorDAO {
         return professorList;
     }
 
+    @Override
+    public List<Professor> searchProfessors(String sql)
+            throws SQLException {
+        List<Professor> professorList = new ArrayList<>();
+        try {
+            connection = SingletonConnection.getInstance().getConnection();
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+
+            while (rs.next()) {
+                Professor professor = new Professor();
+
+                professor.setId(rs.getInt("id"));
+                professor.setName(rs.getString("name"));
+                professor.setSurname(rs.getString("surname"));
+                professor.setAge(rs.getInt("age"));
+                professor.setPrimary_subject1(rs.getString("primary_subject1"));
+                professor.setPrimary_subject2(rs.getString("primary_subject2"));
+
+                professorList.add(professor);
+            }
+        } catch (SQLException e) {
+            System.out.println("error" + e.getMessage());
+            throw e;
+        }
+        return professorList;
+    }
 
     @Override
     public void update(Professor professor) throws SQLException {

@@ -2,13 +2,18 @@ package com.springgoals.dao.impl;
 
 import com.springgoals.dao.FacultyDAO;
 import com.springgoals.dao.SingletonConnection;
+import com.springgoals.exception.QueryException;
+import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Faculty;
 import org.springframework.stereotype.Repository;
 
 
+import javax.validation.ConstraintViolation;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class FacultyDAOImpl implements FacultyDAO {
@@ -66,8 +71,37 @@ public class FacultyDAOImpl implements FacultyDAO {
         } catch (SQLException e) {
             System.out.println("error occured " + e.getMessage());
             throw e;
+        }
+        return facultyList;
+    }
+
+
+    @Override
+    public List<Faculty> searchFaculties(String sql)
+            throws SQLException {
+        List<Faculty> facultyList = new ArrayList<>();
+
+        try {
+            connection = SingletonConnection.getInstance().getConnection();
+            Statement statement = connection.createStatement();
+
+            ResultSet rs = statement.executeQuery(sql);
+
+            while (rs.next()) {
+                Faculty faculty = new Faculty();
+                faculty.setName(rs.getString("name"));
+                faculty.setId(rs.getInt("id"));
+                faculty.setLocation(rs.getString("location"));
+                faculty.setStudy_field(rs.getString("study_field"));
+
+                facultyList.add(faculty);
+            }
+        } catch (SQLException e) {
+            System.out.println("error occured " + e.getMessage());
+            throw e;
 
         }
+
         return facultyList;
     }
 

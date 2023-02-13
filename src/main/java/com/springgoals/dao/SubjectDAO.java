@@ -11,6 +11,9 @@ public interface SubjectDAO {
 
     List<Subject> getAll() throws SQLException;
 
+    List<Subject> searchSubjects(String sql)
+            throws SQLException;
+
     void update(Subject subject) throws SQLException;
 
     void save(Subject subject) throws SQLException;

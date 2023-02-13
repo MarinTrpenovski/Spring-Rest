@@ -1,5 +1,6 @@
 package com.springgoals.controller;
 
+import com.springgoals.exception.QueryException;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.University;
 
@@ -25,6 +26,20 @@ public class UniversityController {
     public ResponseEntity<List<University>> getUniversitys() throws SQLException {
 
         List<University> universities = universityService.getAll();
+        return ResponseEntity.status(HttpStatus.OK).body(universities);
+    }
+
+    @RequestMapping(value = "/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<University>> searchUniversities(
+            @RequestParam("name") String name,
+            @RequestParam("description") String description
+    ) throws SQLException, QueryException {
+        List<University> universities = null;
+        if (name == null && description == null) {
+            throw new QueryException("Error occurred: not enough query parameters");
+        } else {
+            universities = universityService.searchUniversities(name, description);
+        }
         return ResponseEntity.status(HttpStatus.OK).body(universities);
     }
 

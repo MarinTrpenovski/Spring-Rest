@@ -1,7 +1,5 @@
 package com.springgoals.dao;
-
 import com.springgoals.model.Professor;
-
 import java.sql.SQLException;
 import java.util.List;
 
@@ -12,6 +10,8 @@ public interface ProfessorDAO {
 
     List<Professor> getAll() throws SQLException;
 
+    List<Professor> searchProfessors(String sql)
+            throws SQLException;
 
     void save(Professor professor) throws SQLException;
 
