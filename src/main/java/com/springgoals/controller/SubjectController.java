@@ -1,8 +1,7 @@
 package com.springgoals.controller;
-
 import com.springgoals.exception.QueryException;
 import com.springgoals.exception.ValidationsException;
-import com.springgoals.model.Faculty;
+
 import com.springgoals.model.Subject;
 import com.springgoals.service.impl.SubjectServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +36,7 @@ public class SubjectController {
             @RequestParam("credits") Integer credits
     ) throws SQLException, QueryException {
         List<Subject> subjects = null;
-        if (name == null && semester == null && credits == null) {
+        if ((name == null || name.equals("")) && (semester == null || semester.equals("")) && (credits == null || credits.equals(""))) {
             throw new QueryException("Error occurred: not enough query parameters");
         } else {
             subjects = subjectService.searchSubjects(name, semester, credits);

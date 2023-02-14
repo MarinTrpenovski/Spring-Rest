@@ -9,11 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
 
 @RestController
 @RequestMapping(value = "/api/faculty")
@@ -36,7 +34,7 @@ public class FacultyController {
             @RequestParam("study_field") String study_field
     ) throws SQLException, QueryException {
         List<Faculty> faculties = null;
-        if (name == null && location == null && study_field == null) {
+        if ((name == null || name.equals("")) && (location == null || location.equals("")) && (study_field == null || study_field.equals(""))) {
             throw new QueryException("Error occurred: not enough query parameters");
         } else {
             faculties = facultyService.searchFaculties(name, location, study_field);

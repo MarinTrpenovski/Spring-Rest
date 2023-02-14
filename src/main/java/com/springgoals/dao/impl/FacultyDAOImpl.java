@@ -1,19 +1,12 @@
 package com.springgoals.dao.impl;
-
 import com.springgoals.dao.FacultyDAO;
 import com.springgoals.dao.SingletonConnection;
-import com.springgoals.exception.QueryException;
-import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Faculty;
 import org.springframework.stereotype.Repository;
-
-
-import javax.validation.ConstraintViolation;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 @Repository
 public class FacultyDAOImpl implements FacultyDAO {

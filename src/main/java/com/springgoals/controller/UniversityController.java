@@ -35,7 +35,7 @@ public class UniversityController {
             @RequestParam("description") String description
     ) throws SQLException, QueryException {
         List<University> universities = null;
-        if (name == null && description == null) {
+        if ((name == null || name.equals("")) && (description == null || description.equals(""))) {
             throw new QueryException("Error occurred: not enough query parameters");
         } else {
             universities = universityService.searchUniversities(name, description);
