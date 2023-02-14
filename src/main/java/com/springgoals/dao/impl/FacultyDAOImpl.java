@@ -1,11 +1,15 @@
 package com.springgoals.dao.impl;
+
 import com.springgoals.dao.FacultyDAO;
 import com.springgoals.dao.SingletonConnection;
 import com.springgoals.model.Faculty;
 import org.springframework.stereotype.Repository;
+
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Repository
@@ -68,6 +72,28 @@ public class FacultyDAOImpl implements FacultyDAO {
         return facultyList;
     }
 
+    @Override
+    public Map<Integer, Faculty> getMap() throws SQLException {
+
+        Map<Integer, Faculty> facultyMap = new HashMap<>();
+        try {
+            connection = SingletonConnection.getInstance().getConnection();
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("select * from faculty");
+            while (rs.next()) {
+                Faculty faculty = new Faculty();
+                faculty.setName(rs.getString("name"));
+                faculty.setId(rs.getInt("id"));
+                faculty.setLocation(rs.getString("location"));
+                faculty.setStudy_field(rs.getString("study_field"));
+                facultyMap.put(faculty.getId(), faculty);
+            }
+        } catch (SQLException e) {
+            System.out.println("error occured " + e.getMessage());
+            throw e;
+        }
+        return facultyMap;
+    }
 
     @Override
     public List<Faculty> searchFaculties(String sql)

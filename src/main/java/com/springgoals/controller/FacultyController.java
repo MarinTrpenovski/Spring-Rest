@@ -9,8 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -24,6 +26,13 @@ public class FacultyController {
     public ResponseEntity<List<Faculty>> getFaculties() throws SQLException {
 
         List<Faculty> faculties = facultyService.getAll();
+        return ResponseEntity.status(HttpStatus.OK).body(faculties);
+    }
+
+    @RequestMapping(value = "/map", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<Integer, Faculty>> mapFaculties() throws SQLException {
+
+        Map<Integer, Faculty> faculties = facultyService.getMap();
         return ResponseEntity.status(HttpStatus.OK).body(faculties);
     }
 
@@ -49,7 +58,7 @@ public class FacultyController {
         return ResponseEntity.status(HttpStatus.OK).body(faculty);
     }
 
-        @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> add(@RequestBody Faculty faculty) throws SQLException, ValidationsException {
 
         facultyService.save(faculty);

@@ -1,4 +1,5 @@
 package com.springgoals.controller;
+
 import com.springgoals.exception.QueryException;
 import com.springgoals.exception.ValidationsException;
 
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.SQLException;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/subject")
@@ -26,6 +28,13 @@ public class SubjectController {
     public ResponseEntity<List<Subject>> getSubjects() throws SQLException {
 
         List<Subject> subjects = subjectService.getAll();
+        return ResponseEntity.status(HttpStatus.OK).body(subjects);
+    }
+
+    @RequestMapping(value = "/map", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<Integer, Subject>> mapSubject() throws SQLException {
+
+        Map<Integer, Subject> subjects = subjectService.getMap();
         return ResponseEntity.status(HttpStatus.OK).body(subjects);
     }
 

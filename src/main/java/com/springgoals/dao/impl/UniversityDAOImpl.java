@@ -2,13 +2,14 @@ package com.springgoals.dao.impl;
 
 import com.springgoals.dao.SingletonConnection;
 import com.springgoals.dao.UniversityDAO;
-import com.springgoals.model.Subject;
 import com.springgoals.model.University;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 
@@ -74,6 +75,28 @@ public class UniversityDAOImpl implements UniversityDAO {
         }
         return universityList;
 
+    }
+
+    @Override
+    public Map<Integer, University> getMap() throws SQLException {
+
+        Map<Integer, University> universityMap = new HashMap<>();
+        try {
+            connection = SingletonConnection.getInstance().getConnection();
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("select * from university");
+            while (rs.next()) {
+                University university = new University();
+                university.setName(rs.getString("name"));
+                university.setId(rs.getInt("id"));
+                university.setDescription(rs.getString("description"));
+                universityMap.put(university.getId(), university);
+            }
+        } catch (SQLException e) {
+            System.out.println("error occured " + e.getMessage());
+            throw e;
+        }
+        return universityMap;
     }
 
     @Override
