@@ -1,14 +1,18 @@
 package com.springgoals.dao;
+
 import com.springgoals.model.Professor;
+
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public interface ProfessorDAO {
 
     Professor getById(Integer id) throws SQLException;
 
-
     List<Professor> getAll() throws SQLException;
+
+    Map<Integer, Professor> getMap() throws SQLException;
 
     List<Professor> searchProfessors(String sql)
             throws SQLException;

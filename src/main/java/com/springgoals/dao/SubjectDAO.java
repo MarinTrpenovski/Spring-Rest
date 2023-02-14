@@ -4,12 +4,15 @@ import com.springgoals.model.Subject;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public interface SubjectDAO {
 
     Subject getById(Integer id) throws SQLException;
 
     List<Subject> getAll() throws SQLException;
+
+    Map<Integer, Subject> getMap() throws SQLException;
 
     List<Subject> searchSubjects(String sql)
             throws SQLException;

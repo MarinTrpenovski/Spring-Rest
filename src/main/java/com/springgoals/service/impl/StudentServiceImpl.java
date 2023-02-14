@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.transaction.Transactional;
@@ -36,25 +37,30 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public Map<Integer, Student> getMap() throws SQLException {
+        return studentDAO.getMap();
+    }
+
+    @Override
     public List<Student> searchStudents(String name, String surname, String location, Integer indeks)
             throws SQLException {
-        StringBuilder sql= new StringBuilder("Select * from student where 1=1");
-        if(name != null && !name.equals("")){
+        StringBuilder sql = new StringBuilder("Select * from student where 1=1");
+        if (name != null && !name.equals("")) {
             sql.append(" and name = \"");
             sql.append(name);
             sql.append("\"");
         }
-        if(surname != null && !surname.equals("")){
+        if (surname != null && !surname.equals("")) {
             sql.append(" and surname = \"");
             sql.append(surname);
             sql.append("\"");
         }
-        if(location != null && !location.equals("")){
+        if (location != null && !location.equals("")) {
             sql.append(" and location = \"");
             sql.append(location);
             sql.append("\"");
         }
-        if(indeks != null && indeks!=0){
+        if (indeks != null && indeks != 0) {
             sql.append(" and indeks = ");
             sql.append(indeks);
         }

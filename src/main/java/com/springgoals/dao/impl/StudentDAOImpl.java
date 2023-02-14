@@ -3,12 +3,13 @@ package com.springgoals.dao.impl;
 import com.springgoals.dao.SingletonConnection;
 import com.springgoals.dao.StudentDAO;
 import com.springgoals.model.Student;
-import com.springgoals.model.Subject;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 
@@ -75,6 +76,31 @@ public class StudentDAOImpl implements StudentDAO {
         return studentList;
 
     }
+
+    @Override
+    public Map<Integer, Student> getMap() throws SQLException {
+
+        Map<Integer, Student> studentMap = new HashMap<>();
+        try {
+            connection = SingletonConnection.getInstance().getConnection();
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("select * from student");
+            while (rs.next()) {
+                Student student = new Student();
+                student.setName(rs.getString("name"));
+                student.setId(rs.getInt("id"));
+                student.setSurname(rs.getString("surname"));
+                student.setLocation(rs.getString("location"));
+                student.setIndeks(rs.getInt("indeks"));
+                studentMap.put(student.getId(), student);
+            }
+        } catch (SQLException e) {
+            System.out.println("error occured " + e.getMessage());
+            throw e;
+        }
+        return studentMap;
+    }
+
 
     @Override
     public List<Student> searchStudents(String sql)

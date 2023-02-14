@@ -7,7 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 
@@ -71,6 +73,30 @@ public class SubjectDAOImpl implements SubjectDAO {
             throw e;
         }
         return subjectList;
+    }
+
+    @Override
+    public Map<Integer, Subject> getMap() throws SQLException {
+
+        Map<Integer, Subject> subjectMap = new HashMap<>();
+        try {
+            connection = SingletonConnection.getInstance().getConnection();
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("select * from subject");
+
+            while (rs.next()) {
+                Subject subject = new Subject();
+                subject.setName(rs.getString("name"));
+                subject.setId(rs.getInt("id"));
+                subject.setSemester(rs.getString("semester"));
+                subject.setCredits(rs.getInt("credits"));
+                subjectMap.put(subject.getId(), subject);
+            }
+        } catch (SQLException e) {
+            System.out.println("error occured " + e.getMessage());
+            throw e;
+        }
+        return subjectMap;
     }
 
     @Override

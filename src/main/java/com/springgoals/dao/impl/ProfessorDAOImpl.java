@@ -8,7 +8,9 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 
@@ -74,6 +76,33 @@ public class ProfessorDAOImpl implements ProfessorDAO {
             throw e;
         }
         return professorList;
+    }
+
+    @Override
+    public Map<Integer, Professor> getMap() throws SQLException {
+
+        Map<Integer, Professor> professorMap = new HashMap<>();
+        try {
+            connection = SingletonConnection.getInstance().getConnection();
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("select * from professor");
+            while (rs.next()) {
+
+                Professor professor = new Professor();
+                professor.setName(rs.getString("name"));
+                professor.setId(rs.getInt("id"));
+                professor.setSurname(rs.getString("surname"));
+                professor.setAge(rs.getInt("age"));
+                professor.setPrimary_subject1(rs.getString("primary_subject1"));
+                professor.setPrimary_subject2(rs.getString("primary_subject2"));
+
+                professorMap.put(professor.getId(), professor);
+            }
+        } catch (SQLException e) {
+            System.out.println("error occured " + e.getMessage());
+            throw e;
+        }
+        return professorMap;
     }
 
     @Override
@@ -156,7 +185,6 @@ public class ProfessorDAOImpl implements ProfessorDAO {
         }
 
     }
-
 
     @Override
     public void delete(Integer id_deleting) throws SQLException {

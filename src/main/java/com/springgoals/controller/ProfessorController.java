@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/professor")
@@ -25,6 +26,13 @@ public class ProfessorController {
     public ResponseEntity<List<Professor>> getProfessors() throws SQLException {
         List<Professor> professors = professorService.getAll();
 
+        return ResponseEntity.status(HttpStatus.OK).body(professors);
+    }
+
+    @RequestMapping(value = "/map", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<Integer, Professor>> mapProfessors() throws SQLException {
+
+        Map<Integer, Professor> professors = professorService.getMap();
         return ResponseEntity.status(HttpStatus.OK).body(professors);
     }
 
@@ -44,7 +52,6 @@ public class ProfessorController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(professors);
     }
-
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Professor> getById(@PathVariable("id") Integer id) throws SQLException {

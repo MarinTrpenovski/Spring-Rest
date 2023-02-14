@@ -4,6 +4,7 @@ import com.springgoals.model.Student;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 
 public interface StudentDAO {
@@ -11,6 +12,8 @@ public interface StudentDAO {
     Student getById(Integer id) throws SQLException;
 
     List<Student> getAll() throws SQLException;
+
+    Map<Integer, Student> getMap() throws SQLException;
 
     List<Student> searchStudents(String sql)
             throws SQLException;

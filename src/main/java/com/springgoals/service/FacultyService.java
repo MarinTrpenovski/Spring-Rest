@@ -11,6 +11,8 @@ public interface FacultyService {
 
     List<Faculty> getAll() throws SQLException;
 
+    Map<Integer, Faculty> getMap() throws SQLException;
+
     List<Faculty> searchFaculties(String name, String location, String study_field)
             throws SQLException;
 
@@ -18,7 +20,9 @@ public interface FacultyService {
 
     void update(Faculty faculty) throws SQLException, ValidationsException;
 
-    void save (Faculty faculty) throws SQLException, ValidationsException;
+    void save(Faculty faculty) throws SQLException, ValidationsException;
 
     void delete(Integer id) throws SQLException;
+
+
 }

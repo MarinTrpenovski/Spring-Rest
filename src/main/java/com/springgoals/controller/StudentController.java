@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.SQLException;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/student")
@@ -30,6 +31,13 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.OK).body(students);
     }
 
+    @RequestMapping(value = "/map", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<Integer, Student>> mapStudents() throws SQLException {
+
+        Map<Integer, Student> students = studentService.getMap();
+        return ResponseEntity.status(HttpStatus.OK).body(students);
+    }
+
     @RequestMapping(value = "/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Student>> searchStudents(
             @RequestParam("name") String name,
@@ -38,7 +46,7 @@ public class StudentController {
             @RequestParam("indeks") Integer indeks
     ) throws SQLException, QueryException {
         List<Student> students = null;
-        if ((name == null || name.equals("")) && (surname == null || surname.equals(""))  && (location == null || location.equals("")) && (indeks == null || indeks.equals(""))) {
+        if ((name == null || name.equals("")) && (surname == null || surname.equals("")) && (location == null || location.equals("")) && (indeks == null || indeks.equals(""))) {
             throw new QueryException("Error occurred: not enough query parameters");
         } else {
             students = studentService.searchStudents(name, surname, location, indeks);
