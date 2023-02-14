@@ -38,7 +38,7 @@ public class StudentController {
             @RequestParam("indeks") Integer indeks
     ) throws SQLException, QueryException {
         List<Student> students = null;
-        if (name == null && surname == null && location == null && indeks == null) {
+        if ((name == null || name.equals("")) && (surname == null || surname.equals(""))  && (location == null || location.equals("")) && (indeks == null || indeks.equals(""))) {
             throw new QueryException("Error occurred: not enough query parameters");
         } else {
             students = studentService.searchStudents(name, surname, location, indeks);

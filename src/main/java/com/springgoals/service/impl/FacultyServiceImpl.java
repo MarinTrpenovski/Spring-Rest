@@ -6,10 +6,9 @@ import com.springgoals.model.Faculty;
 import com.springgoals.service.FacultyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
+
 import java.util.Set;
 
 import javax.transaction.Transactional;
@@ -32,7 +31,7 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
 
-    @Override //rest API for search creteria
+    @Override
     public List<Faculty> searchFaculties(String name, String location, String study_field) throws SQLException {
         StringBuilder sql= new StringBuilder("Select * from faculty where 1=1");
         if(name != null && !name.equals("")){
