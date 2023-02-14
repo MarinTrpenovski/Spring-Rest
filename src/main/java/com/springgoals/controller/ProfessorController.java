@@ -37,7 +37,7 @@ public class ProfessorController {
             @RequestParam("primary_subject2") String primary_subject2
     ) throws SQLException, QueryException {
         List<Professor> professors = null;
-        if (name == null && surname == null && age == null && primary_subject1 == null && (primary_subject2 == null || primary_subject2.equals("")) ) {
+        if ((name == null || name.equals("")) && (surname == null || surname.equals("")) && (age == null || age.equals("")) && (primary_subject1 == null || primary_subject1.equals("")) && (primary_subject2 == null || primary_subject2.equals(""))) {
             throw new QueryException("Error occurred: not enough query parameters");
         } else {
             professors = professorService.searchProfessors(name, surname, age, primary_subject1, primary_subject2);
