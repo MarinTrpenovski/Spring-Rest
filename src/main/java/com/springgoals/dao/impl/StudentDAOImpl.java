@@ -3,6 +3,8 @@ package com.springgoals.dao.impl;
 import com.springgoals.dao.SingletonConnection;
 import com.springgoals.dao.StudentDAO;
 import com.springgoals.model.Student;
+import com.springgoals.model.Subject;
+import com.springgoals.model.dto.StudentDTO;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -195,5 +197,50 @@ public class StudentDAOImpl implements StudentDAO {
         }
     }
 
+    @Override
+    public StudentDTO getSubjectsByStudId(Integer studentId) throws SQLException {
+
+        StudentDTO studentDTO = new StudentDTO();
+
+        List<Subject> subjectList = new ArrayList<>();
+
+        try {
+            connection = SingletonConnection.getInstance().getConnection();
+            Statement statement = connection.createStatement();
+
+            StringBuilder sql = new StringBuilder("select s.*,st.name as sname from student as st\n" +
+                    "INNER JOIN student_subject_relation ON student_subject_relation.student_id = st.id \n" +
+                    "INNER JOIN subject as s ON s.id = student_subject_relation.subject_id \n" +
+                    "WHERE st.id =");
+
+            sql.append(studentId);
+
+            ResultSet rs = statement.executeQuery(sql.toString());
+
+            while (rs.next()) {
+                Subject subject = new Subject();
+
+                subject.setId(rs.getInt("id"));
+                subject.setName(rs.getString("name"));
+                subject.setCredits(rs.getInt("credits"));
+                subject.setSemester(rs.getString("semester"));
+
+                studentDTO.setStudentName(rs.getString("sname"));
+
+                subjectList.add(subject);
+            }
+
+
+            studentDTO.setStudentId(studentId);
+            studentDTO.setSubjectList(subjectList);
+            studentDTO.setLengthOfList(subjectList.size());
+
+        } catch (SQLException e) {
+            System.out.println("error occured " + e.getMessage());
+            throw e;
+        }
+
+        return studentDTO;
+    }
 
 }

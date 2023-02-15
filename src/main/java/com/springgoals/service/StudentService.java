@@ -2,6 +2,8 @@ package com.springgoals.service;
 
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Student;
+import com.springgoals.model.dto.StudentDTO;
+
 
 import java.sql.SQLException;
 import java.util.List;
@@ -24,5 +26,6 @@ public interface StudentService {
 
     void delete(Integer id) throws SQLException;
 
+    StudentDTO getSubjectsByStudId(Integer id) throws SQLException;
 
 }

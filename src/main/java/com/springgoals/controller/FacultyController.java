@@ -3,6 +3,7 @@ package com.springgoals.controller;
 import com.springgoals.exception.QueryException;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Faculty;
+import com.springgoals.model.dto.FacultyDTO;
 import com.springgoals.service.impl.FacultyServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -56,6 +57,20 @@ public class FacultyController {
         Faculty faculty = facultyService.getById(id);
         System.out.println("Test commit for ");
         return ResponseEntity.status(HttpStatus.OK).body(faculty);
+    }
+
+    @RequestMapping(value = "/subjects/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<FacultyDTO> getFacultiesByUniId(@PathVariable("id") Integer id)
+            throws SQLException, ValidationsException {
+
+        FacultyDTO facultyDTO = new FacultyDTO();
+
+        if (id == null ||id == 0 ) {
+            throw new ValidationsException("Error occurred:id can not be zero or null");
+        } else {
+            facultyDTO = facultyService.getSubjectsByFacId(id);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(facultyDTO);
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

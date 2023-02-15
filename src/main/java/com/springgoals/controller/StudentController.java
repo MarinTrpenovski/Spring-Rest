@@ -4,6 +4,7 @@ import com.springgoals.exception.QueryException;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Student;
 
+import com.springgoals.model.dto.StudentDTO;
 import com.springgoals.service.impl.StudentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -58,6 +59,20 @@ public class StudentController {
     public ResponseEntity<Student> getById(@PathVariable("id") Integer id) throws SQLException {
         Student student = studentService.getById(id);
         return ResponseEntity.status(HttpStatus.OK).body(student);
+    }
+
+    @RequestMapping(value = "/subjects/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<StudentDTO> getFacultiesByUniId(@PathVariable("id") Integer id)
+            throws SQLException, ValidationsException {
+
+        StudentDTO studentDTO = new StudentDTO();
+
+        if (id == null ||id == 0 ) {
+            throw new ValidationsException("Error occurred:id can not be zero or null");
+        } else {
+            studentDTO = studentService.getSubjectsByStudId(id);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(studentDTO);
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

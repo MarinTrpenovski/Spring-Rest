@@ -2,7 +2,9 @@ package com.springgoals.dao.impl;
 
 import com.springgoals.dao.SingletonConnection;
 import com.springgoals.dao.UniversityDAO;
+import com.springgoals.model.Faculty;
 import com.springgoals.model.University;
+import com.springgoals.model.dto.UniversityDTO;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -190,6 +192,56 @@ public class UniversityDAOImpl implements UniversityDAO {
             throw e;
 
         }
+    }
+
+    @Override
+    public UniversityDTO getFacultiesByUniId(Integer universityId) throws SQLException {
+
+        UniversityDTO universityDTO = new UniversityDTO();
+
+        List<Faculty> facultyList = new ArrayList<>();
+
+        try {
+            connection = SingletonConnection.getInstance().getConnection();
+            Statement statement = connection.createStatement();
+
+            StringBuilder sql = new StringBuilder("select  university.name as uname," +
+                    "faculty.id as fid, faculty.name as fname,\n" +
+                    "faculty.location as flocation, faculty.study_field as fstudy_field\n" +
+                    "from faculty inner join university\n" +
+                    " on faculty.university_id = university.id\n" +
+                    " where faculty.university_id =");
+
+            sql.append(universityId);
+
+            ResultSet rs = statement.executeQuery(sql.toString());
+
+            while (rs.next()) {
+                Faculty faculty = new Faculty();
+
+                faculty.setId(rs.getInt("fid"));
+                faculty.setName(rs.getString("fname"));
+                faculty.setLocation(rs.getString("flocation"));
+                faculty.setStudy_field(rs.getString("fstudy_field"));
+
+                universityDTO.setUniversityName(rs.getString("uname"));
+
+                facultyList.add(faculty);
+            }
+
+
+            universityDTO.setUniversityId(universityId);
+            universityDTO.setFacultyList(facultyList);
+            universityDTO.setLengthOfList(facultyList.size());
+
+        } catch (SQLException e) {
+            System.out.println("error occured " + e.getMessage());
+            throw e;
+        }
+
+
+
+        return universityDTO;
     }
 
 }
