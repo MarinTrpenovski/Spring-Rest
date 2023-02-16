@@ -3,7 +3,7 @@ package com.springgoals.service.impl;
 import com.springgoals.dao.impl.UniversityDAOImpl;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.University;
-import com.springgoals.model.dto.UniversityDTO;
+import com.springgoals.model.dto.UniversityFacultyDTO;
 import com.springgoals.service.UniversityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -101,7 +101,7 @@ public class UniversityServiceImpl implements UniversityService {
     }
 
     @Override
-    public UniversityDTO getFacultiesByUniId(Integer id) throws SQLException {
+    public UniversityFacultyDTO getFacultiesByUniId(Integer id) throws SQLException {
 
         return universityDAO.getFacultiesByUniId(id);
     }

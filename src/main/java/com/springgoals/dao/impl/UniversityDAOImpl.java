@@ -4,7 +4,7 @@ import com.springgoals.dao.SingletonConnection;
 import com.springgoals.dao.UniversityDAO;
 import com.springgoals.model.Faculty;
 import com.springgoals.model.University;
-import com.springgoals.model.dto.UniversityDTO;
+import com.springgoals.model.dto.UniversityFacultyDTO;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -195,9 +195,9 @@ public class UniversityDAOImpl implements UniversityDAO {
     }
 
     @Override
-    public UniversityDTO getFacultiesByUniId(Integer universityId) throws SQLException {
+    public UniversityFacultyDTO getFacultiesByUniId(Integer universityId) throws SQLException {
 
-        UniversityDTO universityDTO = new UniversityDTO();
+        UniversityFacultyDTO universityFacultyDTO = new UniversityFacultyDTO();
 
         List<Faculty> facultyList = new ArrayList<>();
 
@@ -224,15 +224,15 @@ public class UniversityDAOImpl implements UniversityDAO {
                 faculty.setLocation(rs.getString("flocation"));
                 faculty.setStudy_field(rs.getString("fstudy_field"));
 
-                universityDTO.setUniversityName(rs.getString("uname"));
+                universityFacultyDTO.setUniversityName(rs.getString("uname"));
 
                 facultyList.add(faculty);
             }
 
 
-            universityDTO.setUniversityId(universityId);
-            universityDTO.setFacultyList(facultyList);
-            universityDTO.setLengthOfList(facultyList.size());
+            universityFacultyDTO.setUniversityId(universityId);
+            universityFacultyDTO.setFacultyList(facultyList);
+            universityFacultyDTO.setLengthOfList(facultyList.size());
 
         } catch (SQLException e) {
             System.out.println("error occured " + e.getMessage());
@@ -241,7 +241,7 @@ public class UniversityDAOImpl implements UniversityDAO {
 
 
 
-        return universityDTO;
+        return universityFacultyDTO;
     }
 
 }

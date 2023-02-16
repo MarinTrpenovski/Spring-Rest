@@ -1,7 +1,7 @@
 package com.springgoals.dao;
 
 import com.springgoals.model.Student;
-import com.springgoals.model.dto.StudentDTO;
+import com.springgoals.model.dto.StudentSubjectDTO;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -25,5 +25,6 @@ public interface StudentDAO {
 
     void delete(Integer id) throws SQLException;
 
-    StudentDTO getSubjectsByStudId(Integer id) throws SQLException;
+    StudentSubjectDTO getSubjectsByStudId(Integer id) throws SQLException;
+
 }

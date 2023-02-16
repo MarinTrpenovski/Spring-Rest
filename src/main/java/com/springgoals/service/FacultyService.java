@@ -2,7 +2,7 @@ package com.springgoals.service;
 
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Faculty;
-import com.springgoals.model.dto.FacultyDTO;
+import com.springgoals.model.dto.FacultySubjectDTO;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -24,5 +24,5 @@ public interface FacultyService {
 
     void delete(Integer id) throws SQLException;
 
-    FacultyDTO getSubjectsByFacId(Integer id) throws SQLException;
+    FacultySubjectDTO getSubjectsByFacId(Integer id) throws SQLException;
 }

@@ -5,7 +5,7 @@ import com.springgoals.model.Subject;
 import java.util.List;
 import java.util.Objects;
 
-public class StudentDTO {
+public class StudentSubjectDTO {
 
     private Integer studentId;
 
@@ -15,9 +15,9 @@ public class StudentDTO {
 
     private Integer lengthOfList;
 
-    public StudentDTO () {}
+    public StudentSubjectDTO() {}
 
-    public StudentDTO(Integer studentId, String studentName, List<Subject> subjectList, Integer lengthOfList) {
+    public StudentSubjectDTO(Integer studentId, String studentName, List<Subject> subjectList, Integer lengthOfList) {
         this.studentId = studentId;
         this.studentName = studentName;
         this.subjectList = subjectList;
@@ -60,7 +60,7 @@ public class StudentDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        StudentDTO that = (StudentDTO) o;
+        StudentSubjectDTO that = (StudentSubjectDTO) o;
         return studentId.equals(that.studentId) && studentName.equals(that.studentName) && subjectList.equals(that.subjectList) && lengthOfList.equals(that.lengthOfList);
     }
 
@@ -71,7 +71,7 @@ public class StudentDTO {
 
     @Override
     public String toString() {
-        return "StudentDTO{" +
+        return "StudentSubjectDTO{" +
                 "studentId=" + studentId +
                 ", studentName='" + studentName + '\'' +
                 ", subjectList=" + subjectList +

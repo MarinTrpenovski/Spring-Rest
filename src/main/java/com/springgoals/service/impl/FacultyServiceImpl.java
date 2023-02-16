@@ -3,7 +3,7 @@ package com.springgoals.service.impl;
 import com.springgoals.dao.impl.FacultyDAOImpl;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Faculty;
-import com.springgoals.model.dto.FacultyDTO;
+import com.springgoals.model.dto.FacultySubjectDTO;
 import com.springgoals.service.FacultyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -99,7 +99,6 @@ public class FacultyServiceImpl implements FacultyService {
         facultyDAO.save(faculty);
     }
 
-
     @Override
     @Transactional
     public void delete(Integer id) throws SQLException {
@@ -107,7 +106,7 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
     @Override
-    public FacultyDTO getSubjectsByFacId(Integer id) throws SQLException {
+    public FacultySubjectDTO getSubjectsByFacId(Integer id) throws SQLException {
 
         return facultyDAO.getSubjectsByFacId(id);
 

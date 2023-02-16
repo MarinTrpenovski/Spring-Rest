@@ -5,7 +5,7 @@ import com.springgoals.model.Subject;
 import java.util.List;
 import java.util.Objects;
 
-public class FacultyDTO {
+public class FacultySubjectDTO {
 
     private Integer facultyId;
 
@@ -15,9 +15,9 @@ public class FacultyDTO {
 
     private Integer lengthOfList;
 
-    public FacultyDTO () {}
+    public FacultySubjectDTO() {}
 
-    public FacultyDTO(Integer facultyId, String facultyName, List<Subject> subjectList, Integer lengthOfList) {
+    public FacultySubjectDTO(Integer facultyId, String facultyName, List<Subject> subjectList, Integer lengthOfList) {
         this.facultyId = facultyId;
         this.facultyName = facultyName;
         this.subjectList = subjectList;
@@ -60,7 +60,7 @@ public class FacultyDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        FacultyDTO that = (FacultyDTO) o;
+        FacultySubjectDTO that = (FacultySubjectDTO) o;
         return facultyId.equals(that.facultyId) && facultyName.equals(that.facultyName) && subjectList.equals(that.subjectList) && lengthOfList.equals(that.lengthOfList);
     }
 
@@ -71,7 +71,7 @@ public class FacultyDTO {
 
     @Override
     public String toString() {
-        return "FacultyDTO{" +
+        return "FacultySubjectDTO{" +
                 "facultyId=" + facultyId +
                 ", facultyName='" + facultyName + '\'' +
                 ", subjectList=" + subjectList +
