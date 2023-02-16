@@ -4,7 +4,7 @@ import com.springgoals.dao.SingletonConnection;
 import com.springgoals.dao.StudentDAO;
 import com.springgoals.model.Student;
 import com.springgoals.model.Subject;
-import com.springgoals.model.dto.StudentDTO;
+import com.springgoals.model.dto.StudentSubjectDTO;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -198,9 +198,9 @@ public class StudentDAOImpl implements StudentDAO {
     }
 
     @Override
-    public StudentDTO getSubjectsByStudId(Integer studentId) throws SQLException {
+    public StudentSubjectDTO getSubjectsByStudId(Integer studentId) throws SQLException {
 
-        StudentDTO studentDTO = new StudentDTO();
+        StudentSubjectDTO studentSubjectDTO = new StudentSubjectDTO();
 
         List<Subject> subjectList = new ArrayList<>();
 
@@ -225,22 +225,22 @@ public class StudentDAOImpl implements StudentDAO {
                 subject.setCredits(rs.getInt("credits"));
                 subject.setSemester(rs.getString("semester"));
 
-                studentDTO.setStudentName(rs.getString("sname"));
+                studentSubjectDTO.setStudentName(rs.getString("sname"));
 
                 subjectList.add(subject);
             }
 
 
-            studentDTO.setStudentId(studentId);
-            studentDTO.setSubjectList(subjectList);
-            studentDTO.setLengthOfList(subjectList.size());
+            studentSubjectDTO.setStudentId(studentId);
+            studentSubjectDTO.setSubjectList(subjectList);
+            studentSubjectDTO.setLengthOfList(subjectList.size());
 
         } catch (SQLException e) {
             System.out.println("error occured " + e.getMessage());
             throw e;
         }
 
-        return studentDTO;
+        return studentSubjectDTO;
     }
 
 }

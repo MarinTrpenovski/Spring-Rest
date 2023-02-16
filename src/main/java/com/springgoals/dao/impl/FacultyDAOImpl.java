@@ -4,7 +4,7 @@ import com.springgoals.dao.FacultyDAO;
 import com.springgoals.dao.SingletonConnection;
 import com.springgoals.model.Faculty;
 import com.springgoals.model.Subject;
-import com.springgoals.model.dto.FacultyDTO;
+import com.springgoals.model.dto.FacultySubjectDTO;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -183,9 +183,9 @@ public class FacultyDAOImpl implements FacultyDAO {
     }
 
     @Override
-    public FacultyDTO getSubjectsByFacId(Integer facultyId) throws SQLException {
+    public FacultySubjectDTO getSubjectsByFacId(Integer facultyId) throws SQLException {
 
-        FacultyDTO facultyDTO = new FacultyDTO();
+        FacultySubjectDTO facultySubjectDTO = new FacultySubjectDTO();
 
         List<Subject> subjectList = new ArrayList<>();
 
@@ -210,14 +210,14 @@ public class FacultyDAOImpl implements FacultyDAO {
                 subject.setCredits(rs.getInt("credits"));
                 subject.setSemester(rs.getString("semester"));
 
-                facultyDTO.setFacultyName(rs.getString("fname"));
+                facultySubjectDTO.setFacultyName(rs.getString("fname"));
 
                 subjectList.add(subject);
             }
 
-            facultyDTO.setFacultyId(facultyId);
-            facultyDTO.setSubjectList(subjectList);
-            facultyDTO.setLengthOfList(subjectList.size());
+            facultySubjectDTO.setFacultyId(facultyId);
+            facultySubjectDTO.setSubjectList(subjectList);
+            facultySubjectDTO.setLengthOfList(subjectList.size());
 
         } catch (SQLException e) {
             System.out.println("error occured " + e.getMessage());
@@ -226,6 +226,6 @@ public class FacultyDAOImpl implements FacultyDAO {
 
 
 
-        return facultyDTO;
+        return facultySubjectDTO;
     }
 }

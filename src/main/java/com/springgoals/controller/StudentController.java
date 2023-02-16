@@ -3,9 +3,9 @@ package com.springgoals.controller;
 import com.springgoals.exception.QueryException;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Student;
-
-import com.springgoals.model.dto.StudentDTO;
+import com.springgoals.model.dto.StudentSubjectDTO;
 import com.springgoals.service.impl.StudentServiceImpl;
+import com.springgoals.service.impl.SubjectServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,6 +24,8 @@ public class StudentController {
     @Autowired
     private StudentServiceImpl studentService;
 
+    @Autowired
+    private SubjectServiceImpl subjectService;
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Student>> getStudents() throws SQLException {
@@ -62,17 +64,17 @@ public class StudentController {
     }
 
     @RequestMapping(value = "/subjects/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<StudentDTO> getFacultiesByUniId(@PathVariable("id") Integer id)
+    public ResponseEntity<StudentSubjectDTO> getSubjectsByStudId(@PathVariable("id") Integer id)
             throws SQLException, ValidationsException {
 
-        StudentDTO studentDTO = new StudentDTO();
+        StudentSubjectDTO studentSubjectDTO;
 
-        if (id == null ||id == 0 ) {
+        if (id == null || id == 0) {
             throw new ValidationsException("Error occurred:id can not be zero or null");
         } else {
-            studentDTO = studentService.getSubjectsByStudId(id);
+            studentSubjectDTO = studentService.getSubjectsByStudId(id);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(studentDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(studentSubjectDTO);
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -87,6 +89,7 @@ public class StudentController {
         studentService.update(student);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }
+
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteCountry(@PathVariable("id") Integer id) throws SQLException {

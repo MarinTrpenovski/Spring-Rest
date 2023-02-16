@@ -5,7 +5,7 @@ import com.springgoals.model.Faculty;
 import java.util.List;
 import java.util.Objects;
 
-public class UniversityDTO {
+public class UniversityFacultyDTO {
 
     private Integer universityId;
 
@@ -15,11 +15,11 @@ public class UniversityDTO {
 
     private Integer lengthOfList;
 
-    public UniversityDTO() {
+    public UniversityFacultyDTO() {
 
     }
 
-    public UniversityDTO(Integer universityId, String universityName, List<Faculty> facultyList, Integer lengthOfList ) {
+    public UniversityFacultyDTO(Integer universityId, String universityName, List<Faculty> facultyList, Integer lengthOfList ) {
         this.universityId = universityId;
         this.universityName = universityName;
         this.facultyList = facultyList;
@@ -62,11 +62,11 @@ public class UniversityDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UniversityDTO universityDTO = (UniversityDTO) o;
-        return universityId.equals(universityDTO.universityId) &&
-                universityName.equals(universityDTO.universityName) &&
-                facultyList.equals(universityDTO.facultyList) &&
-                lengthOfList.equals(universityDTO.lengthOfList);
+        UniversityFacultyDTO universityFacultyDTO = (UniversityFacultyDTO) o;
+        return universityId.equals(universityFacultyDTO.universityId) &&
+                universityName.equals(universityFacultyDTO.universityName) &&
+                facultyList.equals(universityFacultyDTO.facultyList) &&
+                lengthOfList.equals(universityFacultyDTO.lengthOfList);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class UniversityDTO {
 
     @Override
     public String toString() {
-        return "UniversityDTO{" +
+        return "UniversityFacultyDTO{" +
                 "universityId=" + universityId +
                 ", universityName='" + universityName + '\'' +
                 ", facultyList=" + facultyList +
