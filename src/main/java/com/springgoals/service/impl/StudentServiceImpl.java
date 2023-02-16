@@ -1,9 +1,12 @@
 package com.springgoals.service.impl;
 
 import com.springgoals.dao.impl.StudentDAOImpl;
+import com.springgoals.dao.impl.SubjectDAOImpl;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Student;
+import com.springgoals.model.Subject;
 import com.springgoals.model.dto.StudentSubjectDTO;
+import com.springgoals.model.dto.UpdateStudentSubjectDTO;
 import com.springgoals.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,8 @@ public class StudentServiceImpl implements StudentService {
 
     @Autowired
     private StudentDAOImpl studentDAO;
+    @Autowired
+    private SubjectDAOImpl subjectDAO;
 
     @Override
     public Student getById(Integer id) throws SQLException {
@@ -113,6 +118,30 @@ public class StudentServiceImpl implements StudentService {
     public StudentSubjectDTO getSubjectsByStudId(Integer id) throws SQLException {
 
         return studentDAO.getSubjectsByStudId(id);
+    }
+
+    @Override
+    @Transactional
+    public void updateSubjectStudent(UpdateStudentSubjectDTO updateStudentSubjectDTO) throws ValidationsException, SQLException {
+
+        Set<ConstraintViolation<Student>> violationStudent = validator.validate(updateStudentSubjectDTO.getStudent());
+        Set<ConstraintViolation<Subject>> violationSubject = validator.validate(updateStudentSubjectDTO.getSubject());
+
+        if (!violationStudent.isEmpty() || !violationSubject.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (ConstraintViolation<Student> constraintViolation : violationStudent) {
+                sb.append(constraintViolation.getMessage());
+            }
+            for (ConstraintViolation<Subject> constraintViolation : violationSubject) {
+                sb.append(constraintViolation.getMessage());
+            }
+
+            throw new ValidationsException("Error occurred: " + sb.toString());
+        }
+
+        studentDAO.update(updateStudentSubjectDTO.getStudent());
+        subjectDAO.update(updateStudentSubjectDTO.getSubject());
+
     }
 
 }
