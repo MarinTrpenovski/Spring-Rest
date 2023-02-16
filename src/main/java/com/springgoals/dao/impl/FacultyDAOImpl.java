@@ -3,6 +3,8 @@ package com.springgoals.dao.impl;
 import com.springgoals.dao.FacultyDAO;
 import com.springgoals.dao.SingletonConnection;
 import com.springgoals.model.Faculty;
+import com.springgoals.model.Subject;
+import com.springgoals.model.dto.FacultyDTO;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -178,5 +180,52 @@ public class FacultyDAOImpl implements FacultyDAO {
             System.out.println("Error during delete faculty " + e.getMessage());
             throw e;
         }
+    }
+
+    @Override
+    public FacultyDTO getSubjectsByFacId(Integer facultyId) throws SQLException {
+
+        FacultyDTO facultyDTO = new FacultyDTO();
+
+        List<Subject> subjectList = new ArrayList<>();
+
+        try {
+            connection = SingletonConnection.getInstance().getConnection();
+            Statement statement = connection.createStatement();
+
+            StringBuilder sql = new StringBuilder("select su.*,f.name as fname from subject as su\n" +
+                    "inner join professor on professor.id = su.subject_professor\n" +
+                    "inner join faculty as f on f.id = professor.professor_faculty\n" +
+                    "WHERE f.id =");
+
+            sql.append(facultyId);
+
+            ResultSet rs = statement.executeQuery(sql.toString());
+
+            while (rs.next()) {
+                Subject subject = new Subject();
+
+                subject.setId(rs.getInt("id"));
+                subject.setName(rs.getString("name"));
+                subject.setCredits(rs.getInt("credits"));
+                subject.setSemester(rs.getString("semester"));
+
+                facultyDTO.setFacultyName(rs.getString("fname"));
+
+                subjectList.add(subject);
+            }
+
+            facultyDTO.setFacultyId(facultyId);
+            facultyDTO.setSubjectList(subjectList);
+            facultyDTO.setLengthOfList(subjectList.size());
+
+        } catch (SQLException e) {
+            System.out.println("error occured " + e.getMessage());
+            throw e;
+        }
+
+
+
+        return facultyDTO;
     }
 }

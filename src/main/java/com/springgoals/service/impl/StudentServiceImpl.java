@@ -3,6 +3,7 @@ package com.springgoals.service.impl;
 import com.springgoals.dao.impl.StudentDAOImpl;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Student;
+import com.springgoals.model.dto.StudentDTO;
 import com.springgoals.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -107,4 +108,11 @@ public class StudentServiceImpl implements StudentService {
     public void delete(Integer id) throws SQLException {
         studentDAO.delete(id);
     }
+
+    @Override
+    public StudentDTO getSubjectsByStudId(Integer id) throws SQLException {
+
+        return studentDAO.getSubjectsByStudId(id);
+    }
+
 }
