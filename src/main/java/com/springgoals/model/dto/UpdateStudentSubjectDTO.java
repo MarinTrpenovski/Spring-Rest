@@ -14,6 +14,10 @@ public class UpdateStudentSubjectDTO {
         return subject;
     }
 
+    public UpdateStudentSubjectDTO (Subject subject) {
+        this.subject = subject;
+    }
+
     public void setSubject(Subject subject) {
         this.subject = subject;
     }
