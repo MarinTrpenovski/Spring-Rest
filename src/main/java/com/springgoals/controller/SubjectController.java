@@ -2,8 +2,8 @@ package com.springgoals.controller;
 
 import com.springgoals.exception.QueryException;
 import com.springgoals.exception.ValidationsException;
-
 import com.springgoals.model.Subject;
+import com.springgoals.service.StudentService;
 import com.springgoals.service.impl.SubjectServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +22,8 @@ public class SubjectController {
 
     @Autowired
     private SubjectServiceImpl subjectService;
+    @Autowired
+    private StudentService studentService;
 
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -71,6 +73,7 @@ public class SubjectController {
         subjectService.update(subject);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }
+
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteCountry(@PathVariable("id") Integer id) throws SQLException {

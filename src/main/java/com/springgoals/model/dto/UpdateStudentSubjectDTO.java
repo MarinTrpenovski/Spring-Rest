@@ -8,6 +8,7 @@ import java.util.Objects;
 public class UpdateStudentSubjectDTO {
 
     private Subject subject;
+
     private Student student;
 
     public Subject getSubject() {
