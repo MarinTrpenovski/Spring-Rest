@@ -2,12 +2,12 @@ package com.springgoals.model.dto;
 
 import com.springgoals.model.Student;
 import com.springgoals.model.Subject;
-
 import java.util.Objects;
 
 public class UpdateStudentSubjectDTO {
 
     private Subject subject;
+
     private Student student;
 
     public Subject getSubject() {

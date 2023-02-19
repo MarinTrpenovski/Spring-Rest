@@ -3,7 +3,6 @@ package com.springgoals.controller;
 import com.springgoals.exception.QueryException;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Student;
-import com.springgoals.model.Subject;
 import com.springgoals.model.dto.StudentSubjectDTO;
 import com.springgoals.model.dto.UpdateStudentSubjectDTO;
 import com.springgoals.service.impl.StudentServiceImpl;
@@ -92,14 +91,12 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }
 
-    @RequestMapping(value = "/update/dto", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> update(@RequestBody  UpdateStudentSubjectDTO updateStudentSubjectDTO  ) throws SQLException, ValidationsException {
+    @RequestMapping(value = "/update/student-subject", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> updateStudentSubject (@RequestBody UpdateStudentSubjectDTO updateStudentSubjectDTO) throws SQLException, ValidationsException {
 
-    if(updateStudentSubjectDTO.getStudent() != null || updateStudentSubjectDTO.getSubject() != null){
-
-        studentService.updateSubjectStudent(updateStudentSubjectDTO);
-    }
-
+        if (updateStudentSubjectDTO.getStudent() != null || updateStudentSubjectDTO.getSubject() != null) {
+            studentService.updateSubjectStudent(updateStudentSubjectDTO);
+        }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }
 

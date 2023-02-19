@@ -1,0 +1,7 @@
+com\springgoals\model\Professor.class
+com\springgoals\exception\CustomException.class
+com\springgoals\model\User.class
+com\springgoals\service\ProfessorService.class
+com\springgoals\service\UserService.class
+com\springgoals\model\Subject.class
+com\springgoals\dao\SubjectDAO.class
