@@ -99,6 +99,15 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }
 
+    @RequestMapping(value = "/save/student-subjects", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> addStudentSubjects (@RequestBody UpdateStudentSubjectDTO updateStudentSubjectDTO) throws SQLException, ValidationsException {
+
+        if (updateStudentSubjectDTO.getStudent() != null || updateStudentSubjectDTO.getSubjectList().size()>0) {
+            studentService.saveStudentSubjects(updateStudentSubjectDTO);
+        }
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully created");
+    }
+
     @RequestMapping(value = "/update/student-subject", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> updateStudentSubject (@RequestBody UpdateStudentSubjectDTO updateStudentSubjectDTO) throws SQLException, ValidationsException {
 

@@ -23,8 +23,11 @@ public interface StudentDAO {
 
     void save(Student student) throws SQLException;
 
+    Integer saveDTO(Student student) throws SQLException;
     void delete(Integer id) throws SQLException;
 
     StudentSubjectDTO getSubjectsByStudId(Integer id) throws SQLException;
+
+    void saveStudentSubjectsIds(Integer studentId, Integer subjectIds[]) throws SQLException;
 
 }

@@ -31,4 +31,7 @@ public interface StudentService {
 
     void updateSubjectStudent(UpdateStudentSubjectDTO updateStudentSubjectDTO) throws ValidationsException, SQLException;
 
+    void saveStudentSubjects(UpdateStudentSubjectDTO updateStudentSubjectDTO) throws ValidationsException, SQLException;
+
+    void saveStudentSubjectsIds(Integer studentId, Integer subjectIds[]) throws SQLException;
 }

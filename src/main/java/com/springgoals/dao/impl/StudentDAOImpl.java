@@ -49,7 +49,6 @@ public class StudentDAOImpl implements StudentDAO {
             System.out.println("error occured " + e.getMessage());
             throw e;
         }
-
         return student;
     }
 
@@ -76,7 +75,6 @@ public class StudentDAOImpl implements StudentDAO {
             throw e;
         }
         return studentList;
-
     }
 
     @Override
@@ -102,7 +100,6 @@ public class StudentDAOImpl implements StudentDAO {
         }
         return studentMap;
     }
-
 
     @Override
     public List<Student> searchStudents(String sql)
@@ -174,8 +171,40 @@ public class StudentDAOImpl implements StudentDAO {
         } catch (SQLException e) {
             System.out.println("error occured " + e.getMessage());
             throw e;
-
         }
+    }
+
+    @Override
+    public Integer saveDTO(Student student) throws SQLException {
+
+        Integer id = 0;
+
+        try {
+            String sql = "INSERT INTO student (name, surname, indeks, location) VALUES (?, ?, ?, ?)";
+            PreparedStatement statement1 = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            statement1.setString(1, student.getName());
+            statement1.setString(2, student.getSurname());
+            statement1.setString(4, student.getLocation());
+            statement1.setInt(3, student.getIndeks());
+
+            int affectedRows = statement1.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("error");
+            }
+
+            try (ResultSet generatedKeys = statement1.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    id = generatedKeys.getInt(1);
+                } else {
+                    throw new SQLException("error2");
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("error occured " + e.getMessage());
+            throw e;
+        }
+        return id;
     }
 
     @Override
@@ -224,13 +253,9 @@ public class StudentDAOImpl implements StudentDAO {
                 subject.setName(rs.getString("name"));
                 subject.setCredits(rs.getInt("credits"));
                 subject.setSemester(rs.getString("semester"));
-
                 studentSubjectDTO.setStudentName(rs.getString("sname"));
-
                 subjectList.add(subject);
             }
-
-
             studentSubjectDTO.setStudentId(studentId);
             studentSubjectDTO.setSubjectList(subjectList);
             studentSubjectDTO.setLengthOfList(subjectList.size());
@@ -241,6 +266,30 @@ public class StudentDAOImpl implements StudentDAO {
         }
 
         return studentSubjectDTO;
+    }
+
+    @Override
+    public void saveStudentSubjectsIds(Integer studentId, Integer[] subjectIds) throws SQLException {
+        try {
+            PreparedStatement statement1 = null;
+            String sql = null;
+            for(Integer subjectId : subjectIds){
+                sql= "INSERT INTO student_subject_relation (student_id,subject_id) VALUES (?, ?)";
+
+                statement1 = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                statement1.setInt(1, studentId);
+                statement1.setInt(2, subjectId);
+                int affectedRows = statement1.executeUpdate();
+                if (affectedRows == 0) {
+                    throw new SQLException("error with subject id " + subjectId);
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("error occured " + e.getMessage());
+            throw e;
+
+        }
     }
 
 }
