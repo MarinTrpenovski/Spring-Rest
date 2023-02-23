@@ -1,5 +1,6 @@
 package com.springgoals.controller;
 
+import com.springgoals.exception.EntityNotFoundException;
 import com.springgoals.exception.QueryException;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Faculty;
@@ -52,11 +53,12 @@ public class FacultyController {
         return ResponseEntity.status(HttpStatus.OK).body(faculties);
     }
 
-
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Faculty> getById(@PathVariable("id") Integer id) throws SQLException {
         Faculty faculty = facultyService.getById(id);
-        System.out.println("Test commit for ");
+        if (faculty.getId() == null) {
+            throw new EntityNotFoundException("Faculty with id " + id + " not found in DB ");
+        }
         return ResponseEntity.status(HttpStatus.OK).body(faculty);
     }
 
@@ -65,7 +67,6 @@ public class FacultyController {
             throws SQLException, ValidationsException {
 
         FacultySubjectDTO facultySubjectDTO;
-
         if (id == null || id == 0) {
             throw new ValidationsException("Error occurred:id can not be zero or null");
         } else {
@@ -77,18 +78,21 @@ public class FacultyController {
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> add(@RequestBody Faculty faculty) throws SQLException, ValidationsException {
 
+        if (faculty == null) throw new EntityNotFoundException();
         facultyService.save(faculty);
         return ResponseEntity.status(HttpStatus.CREATED).body("Successfully Created");
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> update(@RequestBody Faculty faculty) throws SQLException, ValidationsException {
+
+        if (faculty == null) throw new EntityNotFoundException();
         facultyService.update(faculty);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deleteCountry(@PathVariable("id") Integer id) throws SQLException {
+    public ResponseEntity<String> deleteFaculty(@PathVariable("id") Integer id) throws SQLException {
 
         facultyService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted");

@@ -1,6 +1,7 @@
 package com.springgoals.controller;
 
 import com.springgoals.exception.QueryException;
+import com.springgoals.exception.EntityNotFoundException;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.dto.UniversityFacultyDTO;
 import com.springgoals.model.University;
@@ -53,7 +54,11 @@ public class UniversityController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<University> getById(@PathVariable("id") Integer id) throws SQLException {
+
         University university = universityService.getById(id);
+        if (university.getId() == null) {
+            throw new EntityNotFoundException("University with id " + id + " not found in DB ");
+        }
         return ResponseEntity.status(HttpStatus.OK).body(university);
     }
 
@@ -74,18 +79,21 @@ public class UniversityController {
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> add(@RequestBody University university) throws SQLException, ValidationsException {
 
+        if (university == null) throw new EntityNotFoundException();
         universityService.save(university);
         return ResponseEntity.status(HttpStatus.CREATED).body("Successfully Created");
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> update(@RequestBody University university) throws SQLException, ValidationsException {
+
+        if (university == null) throw new EntityNotFoundException();
         universityService.update(university);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deleteCountry(@PathVariable("id") Integer id) throws SQLException {
+    public ResponseEntity<String> deleteUniversity(@PathVariable("id") Integer id) throws SQLException {
 
         universityService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted");
