@@ -1,5 +1,6 @@
 package com.springgoals.controller;
 
+import com.springgoals.exception.EntityNotFoundException;
 import com.springgoals.exception.QueryException;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Student;
@@ -60,7 +61,11 @@ public class StudentController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Student> getById(@PathVariable("id") Integer id) throws SQLException {
+
         Student student = studentService.getById(id);
+        if (student.getId() == null) {
+            throw new EntityNotFoundException("Student with id " + id + " not found in DB ");
+        }
         return ResponseEntity.status(HttpStatus.OK).body(student);
     }
 
@@ -81,12 +86,15 @@ public class StudentController {
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> add(@RequestBody Student student) throws SQLException, ValidationsException {
 
+        if (student == null) throw new EntityNotFoundException();
         studentService.save(student);
         return ResponseEntity.status(HttpStatus.CREATED).body("Successfully Created");
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> update(@RequestBody Student student) throws SQLException, ValidationsException {
+
+        if (student == null) throw new EntityNotFoundException();
         studentService.update(student);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }
@@ -101,7 +109,7 @@ public class StudentController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deleteCountry(@PathVariable("id") Integer id) throws SQLException {
+    public ResponseEntity<String> deleteStudent (@PathVariable("id") Integer id) throws SQLException {
 
         studentService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted");

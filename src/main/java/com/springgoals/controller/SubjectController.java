@@ -1,5 +1,6 @@
 package com.springgoals.controller;
 
+import com.springgoals.exception.EntityNotFoundException;
 import com.springgoals.exception.QueryException;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Subject;
@@ -57,25 +58,30 @@ public class SubjectController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Subject> getById(@PathVariable("id") Integer id) throws SQLException {
         Subject subject = subjectService.getById(id);
+        if (subject.getId() == null) {
+            throw new EntityNotFoundException("Subject with id " + id + " not found in DB ");
+        }
         return ResponseEntity.status(HttpStatus.OK).body(subject);
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> add(@RequestBody Subject subject) throws SQLException, ValidationsException {
 
+        if (subject == null) throw new EntityNotFoundException();
         subjectService.save(subject);
         return ResponseEntity.status(HttpStatus.CREATED).body("Successfully Created");
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> update(@RequestBody Subject subject) throws SQLException, ValidationsException {
+
+        if (subject == null) throw new EntityNotFoundException();
         subjectService.update(subject);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }
 
-
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deleteCountry(@PathVariable("id") Integer id) throws SQLException {
+    public ResponseEntity<String> deleteSubject (@PathVariable("id") Integer id) throws SQLException {
 
         subjectService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted");

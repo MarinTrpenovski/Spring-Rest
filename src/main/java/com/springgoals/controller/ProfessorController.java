@@ -1,5 +1,6 @@
 package com.springgoals.controller;
 
+import com.springgoals.exception.EntityNotFoundException;
 import com.springgoals.exception.QueryException;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Professor;
@@ -56,24 +57,30 @@ public class ProfessorController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Professor> getById(@PathVariable("id") Integer id) throws SQLException {
         Professor professor = professorService.getById(id);
+        if (professor.getId() == null) {
+            throw new EntityNotFoundException("Professor with id " + id + " not found in DB ");
+        }
         return ResponseEntity.status(HttpStatus.OK).body(professor);
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> add(@RequestBody Professor professor) throws SQLException, ValidationsException {
 
+        if (professor == null) throw new EntityNotFoundException();
         professorService.save(professor);
         return ResponseEntity.status(HttpStatus.CREATED).body("Successfully Created");
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> update(@RequestBody Professor professor) throws SQLException, ValidationsException {
+
+        if (professor == null) throw new EntityNotFoundException();
         professorService.update(professor);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deleteCountry(@PathVariable("id") Integer id) throws SQLException {
+    public ResponseEntity<String> deleteProfessor(@PathVariable("id") Integer id) throws SQLException {
 
         professorService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted");
