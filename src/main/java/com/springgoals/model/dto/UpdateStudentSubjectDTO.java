@@ -2,6 +2,8 @@ package com.springgoals.model.dto;
 
 import com.springgoals.model.Student;
 import com.springgoals.model.Subject;
+
+import java.util.List;
 import java.util.Objects;
 
 public class UpdateStudentSubjectDTO {
@@ -9,6 +11,27 @@ public class UpdateStudentSubjectDTO {
     private Subject subject;
 
     private Student student;
+
+    List<Subject> subjectList;
+
+    public UpdateStudentSubjectDTO  () {}
+
+    public UpdateStudentSubjectDTO(Subject subject, Student student) {
+        this.subject = subject;
+        this.student = student;
+    }
+    public UpdateStudentSubjectDTO(Student student, List<Subject> subjectList) {
+        this.student = student;
+        this.subjectList = subjectList;
+    }
+
+    public List<Subject> getSubjectList() {
+        return subjectList;
+    }
+
+    public void setSubjectList(List<Subject> subjectList) {
+        this.subjectList = subjectList;
+    }
 
     public Subject getSubject() {
         return subject;

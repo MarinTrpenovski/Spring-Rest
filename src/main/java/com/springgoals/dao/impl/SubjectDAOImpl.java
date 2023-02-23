@@ -146,7 +146,6 @@ public class SubjectDAOImpl implements SubjectDAO {
             System.out.println("error occured " + e.getMessage());
             throw e;
         }
-
     }
 
     @Override
@@ -170,9 +169,39 @@ public class SubjectDAOImpl implements SubjectDAO {
         } catch (SQLException e) {
             System.out.println("error occured " + e.getMessage());
             throw e;
+        }
+    }
+    @Override
+    public Integer saveDTO(Subject subject) throws SQLException {
+        Integer id = 0;
+
+        try {
+            String sql = "INSERT INTO subject (name, semester, credits, subject_professor) VALUES (?, ?, ?, ?)";
+            PreparedStatement statement1 = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            statement1.setString(1, subject.getName());
+            statement1.setString(2, subject.getSemester());
+            statement1.setInt(3, subject.getCredits());
+
+
+            int affectedRows = statement1.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("error");
+            }
+
+            try (ResultSet generatedKeys = statement1.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    id = generatedKeys.getInt(1);
+                } else {
+                    throw new SQLException("error2");
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("error occured " + e.getMessage());
+            throw e;
 
         }
-
+        return id;
     }
 
     @Override
@@ -193,6 +222,5 @@ public class SubjectDAOImpl implements SubjectDAO {
         }
 
     }
-
 
 }

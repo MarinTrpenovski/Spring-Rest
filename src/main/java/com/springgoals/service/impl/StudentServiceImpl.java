@@ -70,9 +70,7 @@ public class StudentServiceImpl implements StudentService {
             sql.append(" and indeks = ");
             sql.append(indeks);
         }
-
         return studentDAO.searchStudents(sql.toString());
-
     }
 
     @Override
@@ -144,4 +142,42 @@ public class StudentServiceImpl implements StudentService {
 
     }
 
+    @Override
+    @Transactional
+    public void saveStudentSubjects(UpdateStudentSubjectDTO updateStudentSubjectDTO) throws ValidationsException, SQLException {
+
+        Set<ConstraintViolation<Student>> violationStudent = validator.validate(updateStudentSubjectDTO.getStudent());
+        Set<ConstraintViolation<Subject>> violationSubject = null;
+
+        for(Subject subject : updateStudentSubjectDTO.getSubjectList()){
+            violationSubject = validator.validate(subject);
+        }
+        //all the subjects violations go to same violationSubject
+
+        if (!violationStudent.isEmpty() || !violationSubject.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (ConstraintViolation<Student> constraintViolation : violationStudent) {
+                sb.append(constraintViolation.getMessage());
+            }
+            for (ConstraintViolation<Subject> constraintViolation : violationSubject) {
+                sb.append(constraintViolation.getMessage());
+            }
+
+            throw new ValidationsException("Error occurred: " + sb.toString());
+        }
+        int i =0;
+        Integer subjectIds[] =null;
+        Integer studentId =studentDAO.saveDTO(updateStudentSubjectDTO.getStudent());
+        for(Subject subject : updateStudentSubjectDTO.getSubjectList()){
+
+            subjectIds[i]= subjectDAO.saveDTO(subject);
+            i++;
+        }
+        saveStudentSubjectsIds(studentId,subjectIds);
+    }
+    @Override
+    public void saveStudentSubjectsIds(Integer studentId, Integer subjectIds[])throws SQLException{
+    studentDAO.saveStudentSubjectsIds(studentId,subjectIds);
+
+    }
 }
