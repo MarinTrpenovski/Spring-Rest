@@ -102,7 +102,7 @@ public class StudentController {
     @RequestMapping(value = "/save/student-subjects", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> addStudentSubjects (@RequestBody UpdateStudentSubjectDTO updateStudentSubjectDTO) throws SQLException, ValidationsException {
 
-        if (updateStudentSubjectDTO.getStudent() != null || updateStudentSubjectDTO.getSubjectList().size()>0) {
+        if (updateStudentSubjectDTO.getStudent() != null || updateStudentSubjectDTO.getSubjectList() != null || updateStudentSubjectDTO.getSubjectList().size()>0) {
             studentService.saveStudentSubjects(updateStudentSubjectDTO);
         }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully created");

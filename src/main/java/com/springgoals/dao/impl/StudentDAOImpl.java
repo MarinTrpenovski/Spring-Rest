@@ -269,11 +269,13 @@ public class StudentDAOImpl implements StudentDAO {
     }
 
     @Override
-    public void saveStudentSubjectsIds(Integer studentId, Integer[] subjectIds) throws SQLException {
+    public void saveStudentSubjectsIds(Integer studentId, Integer subjectId) throws SQLException {
+
         try {
+
             PreparedStatement statement1 = null;
             String sql = null;
-            for(Integer subjectId : subjectIds){
+
                 sql= "INSERT INTO student_subject_relation (student_id,subject_id) VALUES (?, ?)";
 
                 statement1 = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -283,7 +285,7 @@ public class StudentDAOImpl implements StudentDAO {
                 if (affectedRows == 0) {
                     throw new SQLException("error with subject id " + subjectId);
                 }
-            }
+
 
         } catch (SQLException e) {
             System.out.println("error occured " + e.getMessage());

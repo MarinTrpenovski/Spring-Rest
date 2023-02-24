@@ -165,19 +165,21 @@ public class StudentServiceImpl implements StudentService {
 
             throw new ValidationsException("Error occurred: " + sb.toString());
         }
-        int i =0;
-        Integer subjectIds[] =null;
+
+        Integer subjectId =0;
         Integer studentId =studentDAO.saveDTO(updateStudentSubjectDTO.getStudent());
         for(Subject subject : updateStudentSubjectDTO.getSubjectList()){
 
-            subjectIds[i]= subjectDAO.saveDTO(subject);
-            i++;
+            subjectId= subjectDAO.saveDTO(subject);
+
+            saveStudentSubjectsIds(studentId,subjectId);
         }
-        saveStudentSubjectsIds(studentId,subjectIds);
+
     }
     @Override
-    public void saveStudentSubjectsIds(Integer studentId, Integer subjectIds[])throws SQLException{
-    studentDAO.saveStudentSubjectsIds(studentId,subjectIds);
+    public void saveStudentSubjectsIds(Integer studentId, Integer subjectId)throws SQLException{
+
+        studentDAO.saveStudentSubjectsIds(studentId,subjectId);
 
     }
 }
