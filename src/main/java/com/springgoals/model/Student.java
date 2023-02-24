@@ -32,6 +32,7 @@ public class Student {
     @Min(value = 1, message = "indeks should not be 0")
     private Integer indeks;
 
+    //    List<Subject> subjectList;
     public Student() {
     }
 

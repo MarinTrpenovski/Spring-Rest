@@ -3,6 +3,7 @@ package com.springgoals.controller;
 import com.springgoals.exception.QueryException;
 import com.springgoals.exception.EntityNotFoundException;
 import com.springgoals.exception.ValidationsException;
+import com.springgoals.model.dto.UniversityFacultiesDTO;
 import com.springgoals.model.dto.UniversityFacultyDTO;
 import com.springgoals.model.University;
 import com.springgoals.service.impl.UniversityServiceImpl;
@@ -90,6 +91,15 @@ public class UniversityController {
         if (university == null) throw new EntityNotFoundException();
         universityService.update(university);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
+    }
+
+    @RequestMapping(value = "/save/university-faculties", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> addUniversityFaculties (@RequestBody UniversityFacultiesDTO updateUniversityFacultiesDTO) throws SQLException, ValidationsException {
+
+        if (updateUniversityFacultiesDTO.getUniversity() != null || updateUniversityFacultiesDTO.getFacultyList() != null || updateUniversityFacultiesDTO.getFacultyList().size()>0) {
+            universityService.saveUniversityFaculties(updateUniversityFacultiesDTO);
+        }
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully created");
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
