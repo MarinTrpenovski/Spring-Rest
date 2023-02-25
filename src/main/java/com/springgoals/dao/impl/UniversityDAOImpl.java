@@ -176,6 +176,37 @@ public class UniversityDAOImpl implements UniversityDAO {
     }
 
     @Override
+    public Integer saveDTO(University university) throws SQLException {
+
+        Integer id = 0;
+
+        try {
+            String sql = "INSERT INTO university (name, description) VALUES (?, ?)";
+            PreparedStatement statement1 = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            statement1.setString(1, university.getName());
+            statement1.setString(2, university.getDescription());
+
+            int affectedRows = statement1.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("error");
+            }
+
+            try (ResultSet generatedKeys = statement1.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    id = generatedKeys.getInt(1);
+                } else {
+                    throw new SQLException("error2");
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("error occured " + e.getMessage());
+            throw e;
+        }
+        return id;
+    }
+
+    @Override
     public void delete(Integer id_deleting) throws SQLException {
         try {
             String sql = "DELETE FROM university WHERE id=?";
@@ -239,10 +270,9 @@ public class UniversityDAOImpl implements UniversityDAO {
             throw e;
         }
 
-
-
         return universityFacultyDTO;
     }
+
 
 }
 

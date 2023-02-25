@@ -175,7 +175,7 @@ public class StudentDAOImpl implements StudentDAO {
     }
 
     @Override
-    public Integer saveDTO(Student student) throws SQLException {
+    public Integer saveReturnId(Student student) throws SQLException {
 
         Integer id = 0;
 

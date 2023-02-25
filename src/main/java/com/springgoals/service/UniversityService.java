@@ -2,7 +2,9 @@ package com.springgoals.service;
 
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.University;
+import com.springgoals.model.dto.UniversityFacultiesDTO;
 import com.springgoals.model.dto.UniversityFacultyDTO;
+
 
 import java.sql.SQLException;
 import java.util.List;
@@ -26,5 +28,8 @@ public interface UniversityService {
     void delete(Integer id) throws SQLException;
 
     UniversityFacultyDTO getFacultiesByUniId(Integer id) throws SQLException;
+
+    void saveUniversityFaculties(UniversityFacultiesDTO updateUniversityFacultiesDTO) throws ValidationsException, SQLException;
+
 
 }

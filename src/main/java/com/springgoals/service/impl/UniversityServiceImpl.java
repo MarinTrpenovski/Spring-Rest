@@ -1,8 +1,13 @@
 package com.springgoals.service.impl;
 
+import com.springgoals.dao.impl.FacultyDAOImpl;
 import com.springgoals.dao.impl.UniversityDAOImpl;
 import com.springgoals.exception.ValidationsException;
+import com.springgoals.model.Faculty;
+import com.springgoals.model.Student;
+import com.springgoals.model.Subject;
 import com.springgoals.model.University;
+import com.springgoals.model.dto.UniversityFacultiesDTO;
 import com.springgoals.model.dto.UniversityFacultyDTO;
 import com.springgoals.service.UniversityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +26,14 @@ import javax.validation.Validator;
 
 public class UniversityServiceImpl implements UniversityService {
 
+    @Autowired
     private Validator validator;
 
     @Autowired
     private UniversityDAOImpl universityDAO;
+
+    @Autowired
+    private FacultyDAOImpl facultyDAO;
 
     @Override
     public University getById(Integer id) throws SQLException {
@@ -105,4 +114,37 @@ public class UniversityServiceImpl implements UniversityService {
 
         return universityDAO.getFacultiesByUniId(id);
     }
+
+    @Override
+    public void saveUniversityFaculties(UniversityFacultiesDTO updateUniversityFacultiesDTO) throws ValidationsException, SQLException {
+
+        Set<ConstraintViolation<University>> violationUniversity = validator.validate(updateUniversityFacultiesDTO.getUniversity());
+        Set<ConstraintViolation<Faculty>> violationFaculty = null;
+
+        for(Faculty faculty : updateUniversityFacultiesDTO.getFacultyList()){
+            violationFaculty = validator.validate(faculty);
+        }
+
+        if (!violationUniversity.isEmpty() || !violationFaculty.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (ConstraintViolation<University> constraintViolation : violationUniversity) {
+                sb.append(constraintViolation.getMessage());
+            }
+            for (ConstraintViolation<Faculty> constraintViolation : violationFaculty) {
+                sb.append(constraintViolation.getMessage());
+            }
+
+            throw new ValidationsException("Error occurred: " + sb.toString());
+        }
+
+        Integer universityId =universityDAO.saveDTO(updateUniversityFacultiesDTO.getUniversity());
+        for(Faculty faculty : updateUniversityFacultiesDTO.getFacultyList()){
+
+             facultyDAO.saveDTO(faculty,universityId);
+
+        }
+
+    }
+
+
 }

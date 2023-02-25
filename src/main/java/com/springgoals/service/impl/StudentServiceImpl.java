@@ -106,11 +106,6 @@ public class StudentServiceImpl implements StudentService {
         studentDAO.save(student);
     }
 
-    @Override
-    @Transactional
-    public void delete(Integer id) throws SQLException {
-        studentDAO.delete(id);
-    }
 
     @Override
     public StudentSubjectDTO getSubjectsByStudId(Integer id) throws SQLException {
@@ -167,10 +162,12 @@ public class StudentServiceImpl implements StudentService {
         }
 
         Integer subjectId =0;
-        Integer studentId =studentDAO.saveDTO(updateStudentSubjectDTO.getStudent());
+        Integer studentId =studentDAO.saveReturnId(updateStudentSubjectDTO.getStudent());
         for(Subject subject : updateStudentSubjectDTO.getSubjectList()){
-
-            subjectId= subjectDAO.saveDTO(subject);
+            if(subject == null ){
+                 break;
+            }
+            subjectId= subjectDAO.saveReturnId(subject);
 
             saveStudentSubjectsIds(studentId,subjectId);
         }
@@ -181,5 +178,31 @@ public class StudentServiceImpl implements StudentService {
 
         studentDAO.saveStudentSubjectsIds(studentId,subjectId);
 
+    }
+
+
+    @Override
+    @Transactional
+    public void delete(Integer id) throws SQLException {
+        studentDAO.delete(id);
+    }
+
+    @Override
+    public void deleteStudentSubjects(Integer studentId, Integer [] subjectsIds ) throws SQLException {
+
+        for(Integer subjectId : subjectsIds){
+
+            if( subjectDAO.deleteDTO( studentId,  subjectId) == 0 ) {
+                //in the table stud_sub._rel. checks the number of rows where studentId!= student_id and subject_id are the same
+                //this means there are 0 students with that subject and that subject can be deleted
+
+                subjectDAO.delete(subjectId);
+            }
+            //saveStudentSubjectsIds(studentId,subjectId);
+            //every subject id is in table student_sub_rel
+            //every subject has the same student id in the same table
+        }
+
+        studentDAO.delete(studentId);
     }
 }

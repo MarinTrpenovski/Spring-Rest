@@ -170,6 +170,31 @@ public class FacultyDAOImpl implements FacultyDAO {
     }
 
     @Override
+    public void saveDTO(Faculty faculty,Integer universityId) throws SQLException {
+
+        try {
+            String sql = "INSERT INTO faculty (name, location, study_field,university_id) VALUES (?, ?, ?,?)";
+            PreparedStatement statement1 = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            statement1.setString(1, faculty.getName());
+            statement1.setString(2, faculty.getLocation());
+            statement1.setString(3, faculty.getStudy_field());
+            statement1.setInt(4, universityId);
+
+            int affectedRows = statement1.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("error");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("error occured " + e.getMessage());
+            throw e;
+
+        }
+
+    }
+
+    @Override
     public void delete(Integer id_deleting) throws SQLException {
         try {
             String sql = "DELETE FROM faculty WHERE id=?";

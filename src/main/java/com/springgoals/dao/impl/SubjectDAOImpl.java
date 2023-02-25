@@ -42,11 +42,13 @@ public class SubjectDAOImpl implements SubjectDAO {
                 subject.setSemester(resultSet.getString("semester"));
                 subject.setCredits(resultSet.getInt("credits"));
 
+
             }
         } catch (SQLException e) {
             System.out.println("error occured " + e.getMessage());
             throw e;
         }
+
         return subject;
 
     }
@@ -172,7 +174,7 @@ public class SubjectDAOImpl implements SubjectDAO {
         }
     }
     @Override
-    public Integer saveDTO(Subject subject) throws SQLException {
+    public Integer saveReturnId(Subject subject) throws SQLException {
         Integer id = 0;
 
         try {
@@ -223,4 +225,39 @@ public class SubjectDAOImpl implements SubjectDAO {
 
     }
 
+    @Override
+    public Integer deleteDTO(Integer studentId, Integer subjectId) throws SQLException {
+        try {
+            String sql = "DELETE FROM student_subject_relation" +
+                    " WHERE  student_id=? AND subject_id=?";
+            PreparedStatement statement1 = connection.prepareStatement(sql);
+            statement1.setInt(1, studentId);
+            statement1.setInt(2, subjectId);
+
+            int rowsUpdated = statement1.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("Subject_id = " + subjectId + "student_id = " + studentId + " was deleted");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("error happened in delete " + e.getMessage());
+            throw e;
+        }
+
+        String sql2 = "Select * FROM student_subject_relation" +
+                " WHERE  student_id!=? AND subject_id=?";
+        PreparedStatement statement2 = connection.prepareStatement(sql2);
+        statement2.setInt(1, studentId);
+        statement2.setInt(2, subjectId);
+
+        ResultSet resultSet = statement2.executeQuery(sql2);
+
+        return resultSet.getFetchSize();
+    }
+
 }
+
+   /* DELETE FROM student_subject_relation
+        WHERE  student_id=1 AND  subject_id=4,
+        Select * FROM student_subject_relation
+        WHERE  subject_id=4;*/
