@@ -161,7 +161,7 @@ public class StudentServiceImpl implements StudentService {
             throw new ValidationsException("Error occurred: " + sb.toString());
         }
 
-        Integer subjectId =0;
+        Integer subjectId;
         Integer studentId =studentDAO.saveReturnId(updateStudentSubjectDTO.getStudent());
         for(Subject subject : updateStudentSubjectDTO.getSubjectList()){
             if(subject == null ){
