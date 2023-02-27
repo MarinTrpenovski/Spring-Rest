@@ -176,9 +176,9 @@ public class UniversityDAOImpl implements UniversityDAO {
     }
 
     @Override
-    public Integer saveDTO(University university) throws SQLException {
+    public Integer saveReturnId(University university) throws SQLException {
 
-        Integer id = 0;
+        Integer id;
 
         try {
             String sql = "INSERT INTO university (name, description) VALUES (?, ?)";

@@ -4,8 +4,6 @@ import com.springgoals.dao.impl.FacultyDAOImpl;
 import com.springgoals.dao.impl.UniversityDAOImpl;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Faculty;
-import com.springgoals.model.Student;
-import com.springgoals.model.Subject;
 import com.springgoals.model.University;
 import com.springgoals.model.dto.UniversityFacultiesDTO;
 import com.springgoals.model.dto.UniversityFacultyDTO;
@@ -137,10 +135,10 @@ public class UniversityServiceImpl implements UniversityService {
             throw new ValidationsException("Error occurred: " + sb.toString());
         }
 
-        Integer universityId =universityDAO.saveDTO(updateUniversityFacultiesDTO.getUniversity());
+        Integer universityId =universityDAO.saveReturnId(updateUniversityFacultiesDTO.getUniversity());
         for(Faculty faculty : updateUniversityFacultiesDTO.getFacultyList()){
-
-             facultyDAO.saveDTO(faculty,universityId);
+            faculty.setUniversity_id(universityId);
+            facultyDAO.save(faculty);
 
         }
 

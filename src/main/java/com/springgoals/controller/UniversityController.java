@@ -96,7 +96,7 @@ public class UniversityController {
     @RequestMapping(value = "/save/university-faculties", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> addUniversityFaculties (@RequestBody UniversityFacultiesDTO updateUniversityFacultiesDTO) throws SQLException, ValidationsException {
 
-        if (updateUniversityFacultiesDTO.getUniversity() != null || updateUniversityFacultiesDTO.getFacultyList() != null || updateUniversityFacultiesDTO.getFacultyList().size()>0) {
+        if (updateUniversityFacultiesDTO.getUniversity() != null && (updateUniversityFacultiesDTO.getFacultyList() != null && updateUniversityFacultiesDTO.getFacultyList().size()>0)) {
             universityService.saveUniversityFaculties(updateUniversityFacultiesDTO);
         }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully created");
