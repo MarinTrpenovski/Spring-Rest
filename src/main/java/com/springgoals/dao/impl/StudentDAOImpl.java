@@ -177,7 +177,7 @@ public class StudentDAOImpl implements StudentDAO {
     @Override
     public Integer saveReturnId(Student student) throws SQLException {
 
-        Integer id = 0;
+        Integer id ;
 
         try {
             String sql = "INSERT INTO student (name, surname, indeks, location) VALUES (?, ?, ?, ?)";
@@ -202,7 +202,7 @@ public class StudentDAOImpl implements StudentDAO {
             }
         } catch (SQLException e) {
             System.out.println("error occured " + e.getMessage());
-            throw e;
+             throw e;
         }
         return id;
     }

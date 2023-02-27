@@ -175,7 +175,7 @@ public class SubjectDAOImpl implements SubjectDAO {
     }
     @Override
     public Integer saveReturnId(Subject subject) throws SQLException {
-        Integer id = 0;
+        Integer id ;
 
         try {
             String sql = "INSERT INTO subject (name, semester, credits, subject_professor) VALUES (?, ?, ?, ?)";
@@ -257,7 +257,3 @@ public class SubjectDAOImpl implements SubjectDAO {
 
 }
 
-   /* DELETE FROM student_subject_relation
-        WHERE  student_id=1 AND  subject_id=4,
-        Select * FROM student_subject_relation
-        WHERE  subject_id=4;*/
