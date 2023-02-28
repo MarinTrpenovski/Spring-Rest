@@ -13,11 +13,20 @@ public class UniversityFacultiesDTO {
     List<Faculty> facultyList;
 
 
+    private Integer lengthOfList;
+
+
     public UniversityFacultiesDTO () {}
 
     public UniversityFacultiesDTO(University university, List<Faculty> facultyList) {
         this.university = university;
         this.facultyList = facultyList;
+    }
+
+    public UniversityFacultiesDTO(University university, List<Faculty> facultyList, Integer lengthOfList) {
+        this.university = university;
+        this.facultyList = facultyList;
+        this.lengthOfList = lengthOfList;
     }
 
     public University getUniversity() {
@@ -36,16 +45,33 @@ public class UniversityFacultiesDTO {
         this.facultyList = facultyList;
     }
 
+    public Integer getLengthOfList() {
+        return lengthOfList;
+    }
+
+    public void setLengthOfList(Integer lengthOfList) {
+        this.lengthOfList = lengthOfList;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UniversityFacultiesDTO that = (UniversityFacultiesDTO) o;
-        return Objects.equals(university, that.university) && Objects.equals(facultyList, that.facultyList);
+        return Objects.equals(university, that.university) && Objects.equals(facultyList, that.facultyList) && Objects.equals(lengthOfList, that.lengthOfList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(university, facultyList);
+        return Objects.hash(university, facultyList, lengthOfList);
+    }
+
+    @Override
+    public String toString() {
+        return "UniversityFacultiesDTO{" +
+                "university=" + university +
+                ", facultyList=" + facultyList +
+                ", lengthOfList=" + lengthOfList +
+                '}';
     }
 }

@@ -156,7 +156,7 @@ public class FacultyDAOImpl implements FacultyDAO {
             statement1.setString(1, faculty.getName());
             statement1.setString(2, faculty.getLocation());
             statement1.setString(3, faculty.getStudy_field());
-            statement1.setInt(4, 1);
+            statement1.setInt(4, faculty.getUniversity_id());
 
             int affectedRows = statement1.executeUpdate();
             if (affectedRows == 0) {
@@ -170,7 +170,9 @@ public class FacultyDAOImpl implements FacultyDAO {
     }
 
     @Override
-    public void saveDTO(Faculty faculty,Integer universityId) throws SQLException {
+    public Integer saveReturnId(Faculty faculty) throws SQLException {
+
+        Integer id ;
 
         try {
             String sql = "INSERT INTO faculty (name, location, study_field,university_id) VALUES (?, ?, ?,?)";
@@ -178,7 +180,7 @@ public class FacultyDAOImpl implements FacultyDAO {
             statement1.setString(1, faculty.getName());
             statement1.setString(2, faculty.getLocation());
             statement1.setString(3, faculty.getStudy_field());
-            statement1.setInt(4, universityId);
+            statement1.setInt(4, faculty.getUniversity_id());
 
             int affectedRows = statement1.executeUpdate();
 
@@ -186,11 +188,18 @@ public class FacultyDAOImpl implements FacultyDAO {
                 throw new SQLException("error");
             }
 
+            try (ResultSet generatedKeys = statement1.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    id = generatedKeys.getInt(1);
+                } else {
+                    throw new SQLException("error2");
+                }
+            }
         } catch (SQLException e) {
             System.out.println("error occured " + e.getMessage());
             throw e;
-
         }
+        return id;
 
     }
 

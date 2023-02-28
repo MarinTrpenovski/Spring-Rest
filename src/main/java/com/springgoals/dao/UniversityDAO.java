@@ -1,6 +1,5 @@
 package com.springgoals.dao;
 
-import com.springgoals.model.Student;
 import com.springgoals.model.University;
 import com.springgoals.model.dto.UniversityFacultyDTO;
 
@@ -23,7 +22,7 @@ public interface UniversityDAO {
 
     void save(University university) throws SQLException;
 
-    Integer saveDTO(University university) throws SQLException;
+    Integer saveReturnId(University university) throws SQLException;
 
     void delete(Integer id) throws SQLException;
 

@@ -1,7 +1,6 @@
 package com.springgoals.dao;
 
 import com.springgoals.model.Faculty;
-import com.springgoals.model.Subject;
 import com.springgoals.model.dto.FacultySubjectDTO;
 
 import java.sql.SQLException;
@@ -19,13 +18,13 @@ public interface FacultyDAO {
 
     Faculty getById(Integer id) throws SQLException;
 
-    void update(Faculty user) throws SQLException;
+    void update(Faculty faculty) throws SQLException;
 
     void delete(Integer id) throws SQLException;
 
-    void save(Faculty user) throws SQLException;
+    void save(Faculty faculty) throws SQLException;
 
-    void saveDTO(Faculty faculty,Integer universityId) throws SQLException;
+    Integer saveReturnId(Faculty faculty) throws SQLException;
 
     FacultySubjectDTO getSubjectsByFacId(Integer id) throws SQLException;
 
