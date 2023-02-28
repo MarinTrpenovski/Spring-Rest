@@ -124,11 +124,13 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted");
     }
 
-    @RequestMapping(value = "/delete/student-subjects/{id}/{subjectsIds.join}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/delete/student-subjects", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteStudentSubjects (
-            @PathVariable("id") Integer id, @PathVariable("subjectsIds") Integer [] subjectsIds)
+            @RequestParam("id") Integer id,
+            @RequestParam("subjectsIds") Integer [] subjectsIds)
+
             throws SQLException, ValidationsException {
-//1/4,9
+
         Student student = studentService.getById(id);
         if (student.getId() == null) {
             throw new EntityNotFoundException("Student with id " + id + " not found in DB ");

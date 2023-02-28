@@ -221,7 +221,7 @@ public class StudentDAOImpl implements StudentDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("error occured " + e.getMessage());
+            System.out.println("error occured in delete student: " + e.getMessage());
             throw e;
         }
     }
@@ -273,8 +273,8 @@ public class StudentDAOImpl implements StudentDAO {
 
         try {
 
-            PreparedStatement statement1 = null;
-            String sql = null;
+            PreparedStatement statement1;
+            String sql;
 
                 sql= "INSERT INTO student_subject_relation (student_id,subject_id) VALUES (?, ?)";
 

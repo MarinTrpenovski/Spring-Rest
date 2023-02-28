@@ -164,9 +164,7 @@ public class StudentServiceImpl implements StudentService {
         Integer subjectId;
         Integer studentId =studentDAO.saveReturnId(updateStudentSubjectDTO.getStudent());
         for(Subject subject : updateStudentSubjectDTO.getSubjectList()){
-            if(subject == null ){
-                 break;
-            }
+
             subjectId= subjectDAO.saveReturnId(subject);
 
             saveStudentSubjectsIds(studentId,subjectId);
@@ -190,19 +188,24 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public void deleteStudentSubjects(Integer studentId, Integer [] subjectsIds ) throws SQLException {
 
-        for(Integer subjectId : subjectsIds){
+        Integer numberOfStudents;
 
-            if( subjectDAO.deleteDTO( studentId,  subjectId) == 0 ) {
+        for(Integer subjectId : subjectsIds){
+            numberOfStudents= subjectDAO.getSubjectStudents( studentId,subjectId);
+
+            subjectDAO.deleteDTO( studentId,subjectId);
+            if(  numberOfStudents == 1 ) {
                 //in the table stud_sub._rel. checks the number of rows where studentId!= student_id and subject_id are the same
                 //this means there are 0 students with that subject and that subject can be deleted
-
+                System.out.println("if,deleteDTO,for,deleteStudentSubjects");
                 subjectDAO.delete(subjectId);
             }
+            System.out.println("deleteDTO,for,deleteStudentSubjects");
             //saveStudentSubjectsIds(studentId,subjectId);
             //every subject id is in table student_sub_rel
             //every subject has the same student id in the same table
         }
-
+        System.out.println("deleteDTO,deleteStudentSubjects");
         studentDAO.delete(studentId);
     }
 }
