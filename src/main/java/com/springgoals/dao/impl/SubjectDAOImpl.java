@@ -219,14 +219,14 @@ public class SubjectDAOImpl implements SubjectDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("error happened in delete " + e.getMessage());
+            System.out.println("error happened in delete subject: " + e.getMessage());
             throw e;
         }
 
     }
 
     @Override
-    public Integer deleteDTO(Integer studentId, Integer subjectId) throws SQLException {
+    public void deleteDTO(Integer studentId, Integer subjectId) throws SQLException {
         try {
             String sql = "DELETE FROM student_subject_relation" +
                     " WHERE  student_id=? AND subject_id=?";
@@ -236,24 +236,40 @@ public class SubjectDAOImpl implements SubjectDAO {
 
             int rowsUpdated = statement1.executeUpdate();
             if (rowsUpdated > 0) {
-                System.out.println("Subject_id = " + subjectId + "student_id = " + studentId + " was deleted");
+                System.out.println("deleteDTO rowsUpdated :Subject_id = " + subjectId + " student_id = " + studentId + " was deleted");
+
             }
 
         } catch (SQLException e) {
-            System.out.println("error happened in delete " + e.getMessage());
+            System.out.println("error happened in deleteDTO " + e.getMessage());
             throw e;
         }
 
-        String sql2 = "Select * FROM student_subject_relation" +
-                " WHERE  student_id!=? AND subject_id=?";
-        PreparedStatement statement2 = connection.prepareStatement(sql2);
-        statement2.setInt(1, studentId);
-        statement2.setInt(2, subjectId);
-
-        ResultSet resultSet = statement2.executeQuery(sql2);
-
-        return resultSet.getFetchSize();
     }
+    @Override
+    public Integer getSubjectStudents(Integer studentId, Integer subjectId) throws SQLException {
 
+        Integer numberOfStudents=0;
+        try {
+            connection = SingletonConnection.getInstance().getConnection();
+
+            String sql2 = "Select * FROM student_subject_relation" +
+                    " WHERE subject_id=?;";
+
+            PreparedStatement statement2 = connection.prepareStatement(sql2);
+            statement2.setInt(1, studentId);
+
+            ResultSet resultSet = statement2.executeQuery();
+            while (resultSet.next()){
+                numberOfStudents ++;
+            }
+            System.out.println("number of students is " + numberOfStudents);
+        } catch (SQLException e) {
+            System.out.println("error in getSubjectStudents " + e.getMessage());
+            throw e;
+        }
+        return  numberOfStudents;
+    }
 }
+
 
