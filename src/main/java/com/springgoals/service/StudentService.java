@@ -3,6 +3,7 @@ package com.springgoals.service;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Student;
 import com.springgoals.model.dto.StudentSubjectDTO;
+import com.springgoals.model.dto.StudentSubjectsOddDTO;
 import com.springgoals.model.dto.UpdateStudentSubjectDTO;
 
 
@@ -36,4 +37,6 @@ public interface StudentService {
     void saveStudentSubjectsIds(Integer studentId, Integer subjectId) throws SQLException;
 
     void deleteStudentSubjects(Integer studentId, Integer [] subjectsIds ) throws SQLException;
+
+     StudentSubjectsOddDTO getOddSubjectsByStudId(Integer id) throws SQLException;
 }
