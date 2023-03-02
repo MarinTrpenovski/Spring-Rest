@@ -80,7 +80,8 @@ public class UniversityController {
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> add(@RequestBody University university) throws SQLException, ValidationsException {
 
-        if (university == null) throw new EntityNotFoundException();
+        if (university == null) {
+            throw new ValidationsException("Missing university payload");}
         universityService.save(university);
         return ResponseEntity.status(HttpStatus.CREATED).body("Successfully Created");
     }
@@ -88,7 +89,8 @@ public class UniversityController {
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> update(@RequestBody University university) throws SQLException, ValidationsException {
 
-        if (university == null) throw new EntityNotFoundException();
+        if (university == null) {
+            throw new ValidationsException("Missing university payload");}
         universityService.update(university);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }

@@ -67,7 +67,8 @@ public class SubjectController {
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> add(@RequestBody Subject subject) throws SQLException, ValidationsException {
 
-        if (subject == null) throw new EntityNotFoundException();
+        if (subject == null) {
+            throw new ValidationsException("Missing subject payload");}
         subjectService.save(subject);
         return ResponseEntity.status(HttpStatus.CREATED).body("Successfully Created");
     }
@@ -75,7 +76,8 @@ public class SubjectController {
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> update(@RequestBody Subject subject) throws SQLException, ValidationsException {
 
-        if (subject == null) throw new EntityNotFoundException();
+        if (subject == null) {
+            throw new ValidationsException("Missing subject payload");}
         subjectService.update(subject);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }

@@ -109,7 +109,8 @@ public class StudentController {
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> add(@RequestBody Student student) throws SQLException, ValidationsException {
 
-        if (student == null) throw new EntityNotFoundException();
+        if (student == null) {
+            throw new ValidationsException("Missing student payload");}
         studentService.save(student);
         return ResponseEntity.status(HttpStatus.CREATED).body("Successfully Created");
     }
@@ -117,7 +118,8 @@ public class StudentController {
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> update(@RequestBody Student student) throws SQLException, ValidationsException {
 
-        if (student == null) throw new EntityNotFoundException();
+        if (student == null) {
+            throw new ValidationsException("Missing student payload");}
         studentService.update(student);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }
