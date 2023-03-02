@@ -78,7 +78,8 @@ public class FacultyController {
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> add(@RequestBody Faculty faculty) throws SQLException, ValidationsException {
 
-        if (faculty == null) throw new EntityNotFoundException();
+        if (faculty == null) {
+            throw new ValidationsException("Missing faculty payload");}
         facultyService.save(faculty);
         return ResponseEntity.status(HttpStatus.CREATED).body("Successfully Created");
     }
@@ -86,7 +87,8 @@ public class FacultyController {
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> update(@RequestBody Faculty faculty) throws SQLException, ValidationsException {
 
-        if (faculty == null) throw new EntityNotFoundException();
+        if (faculty == null) {
+            throw new ValidationsException("Missing faculty payload");}
         facultyService.update(faculty);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }
