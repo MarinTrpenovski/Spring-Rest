@@ -11,9 +11,11 @@ public class StudentSubjectDTO {
 
     private  String studentName;
 
-    List<Subject> subjectList;
+    private List<Subject> subjectList;
 
     private Integer lengthOfList;
+
+
 
     public StudentSubjectDTO() {}
 

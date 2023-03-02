@@ -11,7 +11,7 @@ public class FacultySubjectDTO {
 
     private String facultyName;
 
-    List<Subject> subjectList;
+    private List<Subject> subjectList;
 
     private Integer lengthOfList;
 
