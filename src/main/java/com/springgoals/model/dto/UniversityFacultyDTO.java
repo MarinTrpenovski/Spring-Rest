@@ -11,7 +11,7 @@ public class UniversityFacultyDTO {
 
     private String universityName;
 
-    List<Faculty> facultyList;
+    private List<Faculty> facultyList;
 
     private Integer lengthOfList;
 

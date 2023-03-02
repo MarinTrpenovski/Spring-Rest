@@ -12,7 +12,7 @@ public class UpdateStudentSubjectDTO {
 
     private Student student;
 
-    List<Subject> subjectList;
+    private List<Subject> subjectList;
 
     public UpdateStudentSubjectDTO  () {}
 

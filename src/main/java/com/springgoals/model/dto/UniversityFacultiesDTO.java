@@ -10,7 +10,8 @@ public class UniversityFacultiesDTO {
 
     private University university;
 
-    List<Faculty> facultyList;
+
+    private List<Faculty> facultyList;
 
 
     private Integer lengthOfList;
