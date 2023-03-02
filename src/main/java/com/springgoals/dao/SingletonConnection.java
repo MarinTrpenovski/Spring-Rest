@@ -4,28 +4,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import static com.springgoals.constants.DBConstants.*;
 
-@Component
 public class SingletonConnection {
 
     private static SingletonConnection instance;
     private static Connection connection;
-
-    //@Value("${connectionString}")
-    private String connectionString="jdbc:mysql://localhost:3306/education";
-
-    //@Value("${dbUser}")
-    private String dbUser="root" ;
-
-   // @Value("${dbPassword}")
-    private String dbPassword="AngjelaWork123" ;
-
-   // @Value("${test}")
-    private String dbDriver = "com.mysql.cj.jdbc.Driver";
-
 
     private SingletonConnection() throws SQLException {
         try {
@@ -48,8 +32,6 @@ public class SingletonConnection {
         }
         return instance;
     }
-
-
 
 
 }

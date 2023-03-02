@@ -5,6 +5,7 @@ import com.springgoals.exception.QueryException;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Student;
 import com.springgoals.model.dto.StudentSubjectDTO;
+import com.springgoals.model.dto.StudentSubjectsOddDTO;
 import com.springgoals.model.dto.UpdateStudentSubjectDTO;
 import com.springgoals.service.impl.StudentServiceImpl;
 import com.springgoals.service.impl.SubjectServiceImpl;
@@ -76,11 +77,30 @@ public class StudentController {
         StudentSubjectDTO studentSubjectDTO;
 
         if (id == null || id == 0) {
-            throw new ValidationsException("Error occurred:id can not be zero or null");
+            throw new ValidationsException("Error occurred:studentId can not be zero or null");
         } else {
+            Student student = studentService.getById(id);
+            if (student == null) throw new EntityNotFoundException();
             studentSubjectDTO = studentService.getSubjectsByStudId(id);
         }
         return ResponseEntity.status(HttpStatus.OK).body(studentSubjectDTO);
+    }
+
+    @RequestMapping(value = "/odd/subjects/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<StudentSubjectsOddDTO> getOddSubjectsByStudId(@PathVariable("id") Integer id)
+            throws SQLException, ValidationsException {
+
+        StudentSubjectsOddDTO studentSubjectsOddDTO;
+
+        if (id == null || id == 0) {
+            throw new ValidationsException("Error occurred:studentId can not be zero or null");
+        } else {
+            Student student = studentService.getById(id);
+            if (student == null) throw new EntityNotFoundException();
+            studentSubjectsOddDTO = studentService.getOddSubjectsByStudId(id);
+
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(studentSubjectsOddDTO);
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

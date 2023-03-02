@@ -6,6 +6,7 @@ import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Student;
 import com.springgoals.model.Subject;
 import com.springgoals.model.dto.StudentSubjectDTO;
+import com.springgoals.model.dto.StudentSubjectsOddDTO;
 import com.springgoals.model.dto.UpdateStudentSubjectDTO;
 import com.springgoals.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -207,5 +208,11 @@ public class StudentServiceImpl implements StudentService {
         }
         System.out.println("deleteDTO,deleteStudentSubjects");
         studentDAO.delete(studentId);
+    }
+
+    public StudentSubjectsOddDTO getOddSubjectsByStudId(Integer id) throws SQLException{
+        return studentDAO.getOddSubjectsByStudId(id);
+
+
     }
 }

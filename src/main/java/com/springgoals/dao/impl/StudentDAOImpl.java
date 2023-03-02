@@ -5,6 +5,7 @@ import com.springgoals.dao.StudentDAO;
 import com.springgoals.model.Student;
 import com.springgoals.model.Subject;
 import com.springgoals.model.dto.StudentSubjectDTO;
+import com.springgoals.model.dto.StudentSubjectsOddDTO;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -269,6 +270,62 @@ public class StudentDAOImpl implements StudentDAO {
     }
 
     @Override
+    public StudentSubjectsOddDTO getOddSubjectsByStudId(Integer studentId) throws SQLException {
+
+        Integer sumOfOddCredits = 0;
+
+        StudentSubjectsOddDTO studentSubjectsOddDTO = new StudentSubjectsOddDTO();
+
+        List<Subject> subjectList = new ArrayList<>();
+
+        try {
+            connection = SingletonConnection.getInstance().getConnection();
+            Statement statement = connection.createStatement();
+
+            StringBuilder sql = new StringBuilder(
+                    "select subj.*, st.name as studentName, st.indeks\n" +
+                            "from student as st\n" +
+                            "INNER JOIN student_subject_relation ON student_subject_relation.student_id = st.id \n" +
+                            "INNER JOIN subject as subj ON subj.id = student_subject_relation.subject_id \n" +
+                            "WHERE st.id =");
+
+            sql.append(studentId);
+
+            ResultSet rs = statement.executeQuery(sql.toString());
+
+            while (rs.next()) {
+                Subject subject = new Subject();
+
+                subject.setId(rs.getInt("id"));
+                subject.setName(rs.getString("name"));
+                subject.setCredits(rs.getInt("credits"));
+                subject.setSemester(rs.getString("semester"));
+                studentSubjectsOddDTO.setStudentName(rs.getString("studentName"));
+                studentSubjectsOddDTO.setIndeks(rs.getInt("indeks"));
+
+                if(subject.getCredits()%2==1){
+                    subjectList.add(subject);
+                    sumOfOddCredits += subject.getCredits();
+
+                }
+            }
+
+            studentSubjectsOddDTO.setStudentId(studentId);
+            studentSubjectsOddDTO.setSubjectList(subjectList);
+            studentSubjectsOddDTO.setLengthOfList(subjectList.size());
+            studentSubjectsOddDTO.setSumOfCredits(sumOfOddCredits);
+            if(subjectList.size() == 0){
+                System.out.println("There are no subject with odd number of credits for student with id " + studentId);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("error in getOddSubjectsByStudId " + e.getMessage());
+            throw e;
+        }
+
+        return studentSubjectsOddDTO;
+    }
+    @Override
     public void saveStudentSubjectsIds(Integer studentId, Integer subjectId) throws SQLException {
 
         try {
@@ -293,5 +350,7 @@ public class StudentDAOImpl implements StudentDAO {
 
         }
     }
+
+
 
 }
