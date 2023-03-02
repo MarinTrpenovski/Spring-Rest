@@ -148,7 +148,7 @@ public class StudentServiceImpl implements StudentService {
         for(Subject subject : updateStudentSubjectDTO.getSubjectList()){
             violationSubject = validator.validate(subject);
         }
-        //all the subjects violations go to same violationSubject
+
 
         if (!violationStudent.isEmpty() || !violationSubject.isEmpty()) {
             StringBuilder sb = new StringBuilder();
@@ -191,23 +191,27 @@ public class StudentServiceImpl implements StudentService {
 
         Integer numberOfStudents;
 
-        for(Integer subjectId : subjectsIds){
-            numberOfStudents= subjectDAO.getSubjectStudents( studentId,subjectId);
+        try{
+            for(Integer subjectId : subjectsIds){
+                numberOfStudents= subjectDAO.getSubjectStudents( studentId,subjectId);
 
-            subjectDAO.deleteDTO( studentId,subjectId);
-            if(  numberOfStudents == 1 ) {
-                //in the table stud_sub._rel. checks the number of rows where studentId!= student_id and subject_id are the same
-                //this means there are 0 students with that subject and that subject can be deleted
-                System.out.println("if,deleteDTO,for,deleteStudentSubjects");
-                subjectDAO.delete(subjectId);
+                subjectDAO.removeSubjectStudentRelation( studentId,subjectId);
+                if(  numberOfStudents == 1 ) {
+
+                    subjectDAO.delete(subjectId);
+                }
+                System.out.println("deleteDTO,for,deleteStudentSubjects");
+
             }
-            System.out.println("deleteDTO,for,deleteStudentSubjects");
-            //saveStudentSubjectsIds(studentId,subjectId);
-            //every subject id is in table student_sub_rel
-            //every subject has the same student id in the same table
+            studentDAO.delete(studentId);
+
         }
-        System.out.println("deleteDTO,deleteStudentSubjects");
-        studentDAO.delete(studentId);
+        catch(SQLException sqlException){
+            System.out.println("Error in deleteStudentSubjects,sqlException.message: "+ sqlException.getMessage());
+            throw sqlException;
+        }
+
+
     }
 
     public StudentSubjectsOddDTO getOddSubjectsByStudId(Integer id) throws SQLException{
