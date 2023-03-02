@@ -226,7 +226,7 @@ public class SubjectDAOImpl implements SubjectDAO {
     }
 
     @Override
-    public void deleteDTO(Integer studentId, Integer subjectId) throws SQLException {
+    public void removeSubjectStudentRelation(Integer studentId, Integer subjectId) throws SQLException {
         try {
             String sql = "DELETE FROM student_subject_relation" +
                     " WHERE  student_id=? AND subject_id=?";
@@ -253,16 +253,16 @@ public class SubjectDAOImpl implements SubjectDAO {
         try {
             connection = SingletonConnection.getInstance().getConnection();
 
-            String sql2 = "Select * FROM student_subject_relation" +
+            String sql2 = "Select  count(student_id) as counterOfStudents FROM student_subject_relation" +
                     " WHERE subject_id=?;";
 
             PreparedStatement statement2 = connection.prepareStatement(sql2);
             statement2.setInt(1, studentId);
 
             ResultSet resultSet = statement2.executeQuery();
-            while (resultSet.next()){
-                numberOfStudents ++;
-            }
+
+            numberOfStudents=resultSet.getInt("counterOfStudents");
+
             System.out.println("number of students is " + numberOfStudents);
         } catch (SQLException e) {
             System.out.println("error in getSubjectStudents " + e.getMessage());

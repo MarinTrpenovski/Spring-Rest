@@ -25,7 +25,7 @@ public interface SubjectDAO {
 
     void delete(Integer id) throws SQLException;
 
-    void deleteDTO(Integer studentId, Integer subjectId) throws SQLException;
+    void removeSubjectStudentRelation(Integer studentId, Integer subjectId) throws SQLException;
 
     public Integer getSubjectStudents(Integer studentId, Integer subjectId) throws SQLException;
 }

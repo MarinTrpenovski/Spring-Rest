@@ -98,6 +98,9 @@ public class StudentController {
             Student student = studentService.getById(id);
             if (student == null) throw new EntityNotFoundException();
             studentSubjectsOddDTO = studentService.getOddSubjectsByStudId(id);
+            if( studentSubjectsOddDTO.getSubjectList().size() == 0){
+                System.out.println("There are no subject with odd number of credits for student with id " + id);
+            }
 
         }
         return ResponseEntity.status(HttpStatus.OK).body(studentSubjectsOddDTO);
@@ -122,9 +125,14 @@ public class StudentController {
     @RequestMapping(value = "/save/student-subjects", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> addStudentSubjects (@RequestBody UpdateStudentSubjectDTO updateStudentSubjectDTO) throws SQLException, ValidationsException {
 
-        if (updateStudentSubjectDTO.getStudent() != null && (updateStudentSubjectDTO.getSubjectList() != null && updateStudentSubjectDTO.getSubjectList().size()>0)) {
-            studentService.saveStudentSubjects(updateStudentSubjectDTO);
+        if (updateStudentSubjectDTO.getStudent().getId() == null || updateStudentSubjectDTO.getStudent().getId() == 0) {
+            throw new ValidationsException("Error occurred:studentId can not be zero or null");
         }
+        else if (updateStudentSubjectDTO.getSubjectList() == null || updateStudentSubjectDTO.getSubjectList().size()==0) {
+            throw new ValidationsException("Error in addStudentSubjects: SubjectList can not be zero or null");
+
+        }
+        studentService.saveStudentSubjects(updateStudentSubjectDTO);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully created");
     }
 
