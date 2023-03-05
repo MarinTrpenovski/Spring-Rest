@@ -124,7 +124,7 @@ public class UniversityServiceImpl implements UniversityService {
         }
 
         if (!violationUniversity.isEmpty() || !violationFaculty.isEmpty()) {
-            StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new StringBuilder();
             for (ConstraintViolation<University> constraintViolation : violationUniversity) {
                 sb.append(constraintViolation.getMessage());
             }

@@ -44,7 +44,7 @@ public class FacultyController {
             @RequestParam("location") String location,
             @RequestParam("study_field") String study_field
     ) throws SQLException, QueryException {
-        List<Faculty> faculties = null;
+        List<Faculty> faculties ;
         if ((name == null || name.equals("")) && (location == null || location.equals("")) && (study_field == null || study_field.equals(""))) {
             throw new QueryException("Error occurred: not enough query parameters");
         } else {
@@ -79,7 +79,8 @@ public class FacultyController {
     public ResponseEntity<String> add(@RequestBody Faculty faculty) throws SQLException, ValidationsException {
 
         if (faculty == null) {
-            throw new ValidationsException("Missing faculty payload");}
+            throw new ValidationsException("Missing faculty payload");
+        }
         facultyService.save(faculty);
         return ResponseEntity.status(HttpStatus.CREATED).body("Successfully Created");
     }
@@ -88,7 +89,8 @@ public class FacultyController {
     public ResponseEntity<String> update(@RequestBody Faculty faculty) throws SQLException, ValidationsException {
 
         if (faculty == null) {
-            throw new ValidationsException("Missing faculty payload");}
+            throw new ValidationsException("Missing faculty payload");
+        }
         facultyService.update(faculty);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }

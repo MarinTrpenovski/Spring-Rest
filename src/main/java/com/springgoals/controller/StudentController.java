@@ -78,11 +78,13 @@ public class StudentController {
 
         if (id == null || id == 0) {
             throw new ValidationsException("Error occurred:studentId can not be zero or null");
-        } else {
-            Student student = studentService.getById(id);
-            if (student == null) throw new EntityNotFoundException();
-            studentSubjectDTO = studentService.getSubjectsByStudId(id);
         }
+        Student student = studentService.getById(id);
+        if (student == null) {
+            throw new ValidationsException("Missing student payload");
+        }
+        studentSubjectDTO = studentService.getSubjectsByStudId(id);
+
         return ResponseEntity.status(HttpStatus.OK).body(studentSubjectDTO);
     }
 
@@ -94,15 +96,13 @@ public class StudentController {
 
         if (id == null || id == 0) {
             throw new ValidationsException("Error occurred:studentId can not be zero or null");
-        } else {
-            Student student = studentService.getById(id);
-            if (student == null) throw new EntityNotFoundException();
-            studentSubjectsOddDTO = studentService.getOddSubjectsByStudId(id);
-            if( studentSubjectsOddDTO.getSubjectList().size() == 0){
-                System.out.println("There are no subject with odd number of credits for student with id " + id);
-            }
-
         }
+        Student student = studentService.getById(id);
+        if (student == null) {
+            throw new ValidationsException("Missing student payload");
+        }
+        studentSubjectsOddDTO = studentService.getOddSubjectsByStudId(id);
+
         return ResponseEntity.status(HttpStatus.OK).body(studentSubjectsOddDTO);
     }
 
@@ -110,7 +110,8 @@ public class StudentController {
     public ResponseEntity<String> add(@RequestBody Student student) throws SQLException, ValidationsException {
 
         if (student == null) {
-            throw new ValidationsException("Missing student payload");}
+            throw new ValidationsException("Missing student payload");
+        }
         studentService.save(student);
         return ResponseEntity.status(HttpStatus.CREATED).body("Successfully Created");
     }
@@ -119,18 +120,18 @@ public class StudentController {
     public ResponseEntity<String> update(@RequestBody Student student) throws SQLException, ValidationsException {
 
         if (student == null) {
-            throw new ValidationsException("Missing student payload");}
+            throw new ValidationsException("Missing student payload");
+        }
         studentService.update(student);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }
 
     @RequestMapping(value = "/save/student-subjects", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> addStudentSubjects (@RequestBody UpdateStudentSubjectDTO updateStudentSubjectDTO) throws SQLException, ValidationsException {
+    public ResponseEntity<String> addStudentSubjects(@RequestBody UpdateStudentSubjectDTO updateStudentSubjectDTO) throws SQLException, ValidationsException {
 
         if (updateStudentSubjectDTO.getStudent().getId() == null || updateStudentSubjectDTO.getStudent().getId() == 0) {
             throw new ValidationsException("Error occurred:studentId can not be zero or null");
-        }
-        else if (updateStudentSubjectDTO.getSubjectList() == null || updateStudentSubjectDTO.getSubjectList().size()==0) {
+        } else if (updateStudentSubjectDTO.getSubjectList() == null || updateStudentSubjectDTO.getSubjectList().size() == 0) {
             throw new ValidationsException("Error in addStudentSubjects: SubjectList can not be zero or null");
 
         }
@@ -139,7 +140,7 @@ public class StudentController {
     }
 
     @RequestMapping(value = "/update/student-subject", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> updateStudentSubject (@RequestBody UpdateStudentSubjectDTO updateStudentSubjectDTO) throws SQLException, ValidationsException {
+    public ResponseEntity<String> updateStudentSubject(@RequestBody UpdateStudentSubjectDTO updateStudentSubjectDTO) throws SQLException, ValidationsException {
 
         if (updateStudentSubjectDTO.getStudent() != null || updateStudentSubjectDTO.getSubject() != null) {
             studentService.updateSubjectStudent(updateStudentSubjectDTO);
@@ -148,24 +149,23 @@ public class StudentController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deleteStudent (@PathVariable("id") Integer id) throws SQLException {
+    public ResponseEntity<String> deleteStudent(@PathVariable("id") Integer id) throws SQLException {
 
         studentService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted");
     }
 
     @RequestMapping(value = "/delete/student-subjects", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deleteStudentSubjects (
+    public ResponseEntity<String> deleteStudentSubjects(
             @RequestParam("id") Integer id,
-            @RequestParam("subjectsIds") Integer [] subjectsIds)
+            @RequestParam("subjectsIds") Integer[] subjectsIds)
 
             throws SQLException, ValidationsException {
 
         Student student = studentService.getById(id);
         if (student.getId() == null) {
             throw new EntityNotFoundException("Student with id " + id + " not found in DB ");
-        }
-        else {
+        } else {
             studentService.deleteStudentSubjects(student.getId(), subjectsIds);
         }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted");

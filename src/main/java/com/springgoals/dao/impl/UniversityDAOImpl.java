@@ -260,7 +260,6 @@ public class UniversityDAOImpl implements UniversityDAO {
                 facultyList.add(faculty);
             }
 
-
             universityFacultyDTO.setUniversityId(universityId);
             universityFacultyDTO.setFacultyList(facultyList);
             universityFacultyDTO.setLengthOfList(facultyList.size());

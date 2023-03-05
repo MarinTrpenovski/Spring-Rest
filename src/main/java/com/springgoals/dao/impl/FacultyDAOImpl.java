@@ -172,7 +172,7 @@ public class FacultyDAOImpl implements FacultyDAO {
     @Override
     public Integer saveReturnId(Faculty faculty) throws SQLException {
 
-        Integer id ;
+        Integer id;
 
         try {
             String sql = "INSERT INTO faculty (name, location, study_field,university_id) VALUES (?, ?, ?,?)";
@@ -257,7 +257,6 @@ public class FacultyDAOImpl implements FacultyDAO {
             System.out.println("error occured " + e.getMessage());
             throw e;
         }
-
 
 
         return facultySubjectDTO;

@@ -145,7 +145,7 @@ public class StudentServiceImpl implements StudentService {
         Set<ConstraintViolation<Student>> violationStudent = validator.validate(updateStudentSubjectDTO.getStudent());
         Set<ConstraintViolation<Subject>> violationSubject = null;
 
-        for(Subject subject : updateStudentSubjectDTO.getSubjectList()){
+        for (Subject subject : updateStudentSubjectDTO.getSubjectList()) {
             violationSubject = validator.validate(subject);
         }
 
@@ -163,19 +163,20 @@ public class StudentServiceImpl implements StudentService {
         }
 
         Integer subjectId;
-        Integer studentId =studentDAO.saveReturnId(updateStudentSubjectDTO.getStudent());
-        for(Subject subject : updateStudentSubjectDTO.getSubjectList()){
+        Integer studentId = studentDAO.saveReturnId(updateStudentSubjectDTO.getStudent());
+        for (Subject subject : updateStudentSubjectDTO.getSubjectList()) {
 
-            subjectId= subjectDAO.saveReturnId(subject);
+            subjectId = subjectDAO.saveReturnId(subject);
 
-            saveStudentSubjectsIds(studentId,subjectId);
+            saveStudentSubjectsIds(studentId, subjectId);
         }
 
     }
-    @Override
-    public void saveStudentSubjectsIds(Integer studentId, Integer subjectId)throws SQLException{
 
-        studentDAO.saveStudentSubjectsIds(studentId,subjectId);
+    @Override
+    public void saveStudentSubjectsIds(Integer studentId, Integer subjectId) throws SQLException {
+
+        studentDAO.saveStudentSubjectsIds(studentId, subjectId);
 
     }
 
@@ -187,34 +188,52 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public void deleteStudentSubjects(Integer studentId, Integer [] subjectsIds ) throws SQLException {
+    public void deleteStudentSubjects(Integer studentId, Integer[] subjectsIds) throws SQLException {
 
         Integer numberOfStudents;
 
-        try{
-            for(Integer subjectId : subjectsIds){
-                numberOfStudents= subjectDAO.getSubjectStudents( studentId,subjectId);
 
-                subjectDAO.removeSubjectStudentRelation( studentId,subjectId);
-                if(  numberOfStudents == 1 ) {
+        for (Integer subjectId : subjectsIds) {
+            try {
+                numberOfStudents = subjectDAO.getSubjectStudents(studentId, subjectId);
+            } catch (SQLException sqlException) {
+                System.out.println("Error in deleteStudentSubjects numberOfStudents,sqlException.message: " + sqlException.getMessage());
+                throw sqlException;
+            }
+
+            try {
+                subjectDAO.removeSubjectStudentRelation(studentId, subjectId);
+
+            } catch (SQLException sqlException) {
+                System.out.println("Error in deleteStudentSubjects removeSubjectStudentRelation ,sqlException.message: " + sqlException.getMessage());
+                throw sqlException;
+            }
+
+            try {
+                if (numberOfStudents == 1) {
 
                     subjectDAO.delete(subjectId);
                 }
                 System.out.println("deleteDTO,for,deleteStudentSubjects");
-
+            } catch (SQLException sqlException) {
+                System.out.println("Error in deleteStudentSubjects  subjectDAO.delete(subjectId) ,sqlException.message: " + sqlException.getMessage());
+                throw sqlException;
             }
-            studentDAO.delete(studentId);
 
         }
-        catch(SQLException sqlException){
-            System.out.println("Error in deleteStudentSubjects,sqlException.message: "+ sqlException.getMessage());
+
+        try {
+            studentDAO.delete(studentId);
+
+        } catch (SQLException sqlException) {
+            System.out.println("Error in deleteStudentSubjects,sqlException.message: " + sqlException.getMessage());
             throw sqlException;
         }
 
 
     }
 
-    public StudentSubjectsOddDTO getOddSubjectsByStudId(Integer id) throws SQLException{
+    public StudentSubjectsOddDTO getOddSubjectsByStudId(Integer id) throws SQLException {
         return studentDAO.getOddSubjectsByStudId(id);
 
 

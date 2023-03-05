@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.sql.SQLException;
 
 import java.util.List;
@@ -68,7 +69,8 @@ public class SubjectController {
     public ResponseEntity<String> add(@RequestBody Subject subject) throws SQLException, ValidationsException {
 
         if (subject == null) {
-            throw new ValidationsException("Missing subject payload");}
+            throw new ValidationsException("Missing subject payload");
+        }
         subjectService.save(subject);
         return ResponseEntity.status(HttpStatus.CREATED).body("Successfully Created");
     }
@@ -77,13 +79,14 @@ public class SubjectController {
     public ResponseEntity<String> update(@RequestBody Subject subject) throws SQLException, ValidationsException {
 
         if (subject == null) {
-            throw new ValidationsException("Missing subject payload");}
+            throw new ValidationsException("Missing subject payload");
+        }
         subjectService.update(subject);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deleteSubject (@PathVariable("id") Integer id) throws SQLException {
+    public ResponseEntity<String> deleteSubject(@PathVariable("id") Integer id) throws SQLException {
 
         subjectService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted");
