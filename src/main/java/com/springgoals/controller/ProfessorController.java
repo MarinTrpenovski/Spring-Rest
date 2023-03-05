@@ -67,7 +67,8 @@ public class ProfessorController {
     public ResponseEntity<String> add(@RequestBody Professor professor) throws SQLException, ValidationsException {
 
         if (professor == null) {
-            throw new ValidationsException("Missing professor payload");}
+            throw new ValidationsException("Missing professor payload");
+        }
         professorService.save(professor);
         return ResponseEntity.status(HttpStatus.CREATED).body("Successfully Created");
     }
@@ -76,7 +77,8 @@ public class ProfessorController {
     public ResponseEntity<String> update(@RequestBody Professor professor) throws SQLException, ValidationsException {
 
         if (professor == null) {
-            throw new ValidationsException("Missing professor payload");}
+            throw new ValidationsException("Missing professor payload");
+        }
         professorService.update(professor);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }

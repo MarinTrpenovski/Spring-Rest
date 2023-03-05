@@ -173,9 +173,10 @@ public class SubjectDAOImpl implements SubjectDAO {
             throw e;
         }
     }
+
     @Override
     public Integer saveReturnId(Subject subject) throws SQLException {
-        Integer id ;
+        Integer id;
 
         try {
             String sql = "INSERT INTO subject (name, semester, credits, subject_professor) VALUES (?, ?, ?, ?)";
@@ -246,10 +247,11 @@ public class SubjectDAOImpl implements SubjectDAO {
         }
 
     }
+
     @Override
     public Integer getSubjectStudents(Integer studentId, Integer subjectId) throws SQLException {
 
-        Integer numberOfStudents=0;
+        Integer numberOfStudents;
         try {
             connection = SingletonConnection.getInstance().getConnection();
 
@@ -261,14 +263,14 @@ public class SubjectDAOImpl implements SubjectDAO {
 
             ResultSet resultSet = statement2.executeQuery();
 
-            numberOfStudents=resultSet.getInt("counterOfStudents");
+            numberOfStudents = resultSet.getInt("counterOfStudents");
 
             System.out.println("number of students is " + numberOfStudents);
         } catch (SQLException e) {
             System.out.println("error in getSubjectStudents " + e.getMessage());
             throw e;
         }
-        return  numberOfStudents;
+        return numberOfStudents;
     }
 }
 

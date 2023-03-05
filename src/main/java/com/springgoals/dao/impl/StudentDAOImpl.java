@@ -178,7 +178,7 @@ public class StudentDAOImpl implements StudentDAO {
     @Override
     public Integer saveReturnId(Student student) throws SQLException {
 
-        Integer id ;
+        Integer id;
 
         try {
             String sql = "INSERT INTO student (name, surname, indeks, location) VALUES (?, ?, ?, ?)";
@@ -203,7 +203,7 @@ public class StudentDAOImpl implements StudentDAO {
             }
         } catch (SQLException e) {
             System.out.println("error occured " + e.getMessage());
-             throw e;
+            throw e;
         }
         return id;
     }
@@ -303,7 +303,7 @@ public class StudentDAOImpl implements StudentDAO {
                 studentSubjectsOddDTO.setStudentName(rs.getString("studentName"));
                 studentSubjectsOddDTO.setIndeks(rs.getInt("indeks"));
 
-                if(subject.getCredits()%2==1){
+                if (subject.getCredits() % 2 == 1) {
                     subjectList.add(subject);
                     sumOfOddCredits += subject.getCredits();
 
@@ -314,9 +314,6 @@ public class StudentDAOImpl implements StudentDAO {
             studentSubjectsOddDTO.setSubjectList(subjectList);
             studentSubjectsOddDTO.setLengthOfList(subjectList.size());
             studentSubjectsOddDTO.setSumOfCredits(sumOfOddCredits);
-            if(subjectList.size() == 0){
-                System.out.println("There are no subject with odd number of credits for student with id " + studentId);
-            }
 
         } catch (SQLException e) {
             System.out.println("error in getOddSubjectsByStudId " + e.getMessage());
@@ -325,23 +322,22 @@ public class StudentDAOImpl implements StudentDAO {
 
         return studentSubjectsOddDTO;
     }
+
     @Override
     public void saveStudentSubjectsIds(Integer studentId, Integer subjectId) throws SQLException {
 
         try {
 
             PreparedStatement statement1;
-            String sql;
+            String sql = "INSERT INTO student_subject_relation (student_id,subject_id) VALUES (?, ?)";
 
-                sql= "INSERT INTO student_subject_relation (student_id,subject_id) VALUES (?, ?)";
-
-                statement1 = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                statement1.setInt(1, studentId);
-                statement1.setInt(2, subjectId);
-                int affectedRows = statement1.executeUpdate();
-                if (affectedRows == 0) {
-                    throw new SQLException("error with subject id " + subjectId);
-                }
+            statement1 = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            statement1.setInt(1, studentId);
+            statement1.setInt(2, subjectId);
+            int affectedRows = statement1.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("error with subject id " + subjectId);
+            }
 
 
         } catch (SQLException e) {
@@ -350,7 +346,6 @@ public class StudentDAOImpl implements StudentDAO {
 
         }
     }
-
 
 
 }

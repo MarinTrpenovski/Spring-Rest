@@ -3,7 +3,6 @@ package com.springgoals.dao.impl;
 import com.springgoals.dao.ProfessorDAO;
 import com.springgoals.dao.SingletonConnection;
 import com.springgoals.model.Professor;
-
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
