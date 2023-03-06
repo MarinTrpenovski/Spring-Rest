@@ -232,7 +232,7 @@ public class StudentServiceImpl implements StudentService {
 
 
     }
-
+    @Override
     public StudentSubjectsOddDTO getOddSubjectsByStudId(Integer id) throws SQLException {
         return studentDAO.getOddSubjectsByStudId(id);
 

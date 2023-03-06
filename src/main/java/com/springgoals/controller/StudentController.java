@@ -81,7 +81,7 @@ public class StudentController {
         }
         Student student = studentService.getById(id);
         if (student == null) {
-            throw new ValidationsException("Missing student payload");
+            throw new ValidationsException("student with id doesn't exist in db");
         }
         studentSubjectDTO = studentService.getSubjectsByStudId(id);
 
@@ -165,8 +165,6 @@ public class StudentController {
         Student student = studentService.getById(id);
         if (student.getId() == null) {
             throw new EntityNotFoundException("Student with id " + id + " not found in DB ");
-        } else {
-            studentService.deleteStudentSubjects(student.getId(), subjectsIds);
         }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted");
     }
