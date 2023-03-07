@@ -188,6 +188,8 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Transactional
+
     public void deleteStudentSubjects(Integer studentId, Integer[] subjectsIds) throws SQLException {
 
         Integer numberOfStudents;
@@ -196,42 +198,27 @@ public class StudentServiceImpl implements StudentService {
         for (Integer subjectId : subjectsIds) {
             try {
                 numberOfStudents = subjectDAO.getSubjectStudents(studentId, subjectId);
-            } catch (SQLException sqlException) {
-                System.out.println("Error in deleteStudentSubjects numberOfStudents,sqlException.message: " + sqlException.getMessage());
-                throw sqlException;
-            }
 
-            try {
+
                 subjectDAO.removeSubjectStudentRelation(studentId, subjectId);
 
-            } catch (SQLException sqlException) {
-                System.out.println("Error in deleteStudentSubjects removeSubjectStudentRelation ,sqlException.message: " + sqlException.getMessage());
-                throw sqlException;
-            }
 
-            try {
                 if (numberOfStudents == 1) {
 
                     subjectDAO.delete(subjectId);
                 }
                 System.out.println("deleteDTO,for,deleteStudentSubjects");
+                studentDAO.delete(studentId);
+
             } catch (SQLException sqlException) {
-                System.out.println("Error in deleteStudentSubjects  subjectDAO.delete(subjectId) ,sqlException.message: " + sqlException.getMessage());
+                System.out.println("Error in deleteStudentSubjects,sqlException.message: " + sqlException.getMessage());
                 throw sqlException;
             }
 
+
         }
-
-        try {
-            studentDAO.delete(studentId);
-
-        } catch (SQLException sqlException) {
-            System.out.println("Error in deleteStudentSubjects,sqlException.message: " + sqlException.getMessage());
-            throw sqlException;
-        }
-
-
     }
+
     @Override
     public StudentSubjectsOddDTO getOddSubjectsByStudId(Integer id) throws SQLException {
         return studentDAO.getOddSubjectsByStudId(id);
