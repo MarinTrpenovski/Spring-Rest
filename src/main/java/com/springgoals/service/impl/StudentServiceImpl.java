@@ -193,18 +193,11 @@ public class StudentServiceImpl implements StudentService {
     public void deleteStudentSubjects(Integer studentId, Integer[] subjectsIds) throws SQLException {
 
         Integer numberOfStudents;
-
-
         for (Integer subjectId : subjectsIds) {
             try {
                 numberOfStudents = subjectDAO.getSubjectStudents(studentId, subjectId);
-
-
                 subjectDAO.removeSubjectStudentRelation(studentId, subjectId);
-
-
                 if (numberOfStudents == 1) {
-
                     subjectDAO.delete(subjectId);
                 }
                 System.out.println("deleteDTO,for,deleteStudentSubjects");
@@ -214,8 +207,6 @@ public class StudentServiceImpl implements StudentService {
                 System.out.println("Error in deleteStudentSubjects,sqlException.message: " + sqlException.getMessage());
                 throw sqlException;
             }
-
-
         }
     }
 
