@@ -1,5 +1,7 @@
 package com.springgoals.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springgoals.exception.EntityNotFoundException;
 import com.springgoals.exception.QueryException;
 import com.springgoals.exception.ValidationsException;
@@ -25,6 +27,8 @@ public class SubjectController {
     private SubjectServiceImpl subjectService;
     @Autowired
     private StudentService studentService;
+
+    ObjectMapper objectMapper = new ObjectMapper();
 
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -66,13 +70,13 @@ public class SubjectController {
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> add(@RequestBody Subject subject) throws SQLException, ValidationsException {
+    public ResponseEntity<String> add(@RequestBody Subject subject) throws SQLException, ValidationsException, JsonProcessingException {
 
         if (subject == null) {
             throw new ValidationsException("Missing subject payload");
         }
         subjectService.save(subject);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Successfully Created");
+        return ResponseEntity.status(HttpStatus.CREATED).body(objectMapper.writeValueAsString("Successfully Created"));
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -85,7 +89,7 @@ public class SubjectController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteSubject(@PathVariable("id") Integer id) throws SQLException {
 
         subjectService.delete(id);

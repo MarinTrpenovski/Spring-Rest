@@ -21,6 +21,7 @@ import javax.validation.Validator;
 
 public class ProfessorServiceImpl implements ProfessorService {
 
+    @Autowired
     private Validator validator;
 
     @Autowired

@@ -1,5 +1,7 @@
 package com.springgoals.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springgoals.exception.EntityNotFoundException;
 import com.springgoals.exception.QueryException;
 import com.springgoals.exception.ValidationsException;
@@ -22,6 +24,7 @@ public class ProfessorController {
     @Autowired
     private ProfessorServiceImpl professorService;
 
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Professor>> getProfessors() throws SQLException {
@@ -46,7 +49,9 @@ public class ProfessorController {
             @RequestParam("primary_subject2") String primary_subject2
     ) throws SQLException, QueryException {
         List<Professor> professors = null;
-        if ((name == null || name.equals("")) && (surname == null || surname.equals("")) && (age == null || age.equals("")) && (primary_subject1 == null || primary_subject1.equals("")) && (primary_subject2 == null || primary_subject2.equals(""))) {
+        if ((name == null || name.equals("")) && (surname == null || surname.equals("")) &&
+                (age == null || age.equals("")) && (primary_subject1 == null || primary_subject1.equals(""))
+                && (primary_subject2 == null || primary_subject2.equals(""))) {
             throw new QueryException("Error occurred: not enough query parameters");
         } else {
             professors = professorService.searchProfessors(name, surname, age, primary_subject1, primary_subject2);
@@ -64,13 +69,13 @@ public class ProfessorController {
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> add(@RequestBody Professor professor) throws SQLException, ValidationsException {
+    public ResponseEntity<String> add(@RequestBody Professor professor) throws SQLException, ValidationsException, JsonProcessingException {
 
         if (professor == null) {
             throw new ValidationsException("Missing professor payload");
         }
         professorService.save(professor);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Successfully Created");
+        return ResponseEntity.status(HttpStatus.CREATED).body(objectMapper.writeValueAsString("Successfully Created"));
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -83,7 +88,7 @@ public class ProfessorController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteProfessor(@PathVariable("id") Integer id) throws SQLException {
 
         professorService.delete(id);

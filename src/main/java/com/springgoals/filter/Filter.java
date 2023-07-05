@@ -3,6 +3,8 @@ package com.springgoals.filter;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
@@ -12,11 +14,19 @@ public class Filter implements javax.servlet.Filter {
     public void init(FilterConfig filterconfig) throws ServletException {}
 
     @Override
-    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
 
-        System.out.println("Remote Host:"+req.getRemoteHost() );
-        System.out.println("Remote Host:"+req.getRemoteAddr() );
-        chain.doFilter(req, resp);//sends request to next resource
+        // System.out.println("servletRequest Remote Host: " + servletRequest.getRemoteHost() );
+        // System.out.println("servletRequest Remote Address: "+servletRequest.getRemoteAddr() );
+        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+        HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
+
+        System.out.println( "httpServletRequest's header's parameter Authorization = " + httpServletRequest.getHeader("Authorization") );
+
+        httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
+        httpServletResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        httpServletResponse.setHeader("Access-Control-Allow-Headers", "*");
+        chain.doFilter(servletRequest, servletResponse);//sends request to next resource
 
 
     }
