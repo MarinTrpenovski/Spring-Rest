@@ -43,9 +43,11 @@ public class FacultyDAOImpl implements FacultyDAO {
                 faculty.setId(resultSet.getInt("id"));
                 faculty.setLocation(resultSet.getString("location"));
                 faculty.setStudy_field(resultSet.getString("study_field"));
+                faculty.setUniversity_id(resultSet.getInt("university_id"));
+
             }
         } catch (SQLException e) {
-            System.out.println("error occured " + e.getMessage());
+            System.out.println("error occurred " + e.getMessage());
             throw e;
         }
 
@@ -61,10 +63,12 @@ public class FacultyDAOImpl implements FacultyDAO {
             ResultSet rs = statement.executeQuery("select * from faculty");
             while (rs.next()) {
                 Faculty faculty = new Faculty();
-                faculty.setName(rs.getString("name"));
                 faculty.setId(rs.getInt("id"));
+                faculty.setName(rs.getString("name"));
                 faculty.setLocation(rs.getString("location"));
                 faculty.setStudy_field(rs.getString("study_field"));
+                faculty.setUniversity_id(rs.getInt("university_id"));
+
                 facultyList.add(faculty);
             }
         } catch (SQLException e) {
@@ -110,10 +114,11 @@ public class FacultyDAOImpl implements FacultyDAO {
 
             while (rs.next()) {
                 Faculty faculty = new Faculty();
-                faculty.setName(rs.getString("name"));
                 faculty.setId(rs.getInt("id"));
+                faculty.setName(rs.getString("name"));
                 faculty.setLocation(rs.getString("location"));
                 faculty.setStudy_field(rs.getString("study_field"));
+                faculty.setUniversity_id(rs.getInt("university_id"));
 
                 facultyList.add(faculty);
             }
@@ -160,7 +165,7 @@ public class FacultyDAOImpl implements FacultyDAO {
 
             int affectedRows = statement1.executeUpdate();
             if (affectedRows == 0) {
-                throw new SQLException("Error in faculty save with affectedRows = statement1.executeUpdate()");
+                throw new SQLException("Error in facultyDAO save");
             }
 
         } catch (SQLException e) {
@@ -185,7 +190,7 @@ public class FacultyDAOImpl implements FacultyDAO {
             int affectedRows = statement1.executeUpdate();
 
             if (affectedRows == 0) {
-                throw new SQLException("error");
+                throw new SQLException("Error in facultyDAO saveReturnId");
             }
 
             try (ResultSet generatedKeys = statement1.getGeneratedKeys()) {
@@ -209,6 +214,11 @@ public class FacultyDAOImpl implements FacultyDAO {
             String sql = "DELETE FROM faculty WHERE id=?";
             PreparedStatement statement1 = connection.prepareStatement(sql);
             statement1.setInt(1, id_deleting);
+
+            int rowsUpdated = statement1.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("faculty with id " + id_deleting + " was deleted");
+            }
 
         } catch (SQLException e) {
             System.out.println("Error during delete faculty " + e.getMessage());

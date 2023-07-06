@@ -20,6 +20,7 @@ import javax.validation.Validator;
 
 public class SubjectServiceImpl implements SubjectService {
 
+    @Autowired
     private Validator validator;
 
     @Autowired

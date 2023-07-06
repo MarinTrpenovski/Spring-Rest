@@ -15,17 +15,17 @@ public class Faculty {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @NotNull(message = "name must be between 1 and 45 characters")
-    @Size(min = 1, max = 45)
+    @NotNull(message = "name must be between 2 and 20  characters")
+    @Size(min = 2, max = 20)
     private String name;
 
-    @NotNull(message = "location must be between 1 and 45 characters")
-    @Size(min = 1, max = 45)
+    @NotNull(message = "location must be between 2 and 20  characters")
+    @Size(min = 2, max = 20)
     private String location;
 
 
-    @NotNull(message = "location must be between 1 and 45 characters")
-    @Size(min = 1, max = 45)
+    @NotNull(message = "location must be between 2 and 20  characters")
+    @Size(min = 2, max = 20)
     private String study_field;
 
     @NotNull(message = "university_id must not be null")

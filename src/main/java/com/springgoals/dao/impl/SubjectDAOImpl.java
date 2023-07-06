@@ -41,8 +41,7 @@ public class SubjectDAOImpl implements SubjectDAO {
                 subject.setName(resultSet.getString("name"));
                 subject.setSemester(resultSet.getString("semester"));
                 subject.setCredits(resultSet.getInt("credits"));
-
-
+                subject.setSubject_professor(resultSet.getInt("subject_professor"));
             }
         } catch (SQLException e) {
             System.out.println("error occured " + e.getMessage());
@@ -68,6 +67,8 @@ public class SubjectDAOImpl implements SubjectDAO {
                 subject.setName(rs.getString("name"));
                 subject.setSemester(rs.getString("semester"));
                 subject.setCredits(rs.getInt("credits"));
+                subject.setSubject_professor(rs.getInt("subject_professor"));
+
                 subjectList.add(subject);
             }
         } catch (SQLException e) {
@@ -117,6 +118,7 @@ public class SubjectDAOImpl implements SubjectDAO {
                 subject.setName(rs.getString("name"));
                 subject.setSemester(rs.getString("semester"));
                 subject.setCredits(rs.getInt("credits"));
+                subject.setSubject_professor(rs.getInt("subject_professor"));
 
                 subjectList.add(subject);
             }

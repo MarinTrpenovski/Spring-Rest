@@ -16,20 +16,20 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @NotNull(message = "name must be between 1 and 45 characters")
-    @Size(min = 1, max = 45)
+    @NotNull(message = "name must be between 2 and 20  characters")
+    @Size(min = 2, max = 20)
     private String name;
 
-    @NotNull(message = "surname must be between 1 and 45 characters")
-    @Size(min = 1, max = 45)
+    @NotNull(message = "surname must be between 2 and 20  characters")
+    @Size(min = 2, max = 20)
     private String surname;
 
-    @NotNull(message = "location must be between 1 and 45 characters")
-    @Size(min = 1, max = 45)
+    @NotNull(message = "location must be between 2 and 20  characters")
+    @Size(min = 2, max = 20)
     private String location;
 
-    @NotNull(message = "indeks must not be null")
-    @Min(value = 1, message = "indeks should not be 0")
+    @NotNull(message = "index must not be null")
+    @Min(value = 1, message = "index should not be 0")
     private Integer indeks;
 
     //    List<Subject> subjectList;

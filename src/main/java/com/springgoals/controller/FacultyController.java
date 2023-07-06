@@ -1,5 +1,7 @@
 package com.springgoals.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springgoals.exception.EntityNotFoundException;
 import com.springgoals.exception.QueryException;
 import com.springgoals.exception.ValidationsException;
@@ -18,11 +20,13 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping(value = "/api/faculty")
+@RequestMapping("/api/faculty")
 public class FacultyController {
 
     @Autowired
     private FacultyServiceImpl facultyService;
+
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Faculty>> getFaculties() throws SQLException {
@@ -76,13 +80,13 @@ public class FacultyController {
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> add(@RequestBody Faculty faculty) throws SQLException, ValidationsException {
+    public ResponseEntity<String> add(@RequestBody Faculty faculty) throws SQLException, ValidationsException, JsonProcessingException {
 
         if (faculty == null) {
             throw new ValidationsException("Missing faculty payload");
         }
         facultyService.save(faculty);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Successfully Created");
+        return ResponseEntity.status(HttpStatus.CREATED).body(objectMapper.writeValueAsString("Successfully Created"));
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -95,7 +99,7 @@ public class FacultyController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteFaculty(@PathVariable("id") Integer id) throws SQLException {
 
         facultyService.delete(id);

@@ -1,5 +1,7 @@
 package com.springgoals.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springgoals.exception.EntityNotFoundException;
 import com.springgoals.exception.QueryException;
 import com.springgoals.exception.ValidationsException;
@@ -29,6 +31,7 @@ public class StudentController {
 
     @Autowired
     private SubjectServiceImpl subjectService;
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Student>> getStudents() throws SQLException {
@@ -51,7 +54,7 @@ public class StudentController {
             @RequestParam("location") String location,
             @RequestParam("indeks") Integer indeks
     ) throws SQLException, QueryException {
-        List<Student> students = null;
+        List<Student> students ;
         if ((name == null || name.equals("")) && (surname == null || surname.equals("")) && (location == null || location.equals("")) && (indeks == null || indeks.equals(""))) {
             throw new QueryException("Error occurred: not enough query parameters");
         } else {
@@ -106,14 +109,14 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.OK).body(studentSubjectsOddDTO);
     }
 
-    @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> add(@RequestBody Student student) throws SQLException, ValidationsException {
+    @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.ALL_VALUE)
+    public ResponseEntity<String> add(@RequestBody Student student) throws SQLException, ValidationsException, JsonProcessingException {
 
         if (student == null) {
             throw new ValidationsException("Missing student payload");
         }
         studentService.save(student);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Successfully Created");
+        return ResponseEntity.status(HttpStatus.CREATED).body(objectMapper.writeValueAsString("Successfully Created"));
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -148,7 +151,7 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteStudent(@PathVariable("id") Integer id) throws SQLException {
 
         studentService.delete(id);

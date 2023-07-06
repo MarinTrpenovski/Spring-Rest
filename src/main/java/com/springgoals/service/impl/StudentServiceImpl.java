@@ -25,6 +25,7 @@ import javax.validation.Validator;
 
 public class StudentServiceImpl implements StudentService {
 
+    @Autowired
     private Validator validator;
 
     @Autowired

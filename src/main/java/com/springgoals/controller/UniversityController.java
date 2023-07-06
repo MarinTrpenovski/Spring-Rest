@@ -1,5 +1,7 @@
 package com.springgoals.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springgoals.exception.QueryException;
 import com.springgoals.exception.EntityNotFoundException;
 import com.springgoals.exception.ValidationsException;
@@ -24,6 +26,7 @@ public class UniversityController {
     @Autowired
     private UniversityServiceImpl universityService;
 
+    ObjectMapper objectMapper = new ObjectMapper();
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<University>> getUniversitys() throws SQLException {
 
@@ -77,12 +80,12 @@ public class UniversityController {
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> add(@RequestBody University university) throws SQLException, ValidationsException {
+    public ResponseEntity<String> add(@RequestBody University university) throws SQLException, ValidationsException, JsonProcessingException {
 
         if (university == null) {
             throw new ValidationsException("Missing university payload");}
         universityService.save(university);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Successfully Created");
+        return ResponseEntity.status(HttpStatus.CREATED).body(objectMapper.writeValueAsString("Successfully Created"));
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -103,7 +106,7 @@ public class UniversityController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully created");
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteUniversity(@PathVariable("id") Integer id) throws SQLException {
 
         universityService.delete(id);

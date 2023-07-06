@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -16,24 +17,25 @@ public class Professor {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @NotNull(message = "name must be between 1 and 45 characters")
-    @Size(min = 1, max = 45)
+    @NotNull(message = "name must be between 2 and 20  characters")
+    @Size(min = 2, max = 20)
     private String name;
 
-    @NotNull(message = "surname must be between 1 and 45 characters")
-    @Size(min = 1, max = 45)
+    @NotNull(message = "surname must be between 2 and 20  characters")
+    @Size(min = 2, max = 20)
     private String surname;
 
     @NotNull(message = "age must not be null")
-    @Min(value = 18, message = "Age should not be less than 18")
+    @Min(value = 27, message = "Age should not be less than 27")
+    @Max(value = 65, message = "Age should not be more than 65")
     private Integer age;
 
-    @NotNull(message = "primary_subject1 must be between 1 and 45 characters")
-    @Size(min = 1, max = 45)
+    @NotNull(message = "primary_subject1 must be between 2 and 20 characters")
+    @Size(min = 2, max = 20)
     private String primary_subject1;
 
-    @NotNull(message = "primary_subject2 must be between 1 and 45 characters")
-    @Size(min = 1, max = 45)
+    @NotNull(message = "primary_subject2 must be between 2 and 20 characters")
+    @Size(min = 2, max = 20)
     private String primary_subject2;
 
     @NotNull(message = "professor_faculty must not be null")

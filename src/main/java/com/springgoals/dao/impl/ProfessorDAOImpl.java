@@ -43,6 +43,8 @@ public class ProfessorDAOImpl implements ProfessorDAO {
                 professor.setPrimary_subject1(resultSet.getString("primary_subject1"));
                 professor.setPrimary_subject2(resultSet.getString("primary_subject2"));
                 professor.setAge(resultSet.getInt("age"));
+                professor.setProfessor_faculty(resultSet.getInt("professor_faculty"));
+
 
             }
         } catch (SQLException e) {
@@ -68,6 +70,8 @@ public class ProfessorDAOImpl implements ProfessorDAO {
                 professor.setAge(rs.getInt("age"));
                 professor.setPrimary_subject1(rs.getString("primary_subject1"));
                 professor.setPrimary_subject2(rs.getString("primary_subject2"));
+                professor.setProfessor_faculty(rs.getInt("professor_faculty"));
+
                 professorList.add(professor);
             }
         } catch (SQLException e) {
@@ -122,6 +126,7 @@ public class ProfessorDAOImpl implements ProfessorDAO {
                 professor.setAge(rs.getInt("age"));
                 professor.setPrimary_subject1(rs.getString("primary_subject1"));
                 professor.setPrimary_subject2(rs.getString("primary_subject2"));
+                professor.setProfessor_faculty(rs.getInt("professor_faculty"));
 
                 professorList.add(professor);
             }
@@ -158,7 +163,6 @@ public class ProfessorDAOImpl implements ProfessorDAO {
 
     @Override
     public void save(Professor professor) throws SQLException {
-
 
         try {
             String sql = "INSERT INTO professor (name, surname, primary_subject1, " +

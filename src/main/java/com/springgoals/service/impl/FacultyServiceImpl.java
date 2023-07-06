@@ -22,6 +22,7 @@ import javax.validation.Validator;
 @Service
 public class FacultyServiceImpl implements FacultyService {
 
+    @Autowired
     private Validator validator;
 
     @Autowired
@@ -69,7 +70,7 @@ public class FacultyServiceImpl implements FacultyService {
     @Transactional
     @Override
     public void update(Faculty faculty) throws SQLException, ValidationsException {
-        Set<ConstraintViolation<Faculty>> violations = validator.validate(faculty);
+        Set<ConstraintViolation<Faculty>> violations = this.validator.validate(faculty);
 
         if (!violations.isEmpty()) {
             StringBuilder sb = new StringBuilder();
@@ -81,7 +82,6 @@ public class FacultyServiceImpl implements FacultyService {
         }
         facultyDAO.update(faculty);
     }
-
 
     @Override
     @Transactional

@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -17,16 +18,17 @@ public class Subject {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @NotNull(message = "name must be between 1 and 45 characters")
-    @Size(min = 1, max = 45)
+    @NotNull(message = "name must be between 2 and 20  characters")
+    @Size(min = 2, max = 20)
     private String name;
 
-    @NotNull(message = "semester must be between 1 and 45 characters")
-    @Size(min = 1, max = 45)
+    @NotNull(message = "semester must be between 2 and 20  characters")
+    @Size(min = 2, max = 20)
     private String semester;
 
     @NotNull(message = "credits must not be null")
     @Min(value = 1, message = "credits should not be 0 or less than 0")
+    @Max(value = 10, message = "credits should not be more than 10")
     private Integer credits;
 
     @NotNull(message = "subject_professor must not be null")
