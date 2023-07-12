@@ -16,8 +16,6 @@ public class Filter implements javax.servlet.Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
 
-        // System.out.println("servletRequest Remote Host: " + servletRequest.getRemoteHost() );
-        // System.out.println("servletRequest Remote Address: "+servletRequest.getRemoteAddr() );
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
 
