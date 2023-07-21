@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-
 public class UniversityDAOImpl implements UniversityDAO {
 
     static Connection connection;
@@ -40,8 +39,8 @@ public class UniversityDAOImpl implements UniversityDAO {
             ResultSet resultSet = statement.executeQuery(sql.toString());
 
             while (resultSet.next()) {
-                university.setName(resultSet.getString("name"));
                 university.setId(resultSet.getInt("id"));
+                university.setName(resultSet.getString("name"));
                 university.setDescription(resultSet.getString("description"));
 
             }
@@ -200,7 +199,7 @@ public class UniversityDAOImpl implements UniversityDAO {
                 }
             }
         } catch (SQLException e) {
-            System.out.println("error occured " + e.getMessage());
+            System.out.println("error occurred " + e.getMessage());
             throw e;
         }
         return id;

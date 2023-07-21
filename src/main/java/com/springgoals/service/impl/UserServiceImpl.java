@@ -1,37 +1,103 @@
 package com.springgoals.service.impl;
 
 import com.springgoals.dao.impl.UserDAOImpl;
+import com.springgoals.exception.EmailExistsException;
+import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.User;
 import com.springgoals.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
 
+import javax.transaction.Transactional;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+
+@Service
 public class UserServiceImpl implements UserService {
 
+    @Autowired
+    private Validator validator;
+
+    @Autowired
     private UserDAOImpl userDAO = new UserDAOImpl();
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
-    public List<User> getAll() {
+    public List<User> getAll() throws SQLException  {
         return userDAO.getAll();
     }
 
     @Override
-    public User getById(Integer id) {
-        return userDAO.getById(id);
+    public User getById(Integer id) throws SQLException  {
+        User user = userDAO.getById(id);
+        return user;
     }
 
     @Override
-    public void update(User user) {
+    @Transactional
+    public void update(User user)
+            throws SQLException, ValidationsException {
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+
+        if (!violations.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (ConstraintViolation<User> constraintViolation : violations) {
+                sb.append(constraintViolation.getMessage());
+            }
+
+            throw new ValidationsException("Error occurred: " + sb.toString());
+        }
         userDAO.update(user);
     }
 
     @Override
-    public void save(User user) {
+    @Transactional
+    public void save(User user)
+            throws SQLException, ValidationsException, EmailExistsException{
+
+        if ( checkUsers(user.getEmail()) ) {
+            throw new EmailExistsException("There is already a user with the given email adress" );
+        }
+
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+
+        if (!violations.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            for (ConstraintViolation<User> constraintViolation : violations) {
+                sb.append(constraintViolation.getMessage());
+            }
+
+            throw new ValidationsException("Error occurred: " + sb.toString());
+        }
+
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+
         userDAO.save(user);
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(Integer id) throws SQLException {
         userDAO.delete(id);
+    }
+
+    @Override
+    public boolean checkUsers(String email) throws SQLException {
+
+        StringBuilder sql = new StringBuilder("Select * from user where 1=1");
+        if (email != null && !email.equals("")) {
+            sql.append(" and email = \"");
+            sql.append(email);
+            sql.append("\"");
+        }
+
+        return userDAO.checkUsers(sql.toString());
     }
 }
