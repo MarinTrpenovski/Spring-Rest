@@ -21,7 +21,6 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
 @Service
-
 public class UniversityServiceImpl implements UniversityService {
 
     @Autowired
@@ -69,7 +68,8 @@ public class UniversityServiceImpl implements UniversityService {
 
     @Override
     @Transactional
-    public void update(University university) throws SQLException, ValidationsException {
+    public void update(University university)
+            throws SQLException, ValidationsException {
         Set<ConstraintViolation<University>> violations = validator.validate(university);
 
         if (!violations.isEmpty()) {

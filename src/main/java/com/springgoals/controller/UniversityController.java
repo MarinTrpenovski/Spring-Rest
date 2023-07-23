@@ -80,17 +80,18 @@ public class UniversityController {
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> add(@RequestBody University university) throws SQLException, ValidationsException, JsonProcessingException {
-
+    public ResponseEntity<String> add(@RequestBody University university)
+            throws SQLException, ValidationsException, JsonProcessingException {
         if (university == null) {
             throw new ValidationsException("Missing university payload");}
         universityService.save(university);
-        return ResponseEntity.status(HttpStatus.CREATED).body(objectMapper.writeValueAsString("Successfully Created"));
+        return ResponseEntity.status(HttpStatus.CREATED).
+                body(objectMapper.writeValueAsString("Successfully Created"));
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> update(@RequestBody University university) throws SQLException, ValidationsException {
-
+    public ResponseEntity<String> update(@RequestBody University university)
+            throws SQLException, ValidationsException {
         if (university == null) {
             throw new ValidationsException("Missing university payload");}
         universityService.update(university);
@@ -107,7 +108,8 @@ public class UniversityController {
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deleteUniversity(@PathVariable("id") Integer id) throws SQLException {
+    public ResponseEntity<String> deleteUniversity(@PathVariable("id") Integer id)
+            throws SQLException {
 
         universityService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted");
