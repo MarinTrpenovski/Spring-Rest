@@ -6,16 +6,18 @@ import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.User;
 import com.springgoals.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Set;
 
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Set;
+
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -29,21 +31,25 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Bean
+    public PasswordEncoder encoder() {
+        return new BCryptPasswordEncoder();
+    }
+
     @Override
-    public List<User> getAll() throws SQLException  {
+    public List<User> getAll() throws SQLException {
         return userDAO.getAll();
     }
 
     @Override
-    public User getById(Integer id) throws SQLException  {
+    public User getById(Integer id) throws SQLException {
         User user = userDAO.getById(id);
         return user;
     }
 
     @Override
     @Transactional
-    public void update(User user)
-            throws SQLException, ValidationsException {
+    public void update(User user) throws SQLException, ValidationsException {
         Set<ConstraintViolation<User>> violations = validator.validate(user);
 
         if (!violations.isEmpty()) {
@@ -59,11 +65,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void save(User user)
-            throws SQLException, ValidationsException, EmailExistsException{
+    public void save(User user) throws SQLException, ValidationsException, EmailExistsException {
 
-        if ( checkUsers(user.getEmail()) ) {
-            throw new EmailExistsException("There is already a user with the given email adress" );
+        if (checkUsers(user.getEmail())) {
+            throw new EmailExistsException("There is already a user with the given email address");
         }
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);

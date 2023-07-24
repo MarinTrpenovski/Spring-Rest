@@ -14,4 +14,5 @@
     <context:component-scan base-package="com.springgoals.*"/>
     <mvc:annotation-driven/>
 
+
 </beans>

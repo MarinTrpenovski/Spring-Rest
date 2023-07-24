@@ -17,6 +17,5 @@ public interface UserDAO {
 
     void save (User user) throws SQLException;
 
-    boolean checkUsers(String sql)
-            throws SQLException;
+    boolean checkUsers(String sql) throws SQLException;
 }
