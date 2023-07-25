@@ -42,9 +42,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> add(@RequestBody User user)
-            throws SQLException, ValidationsException,
-            JsonProcessingException, EmailExistsException {
+    public ResponseEntity<String> add(@RequestBody User user) throws SQLException, ValidationsException, JsonProcessingException, EmailExistsException {
         if (user == null) {
             throw new ValidationsException("Missing user payload");
         }
@@ -54,8 +52,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> update(@RequestBody User user)
-            throws SQLException, ValidationsException  {
+    public ResponseEntity<String> update(@RequestBody User user) throws SQLException, ValidationsException  {
         if (user == null) {
             throw new ValidationsException("Missing user payload");
         }
@@ -64,8 +61,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deleteUser(@PathVariable("id") Integer id)
-            throws SQLException {
+    public ResponseEntity<String> deleteUser(@PathVariable("id") Integer id) throws SQLException {
 
         userService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted");
