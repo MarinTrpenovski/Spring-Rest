@@ -105,4 +105,27 @@ public class UserServiceImpl implements UserService {
 
         return userDAO.checkUsers(sql.toString());
     }
+
+    @Override
+    public boolean loginUser(String email, String password) throws SQLException {
+
+
+
+        String encodedPassword = passwordEncoder.encode( password );
+
+        StringBuilder sql = new StringBuilder("Select * from user where 1=1");
+        if (email != null && !email.equals("")) {
+            sql.append(" and email = \"");
+            sql.append(email);
+            sql.append("\"");
+        }
+
+        if (encodedPassword != null && !encodedPassword.equals("")) {
+            sql.append(" and password = \"");
+            sql.append(password);
+            sql.append("\"");
+        }
+
+        return userDAO.checkUsers(sql.toString());
+    }
 }

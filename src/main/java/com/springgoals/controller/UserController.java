@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springgoals.exception.EmailExistsException;
 import com.springgoals.exception.EntityNotFoundException;
+import com.springgoals.exception.QueryException;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.User;
 import com.springgoals.service.impl.UserServiceImpl;
@@ -65,6 +66,29 @@ public class UserController {
 
         userService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted");
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> loginUser(
+            @RequestParam("email") String email,
+            @RequestParam("password") String password // 12345
+    ) throws SQLException, QueryException {
+        String checkUsersMessage ;
+
+        if ( (email == null || email.equals("")) || (password == null || password.equals("")) ){
+            throw new QueryException("Error occurred: no email or password parameter present");
+        } else {
+
+            if(userService.loginUser( email, password )){
+
+                checkUsersMessage = "your credentials are valid";
+            }
+            else{
+                checkUsersMessage = "your credentials are not valid";
+
+            }
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(checkUsersMessage);
     }
 
 }
