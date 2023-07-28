@@ -14,5 +14,8 @@ public class AuthenFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         chain.doFilter(request, response);
+
+        System.out.println( "Called Auth filter" );
+
     }
 }

@@ -40,12 +40,12 @@
 
   <filter-mapping>
     <filter-name>LogFilter</filter-name>
-    <url-pattern>/*</url-pattern>
+    <url-pattern>/api</url-pattern>
   </filter-mapping>
 
   <filter-mapping>
     <filter-name>AuthenFilter</filter-name>
-    <url-pattern>/*</url-pattern>
+    <url-pattern>/auth</url-pattern>
   </filter-mapping>
 
 

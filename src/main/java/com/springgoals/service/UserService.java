@@ -21,4 +21,6 @@ public interface UserService {
 
     boolean checkUsers(String email)
             throws SQLException;
+
+    boolean loginUser(String email, String password) throws SQLException;
 }
