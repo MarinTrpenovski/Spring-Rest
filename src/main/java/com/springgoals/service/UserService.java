@@ -19,8 +19,7 @@ public interface UserService {
 
     void delete(Integer id)throws SQLException;
 
-    boolean checkUsers(String email)
-            throws SQLException;
+    boolean checkUsers(String email) throws SQLException;
 
-    boolean loginUser(String email, String password) throws SQLException;
+    String loginUser(String email, String password) throws SQLException;
 }
