@@ -4,6 +4,7 @@ import com.springgoals.dao.impl.UserDAOImpl;
 import com.springgoals.exception.EmailExistsException;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.User;
+import com.springgoals.security.JwtTokenUtility;
 import com.springgoals.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -26,10 +27,14 @@ public class UserServiceImpl implements UserService {
     private Validator validator;
 
     @Autowired
-    private UserDAOImpl userDAO = new UserDAOImpl();
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private UserDAOImpl userDAO = new UserDAOImpl();
+
+
+    @Autowired
+    private JwtTokenUtility jwtTokenUtilitator = new JwtTokenUtility();
 
     @Bean
     public PasswordEncoder encoder() {
@@ -107,9 +112,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean loginUser(String email, String password) throws SQLException {
-
-
+    public String loginUser(String email, String password) throws SQLException {
 
         String encodedPassword = passwordEncoder.encode( password );
 
@@ -126,6 +129,8 @@ public class UserServiceImpl implements UserService {
             sql.append("\"");
         }
 
-        return userDAO.checkUsers(sql.toString());
+        User user =  userDAO.loginUser(sql.toString());
+
+        return  jwtTokenUtilitator.generateAccessToken( user ) ;
     }
 }
