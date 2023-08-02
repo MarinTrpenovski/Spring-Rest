@@ -1,7 +1,12 @@
 package com.springgoals.service.impl;
 
+
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.springgoals.dao.impl.UserDAOImpl;
 import com.springgoals.exception.EmailExistsException;
+import com.springgoals.exception.EntityNotFoundException;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.User;
 import com.springgoals.security.JwtTokenUtility;
@@ -16,6 +21,7 @@ import javax.transaction.Transactional;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -34,7 +40,10 @@ public class UserServiceImpl implements UserService {
 
 
     @Autowired
-    private JwtTokenUtility jwtTokenUtilitator = new JwtTokenUtility();
+    private JwtTokenUtility jwtTokenUtilitator;
+
+    //@Autowired
+    private JWTVerifier jwtVerifier ;
 
     @Bean
     public PasswordEncoder encoder() {
@@ -111,6 +120,22 @@ public class UserServiceImpl implements UserService {
         return userDAO.checkUsers(sql.toString());
     }
 
+
+    @Override
+    public boolean isJWTExpired(String jwtToken) {
+    boolean isExpired = false;
+        try {
+            DecodedJWT decodedJWT = jwtVerifier.verify(jwtToken);
+            Date expiresAt = decodedJWT.getExpiresAt();
+            isExpired = expiresAt.before(new Date());
+        } catch (JWTVerificationException e) {
+            System.out.println( "jwt token is not valid or expired" );
+        }
+
+        return isExpired ;
+    }
+
+
     @Override
     public String loginUser(String email, String password) throws SQLException {
 
@@ -131,6 +156,10 @@ public class UserServiceImpl implements UserService {
 
         User user =  userDAO.loginUser(sql.toString());
 
-        return  jwtTokenUtilitator.generateAccessToken( user ) ;
+        if (user.getId() == null) {
+            throw new EntityNotFoundException("User with the provided credentials is not found in DB.");
+        }
+
+        return  jwtTokenUtilitator.generateJWTToken( user ) ;
     }
 }
