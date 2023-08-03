@@ -1,11 +1,11 @@
 package com.springgoals.controller;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.auth0.jwt.interfaces.JWTVerifier;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.springgoals.exception.EmailExistsException;
-import com.springgoals.exception.EntityNotFoundException;
-import com.springgoals.exception.QueryException;
-import com.springgoals.exception.ValidationsException;
+import com.springgoals.exception.*;
 import com.springgoals.model.User;
 import com.springgoals.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -74,7 +77,6 @@ public class UserController {
             @RequestParam("password") String password
     ) throws SQLException, QueryException {
 
-
         if ( (email == null || email.equals("")) || (password == null || password.equals("")) ){
             throw new QueryException("Error occurred: no email or password parameter present");
         }
@@ -83,4 +85,17 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body( loginUserToken );
     }
 
+    @RequestMapping(value = "/verify", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> verifyToken(ServletRequest servletRequest) throws JWTVerificationException, ExpiryException {
+
+        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+        String jwtToken = httpServletRequest.getHeader("Authorization")  ;
+
+
+        if (userService.isJWTExpired(jwtToken) ){
+            throw new ExpiryException("Error occurred: token is expired");
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body( jwtToken );
+    }
 }
