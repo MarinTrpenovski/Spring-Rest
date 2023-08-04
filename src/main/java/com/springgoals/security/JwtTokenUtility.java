@@ -16,6 +16,7 @@ public class JwtTokenUtility {
     @Value("${app.jwt.secret}")
     private String SECRET_KEY;
 
+
     public String generateJWTToken(User user) {
         return Jwts.builder()
                 .setSubject(String.format("%s,%s", user.getId(), user.getEmail()))

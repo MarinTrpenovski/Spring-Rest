@@ -19,7 +19,7 @@ public class Filter implements javax.servlet.Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
 
-        System.out.println( "httpServletRequest's header's parameter Authorization = " + httpServletRequest.getHeader("Authorization") );
+        System.out.println( "httpServletRequest's header's parameter Authorization ==== " + httpServletRequest.getHeader("Authorization") );
 
         httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
         httpServletResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
