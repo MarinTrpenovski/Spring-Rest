@@ -21,7 +21,7 @@ public interface UserService {
 
     boolean checkUsers(String email) throws SQLException;
 
-    boolean isJWTExpired(String jwtToken);
+    boolean isJWTnotValidOrExpired(String jwtToken);
 
     String loginUser(String email, String password) throws SQLException;
 }

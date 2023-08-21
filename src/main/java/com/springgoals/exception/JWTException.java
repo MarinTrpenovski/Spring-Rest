@@ -1,6 +1,6 @@
 package com.springgoals.exception;
 
-public class ExpiryException extends Exception {
+public class JWTException extends Exception {
 
 
     private String message;
@@ -11,7 +11,7 @@ public class ExpiryException extends Exception {
         return message;
     }
 
-    public ExpiryException(String message) {
+    public JWTException(String message) {
         super(message);
         this.message = message;
     }

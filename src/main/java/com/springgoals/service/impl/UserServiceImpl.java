@@ -122,14 +122,17 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public boolean isJWTExpired(String jwtToken) {
-    boolean isExpired = false;
+    public boolean isJWTnotValidOrExpired(String jwtToken) {
+        boolean isExpired = false;
+        boolean notVerified = true;
+
         try {
             DecodedJWT decodedJWT = jwtVerifier.verify(jwtToken);
             Date expiresAt = decodedJWT.getExpiresAt();
             isExpired = expiresAt.before(new Date());
         } catch (JWTVerificationException e) {
             System.out.println( "jwt token is not valid or expired" );
+            return notVerified;
         }
 
         return isExpired ;
