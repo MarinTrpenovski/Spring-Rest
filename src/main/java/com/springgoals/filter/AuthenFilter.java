@@ -1,46 +1,59 @@
 package com.springgoals.filter;
 
+import com.springgoals.security.JwtTokenUtility;
 import com.springgoals.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.*;
-import javax.servlet.Filter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import com.auth0.jwt.exceptions.JWTVerificationException;
 
-public class AuthenFilter implements Filter {
+import java.io.IOException;
+
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+@Component
+public class AuthenFilter extends OncePerRequestFilter {
 
     @Autowired
     private UserServiceImpl userService ;
 
-    public void init(FilterConfig config) throws ServletException {
-    }
+    @Autowired
+    private JwtTokenUtility jwtTokenUtilitator;
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws ServletException, IOException {
+    public void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain chain) throws ServletException, IOException {
 
-        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
-        HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
+        System.out.println( "Called Auth filter !" );
 
-        final String jwtToken = httpServletRequest.getHeader("Authorization");
 
-        if(  jwtToken != null ){
-            try{
-                if( userService.isJWTnotValidOrExpired( jwtToken) != true )
-                    chain.doFilter(servletRequest, servletResponse);
-            }
-            catch (JWTVerificationException e) {
-                System.out.println( "jwt token is not valid or expired" );
-            }
-            System.out.println("Error occurred: token is not valid or expired");
+        final String jwtToken = request.getHeader("Authorization");
+
+        if(jwtToken == null) {
+            System.out.println( "jwt token is missing" );
+            chain.doFilter(request, response);
+            return;
         }
 
-        System.out.println( "Called Auth filter !!!" );
+        if( userService.isJWTnotValidOrExpired( jwtToken) == true ) {
+            System.out.println( "jwt token is not valid or expired" );
+            chain.doFilter(request, response);
+            return;
+        }
+
+        String[] jwtClaims = jwtTokenUtilitator.getSubject(jwtToken).split(",");
+
+        String emailFromToken = jwtClaims[1];
+
+        if( emailFromToken != null) {
+            System.out.println( "User is authenticated" );
+        }
+        chain.doFilter(request, response);
 
     }
 
-    public void destroy() {
-    }
 }

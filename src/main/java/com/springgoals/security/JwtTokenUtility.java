@@ -3,6 +3,7 @@ package com.springgoals.security;
 import java.util.Date;
 
 import com.springgoals.model.User;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Value;
 
 import io.jsonwebtoken.Jwts;
@@ -20,11 +21,24 @@ public class JwtTokenUtility {
     public String generateJWTToken(User user) {
         return Jwts.builder()
                 .setSubject(String.format("%s,%s", user.getId(), user.getEmail()))
-                .setIssuer("CodeJava")
+                .setIssuer( user.getName() )
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRE_DURATION))
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
                 .compact();
 
     }
+
+
+    public String getSubject(String jwtToken) {
+        return parseClaims(jwtToken).getSubject();
+    }
+
+    private Claims parseClaims(String jwtToken) {
+        return Jwts.parser()
+                .setSigningKey(SECRET_KEY)
+                .parseClaimsJws(jwtToken)
+                .getBody();
+    }
+
 }
