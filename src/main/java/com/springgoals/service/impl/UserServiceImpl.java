@@ -1,6 +1,5 @@
 package com.springgoals.service.impl;
 
-
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -123,19 +122,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isJWTnotValidOrExpired(String jwtToken) {
-        boolean isExpired = false;
-        boolean notVerified = true;
+        boolean isExpiredOrNotVerified ;
 
         try {
             DecodedJWT decodedJWT = jwtVerifier.verify(jwtToken);
             Date expiresAt = decodedJWT.getExpiresAt();
-            isExpired = expiresAt.before(new Date());
+            isExpiredOrNotVerified = expiresAt.before(new Date());
         } catch (JWTVerificationException e) {
             System.out.println( "jwt token is not valid or expired" );
-            return notVerified;
+            return true;
         }
 
-        return isExpired ;
+        return isExpiredOrNotVerified ;
     }
 
 

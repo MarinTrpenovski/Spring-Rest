@@ -92,10 +92,9 @@ public class UserController {
 
         if (jwtToken == null) {
             return ResponseEntity.status(HttpStatus.OK).body( "jwtToken is missing" );
-            // return ResponseEntity.status(HttpStatus.OK).body( "header Authorization is missing" );
         }
 
-        if ( userService.isJWTnotValidOrExpired( jwtToken) != true ){
+        if ( userService.isJWTnotValidOrExpired( jwtToken) == true ){
             throw new JWTException("Error occurred: token is not valid or expired");
         }
 
