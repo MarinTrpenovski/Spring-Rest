@@ -11,10 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
-public class AuthenFilter extends OncePerRequestFilter {
+public class AuthenFilter implements javax.servlet.Filter {
 
     @Autowired
     private UserServiceImpl userService ;
@@ -23,25 +22,35 @@ public class AuthenFilter extends OncePerRequestFilter {
     private JwtTokenUtility jwtTokenUtilitator;
 
     @Override
-    public void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain chain) throws ServletException, IOException {
+    public void init(FilterConfig filterconfig) throws ServletException {}
 
-        System.out.println( "Called Auth filter !" );
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
 
+        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+        HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
 
-        final String jwtToken = request.getHeader("Authorization");
+        System.out.println( "Called AuthFilter: header Authorization : " + httpServletRequest.getHeader("Authorization") );
 
-        if(jwtToken == null) {
-            System.out.println( "jwt token is missing" );
-            chain.doFilter(request, response);
+        if( httpServletRequest.getServletPath().contains("/api/user/login") ) {
+            System.out.println( "request from login url" );
+
             return;
         }
 
-        if( userService.isJWTnotValidOrExpired( jwtToken) == true ) {
+        final String jwtToken = httpServletRequest.getHeader("Authorization");
+
+        System.out.println( "jwt token in AuthFilter = " + jwtToken );
+
+        if(jwtToken == null) {
+            System.out.println( "jwt token is missing" );
+
+            return;
+        }
+
+        if( userService.isJWTnotValidOrExpired( jwtToken) ) {
             System.out.println( "jwt token is not valid or expired" );
-            chain.doFilter(request, response);
+
             return;
         }
 
@@ -52,8 +61,11 @@ public class AuthenFilter extends OncePerRequestFilter {
         if( emailFromToken != null) {
             System.out.println( "User is authenticated" );
         }
-        chain.doFilter(request, response);
+        chain.doFilter(httpServletRequest, httpServletResponse);
 
     }
+
+    @Override
+    public void destroy() {}
 
 }
