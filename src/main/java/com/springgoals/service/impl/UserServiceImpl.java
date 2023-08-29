@@ -1,5 +1,6 @@
 package com.springgoals.service.impl;
 
+import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -10,6 +11,7 @@ import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.User;
 import com.springgoals.security.JwtTokenUtility;
 import com.springgoals.service.UserService;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -122,25 +124,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isJWTnotValidOrExpired(String jwtToken) {
-        boolean isExpiredOrNotVerified ;
 
-        try {
-            DecodedJWT decodedJWT = jwtVerifier.verify(jwtToken);
-            Date expiresAt = decodedJWT.getExpiresAt();
-            isExpiredOrNotVerified = expiresAt.before(new Date());
-        } catch (JWTVerificationException e) {
-            System.out.println( "jwt token is not valid or expired" );
-            return true;
-        }
-
-        return isExpiredOrNotVerified ;
+        return !jwtTokenUtilitator.validateJwtToken(jwtToken);
     }
 
 
     @Override
     public String loginUser(String email, String password) throws SQLException {
 
-        String encodedPassword = passwordEncoder.encode( password );
+        // String encodedPassword = passwordEncoder.encode( password );
+        String encodedPassword = password;
 
         StringBuilder sql = new StringBuilder("Select * from user where 1=1");
         if (email != null && !email.equals("")) {
@@ -154,6 +147,10 @@ public class UserServiceImpl implements UserService {
             sql.append(password);
             sql.append("\"");
         }
+
+        System.out.println("encodedpassword = " + encodedPassword );
+        System.out.println("email = " + email );
+        System.out.println("sql.toString() = " + sql.toString() );
 
         User user =  userDAO.loginUser(sql.toString());
 

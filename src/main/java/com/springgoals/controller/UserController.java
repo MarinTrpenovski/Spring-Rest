@@ -77,6 +77,7 @@ public class UserController {
 
         if ( (email == null || email.equals("")) || (password == null || password.equals("")) ){
             throw new QueryException("Error occurred: no email or password parameter present");
+
         }
         String loginUserToken =  userService.loginUser( email, password ) ;
 
@@ -90,12 +91,14 @@ public class UserController {
 
         String jwtToken = httpServletRequest.getHeader("Authorization")  ;
 
+        System.out.println( "jwt token in verifyToken = " + jwtToken );
+
         if (jwtToken == null) {
             return ResponseEntity.status(HttpStatus.OK).body( "jwtToken is missing" );
         }
 
-        if ( userService.isJWTnotValidOrExpired( jwtToken) == true ){
-            throw new JWTException("Error occurred: token is not valid or expired");
+        if ( userService.isJWTnotValidOrExpired( jwtToken) ){
+            return ResponseEntity.status(HttpStatus.OK).body( "jwtToken is expired or not valid" );
         }
 
         return ResponseEntity.status(HttpStatus.OK).body( jwtToken );
