@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.springgoals.dao.impl.UserDAOImpl;
+import com.springgoals.exception.AuthenticationException;
 import com.springgoals.exception.EmailExistsException;
 import com.springgoals.exception.EntityNotFoundException;
 import com.springgoals.exception.ValidationsException;
@@ -41,7 +42,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Autowired
-    private JwtTokenUtility jwtTokenUtilitator;
+    private JwtTokenUtility jwtTokenUtilitator =  new JwtTokenUtility();
 
     //@Autowired
     private JWTVerifier jwtVerifier ;
@@ -80,7 +81,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void save(User user) throws SQLException, ValidationsException, EmailExistsException {
+    public String save(User user) throws SQLException, ValidationsException, EmailExistsException {
 
         if (checkUsers(user.getEmail())) {
             throw new EmailExistsException("There is already a user with the given email address");
@@ -97,10 +98,34 @@ public class UserServiceImpl implements UserService {
             throw new ValidationsException("Error occurred: " + sb.toString());
         }
 
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
-
+        System.out.println("user from service save: " + user );
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDAO.save(user);
+
+        return  jwtTokenUtilitator.generateJWTToken( user ) ;
+    }
+
+    @Override
+    public String loginUser(String email, String password) throws SQLException, AuthenticationException {
+
+       // String encodedPassword = password;
+
+        StringBuilder sql = new StringBuilder("Select * from user where 1=1");
+        if (email != null && !email.equals("")) {
+            sql.append(" and email = \"");
+            sql.append(email);
+            sql.append("\"");
+        }
+
+        User user =  userDAO.loginUser(sql.toString());
+
+        if (user.getId() == null || (user.getPassword() != null && !passwordEncoder.matches(password, user.getPassword()))) {
+            throw new AuthenticationException("invalid crendentails");
+        }
+
+        System.out.println("loginUser from service: " + user);
+
+        return  jwtTokenUtilitator.generateJWTToken( user ) ;
     }
 
     @Override
@@ -128,36 +153,4 @@ public class UserServiceImpl implements UserService {
         return !jwtTokenUtilitator.validateJwtToken(jwtToken);
     }
 
-
-    @Override
-    public String loginUser(String email, String password) throws SQLException {
-
-        // String encodedPassword = passwordEncoder.encode( password );
-        String encodedPassword = password;
-
-        StringBuilder sql = new StringBuilder("Select * from user where 1=1");
-        if (email != null && !email.equals("")) {
-            sql.append(" and email = \"");
-            sql.append(email);
-            sql.append("\"");
-        }
-
-        if (encodedPassword != null && !encodedPassword.equals("")) {
-            sql.append(" and password = \"");
-            sql.append(password);
-            sql.append("\"");
-        }
-
-        System.out.println("encodedpassword = " + encodedPassword );
-        System.out.println("email = " + email );
-        System.out.println("sql.toString() = " + sql.toString() );
-
-        User user =  userDAO.loginUser(sql.toString());
-
-        if (user.getId() == null) {
-            throw new EntityNotFoundException("User with the provided credentials is not found in DB.");
-        }
-
-        return  jwtTokenUtilitator.generateJWTToken( user ) ;
-    }
 }

@@ -1,6 +1,6 @@
 package com.springgoals.exception;
 
-public class JWTException extends Exception {
+public class AuthenticationException extends Exception {
 
 
     private String message;
@@ -11,7 +11,7 @@ public class JWTException extends Exception {
         return message;
     }
 
-    public JWTException(String message) {
+    public AuthenticationException(String message) {
         super(message);
         this.message = message;
     }
