@@ -43,15 +43,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
-    @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> add(@RequestBody User user) throws SQLException, ValidationsException, JsonProcessingException, EmailExistsException {
-        if (user == null) {
-            throw new ValidationsException("Missing user payload");
-        }
-        userService.save(user);
-        return ResponseEntity.status(HttpStatus.CREATED).
-                body(objectMapper.writeValueAsString("Successfully Created new User"));
-    }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> update(@RequestBody User user) throws SQLException, ValidationsException  {
@@ -69,38 +60,5 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted");
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> loginUser(
-            @RequestParam("email") String email,
-            @RequestParam("password") String password
-    ) throws SQLException, QueryException {
 
-        if ( (email == null || email.equals("")) || (password == null || password.equals("")) ){
-            throw new QueryException("Error occurred: no email or password parameter present");
-
-        }
-        String loginUserToken =  userService.loginUser( email, password ) ;
-
-        return ResponseEntity.status(HttpStatus.OK).body( loginUserToken );
-    }
-
-    @RequestMapping(value = "/verify", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> verifyToken(ServletRequest servletRequest) throws JWTVerificationException, JWTException {
-
-        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
-
-        String jwtToken = httpServletRequest.getHeader("Authorization")  ;
-
-        System.out.println( "jwt token in verifyToken = " + jwtToken );
-
-        if (jwtToken == null) {
-            return ResponseEntity.status(HttpStatus.OK).body( "jwtToken is missing" );
-        }
-
-        if ( userService.isJWTnotValidOrExpired( jwtToken) ){
-            return ResponseEntity.status(HttpStatus.OK).body( "jwtToken is expired or not valid" );
-        }
-
-        return ResponseEntity.status(HttpStatus.OK).body( jwtToken );
-    }
 }

@@ -13,6 +13,11 @@ public class GeneralExceptionHandler {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(value = AuthenticationException.class)
+    public ResponseEntity<Object> authException(AuthenticationException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+
     @ExceptionHandler(value = QueryException.class)
     public ResponseEntity<Object> exception(QueryException queryException) {
         return new ResponseEntity<>(queryException.getMessage(), HttpStatus.BAD_REQUEST);

@@ -16,10 +16,10 @@ import org.springframework.stereotype.Component;
 public class AuthenFilter implements javax.servlet.Filter {
 
     @Autowired
-    private UserServiceImpl userService ;
+    private UserServiceImpl userService = new UserServiceImpl();
 
     @Autowired
-    private JwtTokenUtility jwtTokenUtilitator;
+    private JwtTokenUtility jwtTokenUtilitator = new JwtTokenUtility();
 
     @Override
     public void init(FilterConfig filterconfig) throws ServletException {}
@@ -30,27 +30,20 @@ public class AuthenFilter implements javax.servlet.Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
 
-        System.out.println( "Called AuthFilter: header Authorization : " + httpServletRequest.getHeader("Authorization") );
-
-        if( httpServletRequest.getServletPath().contains("/api/user/login") ) {
-            System.out.println( "request from login url" );
-
-            return;
-        }
 
         final String jwtToken = httpServletRequest.getHeader("Authorization");
 
-        System.out.println( "jwt token in AuthFilter = " + jwtToken );
+        System.out.println("jwt token in AuthFilter = " + jwtToken);
 
-        if(jwtToken == null) {
-            System.out.println( "jwt token is missing" );
-
+        if (jwtToken == null) {
+            System.out.println("jwt token is missing");
+            httpServletResponse.getWriter().write("jwt token is missing");
             return;
         }
 
-        if( userService.isJWTnotValidOrExpired( jwtToken) ) {
-            System.out.println( "jwt token is not valid or expired" );
-
+        if (userService.isJWTnotValidOrExpired(jwtToken)) {
+            System.out.println("jwt token is not valid or expired");
+            httpServletResponse.getWriter().write("jwt token is not valid or expired");
             return;
         }
 
@@ -58,8 +51,8 @@ public class AuthenFilter implements javax.servlet.Filter {
 
         String emailFromToken = jwtClaims[1];
 
-        if( emailFromToken != null) {
-            System.out.println( "User is authenticated" );
+        if (emailFromToken != null) {
+            System.out.println("User is authenticated");
         }
         chain.doFilter(httpServletRequest, httpServletResponse);
 

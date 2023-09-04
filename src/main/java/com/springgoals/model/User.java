@@ -23,7 +23,7 @@ public class User {
     private String surname;
 
     @NotNull(message = "email must be between 2 and 20 characters")
-    @Size(min = 2, max = 20)
+    @Size(min = 7, max = 20)
     private String email;
 
     @NotNull(message = "password must be between 6 and 20  characters")
@@ -92,5 +92,16 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, surname, email, password);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }

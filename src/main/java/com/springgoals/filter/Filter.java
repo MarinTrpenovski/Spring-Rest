@@ -20,11 +20,11 @@ public class Filter implements javax.servlet.Filter {
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
 
         System.out.println( "Called Filter header Authorization: " + httpServletRequest.getHeader("Authorization") );
-/*
+
         httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
         httpServletResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         httpServletResponse.setHeader("Access-Control-Allow-Headers", "*");
-*/
+
         chain.doFilter(servletRequest, servletResponse);//sends request to next resource
 
     }

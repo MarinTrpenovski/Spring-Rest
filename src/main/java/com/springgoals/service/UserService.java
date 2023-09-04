@@ -1,5 +1,6 @@
 package com.springgoals.service;
 
+import com.springgoals.exception.AuthenticationException;
 import com.springgoals.exception.EmailExistsException;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.User;
@@ -15,7 +16,7 @@ public interface UserService {
 
     void update(User user) throws SQLException, ValidationsException;
 
-    void save (User user) throws SQLException, ValidationsException, EmailExistsException;
+    String save (User user) throws SQLException, ValidationsException, EmailExistsException;
 
     void delete(Integer id)throws SQLException;
 
@@ -23,5 +24,5 @@ public interface UserService {
 
     boolean isJWTnotValidOrExpired(String jwtToken);
 
-    String loginUser(String email, String password) throws SQLException;
+    String loginUser(String email, String password) throws SQLException, AuthenticationException;
 }
