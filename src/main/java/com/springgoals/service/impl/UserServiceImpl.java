@@ -108,8 +108,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public String loginUser(String email, String password) throws SQLException, AuthenticationException {
 
-       // String encodedPassword = password;
-
         StringBuilder sql = new StringBuilder("Select * from user where 1=1");
         if (email != null && !email.equals("")) {
             sql.append(" and email = \"");
@@ -145,7 +143,6 @@ public class UserServiceImpl implements UserService {
 
         return userDAO.checkUsers(sql.toString());
     }
-
 
     @Override
     public boolean isJWTnotValidOrExpired(String jwtToken) {
