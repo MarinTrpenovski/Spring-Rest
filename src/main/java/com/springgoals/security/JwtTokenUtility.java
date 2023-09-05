@@ -46,7 +46,6 @@ public class JwtTokenUtility {
         return false;
     }
 
-
     public String getSubject(String jwtToken) {
         return parseClaims(jwtToken).getSubject();
     }

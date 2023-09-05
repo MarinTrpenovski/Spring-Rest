@@ -1,9 +1,8 @@
 package com.springgoals.controller;
 
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.springgoals.exception.*;
+import com.springgoals.exception.EntityNotFoundException;
+import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.User;
 import com.springgoals.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -42,7 +38,6 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
-
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> update(@RequestBody User user) throws SQLException, ValidationsException  {
