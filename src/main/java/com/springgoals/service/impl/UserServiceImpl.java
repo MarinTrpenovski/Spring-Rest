@@ -1,29 +1,22 @@
 package com.springgoals.service.impl;
 
-import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.springgoals.dao.impl.UserDAOImpl;
 import com.springgoals.exception.AuthenticationException;
 import com.springgoals.exception.EmailExistsException;
-import com.springgoals.exception.EntityNotFoundException;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.User;
 import com.springgoals.security.JwtTokenUtility;
 import com.springgoals.service.UserService;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -118,7 +111,7 @@ public class UserServiceImpl implements UserService {
         User user =  userDAO.loginUser(sql.toString());
 
         if (user.getId() == null || (user.getPassword() != null && !passwordEncoder.matches(password, user.getPassword()))) {
-            throw new AuthenticationException("invalid crendentails");
+            throw new AuthenticationException("invalid credentials");
         }
 
         System.out.println("loginUser from service: " + user);
