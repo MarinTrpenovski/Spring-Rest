@@ -1,28 +1,33 @@
 package com.springgoals.model;
-import java.util.Objects;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-@Entity
+import java.util.List;
+import java.util.Objects;
+
 public class Role {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     @NotNull(message = "name must be between 2 and 20 characters")
     @Size(min = 2, max = 20)
     private String name;
 
+    private List<Permission> permissions;
+
     public Role () {}
 
-    public Role(Integer id, String name) {
-        this.id = id;
+    public Role( String name) {
+
         this.name = name;
+    }
+
+    public Role( String name, List<Permission> permissions) {
+
+        this.name = name;
+        this.permissions = permissions;
     }
 
     public Integer getId() {
@@ -39,6 +44,14 @@ public class Role {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Permission> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
     }
 
     @Override

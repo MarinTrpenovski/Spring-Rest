@@ -1,6 +1,7 @@
 package com.springgoals.dao;
 
 import com.springgoals.model.User;
+import com.springgoals.model.dto.UserDTO;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -20,4 +21,6 @@ public interface UserDAO {
     boolean checkUsers(String sql) throws SQLException;
 
     User loginUser(String sql) throws SQLException;
+
+    UserDTO getUserRolePermissionsByEmail(String email) throws SQLException;
 }
