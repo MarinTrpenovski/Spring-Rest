@@ -21,7 +21,6 @@ public class RoleServiceImpl implements RoleService {
     private RoleDAOImpl roleDAO = new RoleDAOImpl();
 
 
-
     @Override
     public List<Role> getAll() throws SQLException {
         return roleDAO.getAll();

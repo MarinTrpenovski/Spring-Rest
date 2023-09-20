@@ -2,7 +2,10 @@ package com.springgoals.dao.impl;
 
 import com.springgoals.dao.SingletonConnection;
 import com.springgoals.dao.UserDAO;
+import com.springgoals.model.Permission;
+import com.springgoals.model.Role;
 import com.springgoals.model.User;
+import com.springgoals.model.dto.UserDTO;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -197,8 +200,63 @@ public class UserDAOImpl implements UserDAO {
             throw e;
         }
         return user;
-
     }
 
+    @Override
+    public UserDTO getUserRolePermissionsByEmail(String email) throws SQLException {
+
+        UserDTO userDTO = new UserDTO();
+
+        try {
+            connection = SingletonConnection.getInstance().getConnection();
+            Statement statement = connection.createStatement();
+
+            StringBuilder sql = new StringBuilder("select user.name as username, \n" +
+                    "user.email as useremail,\n" +
+                    "role.name as rolename, permission.name as permissionname , role.id as roleId , permission.id as permissionId \n" +
+                    "from user \n" +
+                    "INNER JOIN user_role_relation ON user_role_relation.user_id = user.id \n" +
+                    "INNER JOIN role ON user_role_relation.role_id = role.id \n" +
+                    "INNER JOIN role_permission_relation ON role.id = role_permission_relation.role_id \n" +
+                    "INNER JOIN permission ON permission.id = role_permission_relation.permission_id \n" +
+                    "where user.email = ");
+
+            sql.append("\"" + email + "\"");
+
+            ResultSet rs = statement.executeQuery(sql.toString());
+
+            List<Role> roles =new ArrayList<>();
+            while (rs.next()) {
+                if(rs.isFirst()) {
+                    userDTO.setEmail(rs.getString("useremail"));
+                    userDTO.setName(rs.getString("username"));
+                }
+                Role role = new Role();
+
+                Permission permission = new Permission();
+                role.setId(rs.getInt("roleId"));
+                role.setName(rs.getString("rolename"));
+                permission.setId(rs.getInt("permissionId"));
+                permission.setName(rs.getString("permissionname"));
+                if(roles.contains(role)){
+                    roles.get(roles.indexOf(role)).getPermissions().add(permission);
+                } else {
+                    List<Permission> permissions = new ArrayList<>();
+                    permissions.add(permission);
+                    role.setPermissions(permissions);
+                    roles.add(role);
+                }
+
+            }
+
+            userDTO.setRoles(roles);
+
+        } catch (SQLException e) {
+            System.out.println("error occurred " + e.getMessage());
+            throw e;
+        }
+
+        return userDTO;
+    }
 
 }

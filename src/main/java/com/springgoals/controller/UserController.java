@@ -2,8 +2,10 @@ package com.springgoals.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springgoals.exception.EntityNotFoundException;
+import com.springgoals.exception.QueryException;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.User;
+import com.springgoals.model.dto.UserDTO;
 import com.springgoals.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -55,5 +57,17 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted");
     }
 
+    @RequestMapping(value = "/roles", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserDTO> userRoles(
+            @RequestParam("email") String email
 
+    ) throws SQLException, QueryException {
+        UserDTO userDTO = new UserDTO();
+        if (email == null || email.equals("")) {
+            throw new QueryException("Error occurred: not enough query parameters");
+        } else {
+            userDTO = userService.getUserRolePermissionsByEmail(email);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(userDTO);
+    }
 }

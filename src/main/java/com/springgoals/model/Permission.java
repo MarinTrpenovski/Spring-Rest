@@ -8,8 +8,7 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-@Entity
-public class Permission {
+    public class Permission{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,10 +18,10 @@ public class Permission {
     @Size(min = 2, max = 20)
     private String name;
 
-public Permission (){}
+    public Permission (){}
 
-    public Permission(Integer id, String name) {
-        this.id = id;
+    public Permission( String name) {
+
         this.name = name;
     }
 

@@ -6,6 +6,7 @@ import com.springgoals.exception.AuthenticationException;
 import com.springgoals.exception.EmailExistsException;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.User;
+import com.springgoals.model.dto.UserDTO;
 import com.springgoals.security.JwtTokenUtility;
 import com.springgoals.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,6 +142,12 @@ public class UserServiceImpl implements UserService {
     public boolean isJWTnotValidOrExpired(String jwtToken) {
 
         return !jwtTokenUtilitator.validateJwtToken(jwtToken);
+    }
+
+    @Override
+    public UserDTO getUserRolePermissionsByEmail(String email) throws SQLException {
+
+        return userDAO.getUserRolePermissionsByEmail(email);
     }
 
 }
