@@ -13,8 +13,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -58,7 +63,6 @@ public class AuthenFilter implements javax.servlet.Filter {
         String emailFromToken = jwtClaims[1];
 
         if (emailFromToken != null) {
-            System.out.println("User is authenticated");
 
             UserServiceImpl use = new UserServiceImpl();
 
@@ -68,18 +72,24 @@ public class AuthenFilter implements javax.servlet.Filter {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-            System.out.println("User email is : " + userDTO.getEmail());
-            for(Role role : userDTO.getRoles()) {
-                System.out.println("Role " +  role.getName() + " has following permissions: ");
-                for(Permission per : role.getPermissions()) {
+            System.out.println("UserDTO email is : " + userDTO.getEmail());
 
-                    System.out.println(" permission : "  + per.getName());
+            List<GrantedAuthority> authorities = new ArrayList<>();
+
+            for(Role role : userDTO.getRoles()) {
+
+                for(Permission permission : role.getPermissions()) {
+                    authorities.add(new SimpleGrantedAuthority(permission.getName()));
+
                 }
 
             }
-            SecurityContextHolder.getContext().setAuthentication(
-                    new UsernamePasswordAuthenticationToken(emailFromToken ,jwtToken));
 
+            SecurityContext context = SecurityContextHolder.createEmptyContext();
+
+            context.setAuthentication(
+                    new UsernamePasswordAuthenticationToken( userDTO, jwtToken, authorities ));
+            System.out.println("User is authenticated.");
         }
         chain.doFilter(httpServletRequest, httpServletResponse);
 
