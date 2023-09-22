@@ -11,9 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -60,9 +65,8 @@ public class UserController {
     @RequestMapping(value = "/roles", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDTO> userRoles(
             @RequestParam("email") String email
-
     ) throws SQLException, QueryException {
-        UserDTO userDTO = new UserDTO();
+        UserDTO userDTO;
         if (email == null || email.equals("")) {
             throw new QueryException("Error occurred: not enough query parameters");
         } else {
@@ -70,4 +74,16 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(userDTO);
     }
+
+    @RequestMapping(value = "/permissions", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<GrantedAuthority>> userPermissions()  {
+
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication authentication = context.getAuthentication();
+
+        List<GrantedAuthority> authorities = (List<GrantedAuthority>) authentication.getAuthorities();
+
+        return ResponseEntity.status(HttpStatus.OK).body( authorities );
+    }
+
 }
