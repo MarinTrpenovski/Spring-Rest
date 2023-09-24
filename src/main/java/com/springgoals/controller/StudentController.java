@@ -15,8 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import java.sql.SQLException;
 
 import java.util.List;
@@ -32,21 +34,21 @@ public class StudentController {
     @Autowired
     private SubjectServiceImpl subjectService;
     ObjectMapper objectMapper = new ObjectMapper();
-
+    @RolesAllowed({"Admin", "User"})
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Student>> getStudents() throws SQLException {
 
         List<Student> students = studentService.getAll();
         return ResponseEntity.status(HttpStatus.OK).body(students);
     }
-
+    @RolesAllowed({"Admin", "User"})
     @RequestMapping(value = "/map", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<Integer, Student>> mapStudents() throws SQLException {
 
         Map<Integer, Student> students = studentService.getMap();
         return ResponseEntity.status(HttpStatus.OK).body(students);
     }
-
+    @RolesAllowed({"Admin", "User"})
     @RequestMapping(value = "/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Student>> searchStudents(
             @RequestParam("name") String name,
@@ -62,7 +64,7 @@ public class StudentController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(students);
     }
-
+    @RolesAllowed({"Admin", "User"})
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Student> getById(@PathVariable("id") Integer id) throws SQLException {
 
@@ -73,6 +75,7 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.OK).body(student);
     }
 
+    @RolesAllowed({"Admin", "User"})
     @RequestMapping(value = "/subjects/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<StudentSubjectDTO> getSubjectsByStudId(@PathVariable("id") Integer id)
             throws SQLException, ValidationsException {
@@ -91,6 +94,7 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.OK).body(studentSubjectDTO);
     }
 
+    @RolesAllowed({"Admin", "User"})
     @RequestMapping(value = "/odd/subjects/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<StudentSubjectsOddDTO> getOddSubjectsByStudId(@PathVariable("id") Integer id)
             throws SQLException, ValidationsException {
@@ -108,7 +112,7 @@ public class StudentController {
 
         return ResponseEntity.status(HttpStatus.OK).body(studentSubjectsOddDTO);
     }
-
+    @Secured("Admin")
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.ALL_VALUE)
     public ResponseEntity<String> add(@RequestBody Student student) throws SQLException, ValidationsException, JsonProcessingException {
 
@@ -118,7 +122,7 @@ public class StudentController {
         studentService.save(student);
         return ResponseEntity.status(HttpStatus.CREATED).body(objectMapper.writeValueAsString("Successfully Created"));
     }
-
+    @Secured("Admin")
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> update(@RequestBody Student student) throws SQLException, ValidationsException {
 
@@ -128,7 +132,7 @@ public class StudentController {
         studentService.update(student);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }
-
+    @Secured("Admin")
     @RequestMapping(value = "/save/student-subjects", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> addStudentSubjects(@RequestBody UpdateStudentSubjectDTO updateStudentSubjectDTO) throws SQLException, ValidationsException {
 
@@ -141,7 +145,7 @@ public class StudentController {
         studentService.saveStudentSubjects(updateStudentSubjectDTO);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully created");
     }
-
+    @Secured("Admin")
     @RequestMapping(value = "/update/student-subject", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> updateStudentSubject(@RequestBody UpdateStudentSubjectDTO updateStudentSubjectDTO) throws SQLException, ValidationsException {
 
@@ -150,14 +154,14 @@ public class StudentController {
         }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }
-
+    @Secured("Admin")
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteStudent(@PathVariable("id") Integer id) throws SQLException {
 
         studentService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted");
     }
-
+    @Secured("Admin")
     @RequestMapping(value = "/delete/student-subjects", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteStudentSubjects(
             @RequestParam("id") Integer id,

@@ -11,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -26,20 +28,21 @@ public class ProfessorController {
 
     ObjectMapper objectMapper = new ObjectMapper();
 
+    @RolesAllowed({"Admin", "User"})
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Professor>> getProfessors() throws SQLException {
         List<Professor> professors = professorService.getAll();
 
         return ResponseEntity.status(HttpStatus.OK).body(professors);
     }
-
+    @RolesAllowed({"Admin", "User"})
     @RequestMapping(value = "/map", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<Integer, Professor>> mapProfessors() throws SQLException {
 
         Map<Integer, Professor> professors = professorService.getMap();
         return ResponseEntity.status(HttpStatus.OK).body(professors);
     }
-
+    @RolesAllowed({"Admin", "User"})
     @RequestMapping(value = "/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Professor>> searchProfessors(
             @RequestParam("name") String name,
@@ -67,7 +70,7 @@ public class ProfessorController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(professor);
     }
-
+    @Secured("Admin")
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> add(@RequestBody Professor professor) throws SQLException, ValidationsException, JsonProcessingException {
 
@@ -77,7 +80,7 @@ public class ProfessorController {
         professorService.save(professor);
         return ResponseEntity.status(HttpStatus.CREATED).body(objectMapper.writeValueAsString("Successfully Created"));
     }
-
+    @Secured("Admin")
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> update(@RequestBody Professor professor) throws SQLException, ValidationsException {
 
@@ -87,7 +90,7 @@ public class ProfessorController {
         professorService.update(professor);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }
-
+    @Secured("Admin")
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteProfessor(@PathVariable("id") Integer id) throws SQLException {
 
