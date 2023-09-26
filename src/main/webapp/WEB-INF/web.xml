@@ -24,8 +24,8 @@
   </filter>
 
   <filter>
-    <filter-name>LogFilter</filter-name>
-    <filter-class>com.springgoals.filter.LogFilter</filter-class>
+    <filter-name>AuthorFilter</filter-name>
+    <filter-class>com.springgoals.filter.AuthorFilter</filter-class>
   </filter>
 
   <filter>
@@ -39,7 +39,7 @@
   </filter-mapping>
 
   <filter-mapping>
-    <filter-name>LogFilter</filter-name>
+    <filter-name>AuthorFilter</filter-name>
     <url-pattern>/api</url-pattern>
   </filter-mapping>
 

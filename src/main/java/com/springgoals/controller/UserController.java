@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -30,13 +31,14 @@ public class UserController {
 
     ObjectMapper objectMapper = new ObjectMapper();
 
+    @Secured("Admin")
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<User>> getUsers() throws SQLException {
         List<User> users = userService.getAll();
 
         return ResponseEntity.status(HttpStatus.OK).body( users );
     }
-
+    @Secured("Admin")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> getById(@PathVariable("id") Integer id)  throws SQLException{
         User user = userService.getById(id);
@@ -45,7 +47,7 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
-
+    @Secured("Admin")
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> update(@RequestBody User user) throws SQLException, ValidationsException  {
         if (user == null) {
@@ -54,14 +56,14 @@ public class UserController {
         userService.update(user);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }
-
+    @Secured("Admin")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteUser(@PathVariable("id") Integer id) throws SQLException {
 
         userService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted");
     }
-
+    @Secured("Admin")
     @RequestMapping(value = "/roles", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDTO> userRoles(
             @RequestParam("email") String email
@@ -74,7 +76,7 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(userDTO);
     }
-
+    @Secured("Admin")
     @RequestMapping(value = "/permissions", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<GrantedAuthority>> userPermissions()  {
 
