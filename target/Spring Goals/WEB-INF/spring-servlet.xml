@@ -14,47 +14,5 @@
     <context:component-scan base-package="com.springgoals.*"/>
     <mvc:annotation-driven/>
 
-  <!--
-
-        <tx:annotation-driven proxy-target-class="true"/>
-    -->
-
- <!--
-
-    <bean id="user" class="com.springgoals.model.User"/>
-    <bean id="userDAO" class="com.springgoals.dao.impl.UserDAOImpl"/>
-    <bean id="userService" class="com.springgoals.service.impl.UserServiceImpl"/>
-    <bean id="userController" class="com.springgoals.controller.UserController"/>
-
-    <bean id="faculty" class="com.springgoals.model.Faculty"/>
-    <bean id="facultyDAO" class="com.springgoals.dao.impl.FacultyDAOImpl"/>
-    <bean id="facultyService" class="com.springgoals.service.impl.FacultyServiceImpl"/>
-    <bean id="facultyController" class="com.springgoals.controller.FacultyController"/>
-
-    <bean id="professor" class="com.springgoals.model.Professor"/>
-    <bean id="professorDAO" class="com.springgoals.dao.impl.ProfessorDAOImpl"/>
-    <bean id="ProfessorService" class="com.springgoals.service.impl.ProfessorServiceImpl"/>
-    <bean id="professorController" class="com.springgoals.controller.ProfessorController"/>
-
-    <bean id="student" class="com.springgoals.model.Student"/>
-    <bean id="studentDAO" class="com.springgoals.dao.impl.StudentDAOImpl"/>
-    <bean id="StudentService" class="com.springgoals.service.impl.StudentServiceImpl"/>
-    <bean id="studentController" class="com.springgoals.controller.StudentController"/>
-
-    <bean id="subject" class="com.springgoals.model.Subject"/>
-    <bean id="subjectDAO" class="com.springgoals.dao.impl.SubjectDAOImpl"/>
-    <bean id="SubjectService" class="com.springgoals.service.impl.SubjectServiceImpl"/>
-    <bean id="subjectController" class="com.springgoals.controller.SubjectController"/>
-
-    <bean id="university" class="com.springgoals.model.University"/>
-    <bean id="universityDAO" class="com.springgoals.dao.impl.UniversityDAOImpl"/>
-    <bean id="UniversityService" class="com.springgoals.service.impl.UniversityServiceImpl"/>
-    <bean id="universityController" class="com.springgoals.controller.UniversityController"/>-->
-
-
-  <!--  <bean id = "viewResolver" class = "org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="prefix" value="/WEB-INF/view/"/>
-        <property name="suffix" value=".jsp"/>
-    </bean>-->
 
 </beans>

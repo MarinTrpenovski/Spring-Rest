@@ -1,10 +1,12 @@
 package com.springgoals.filter;
 
+import com.springgoals.exception.AuthenticationException;
 import com.springgoals.model.Permission;
 import com.springgoals.model.Role;
 import com.springgoals.model.dto.UserDTO;
 import com.springgoals.security.JwtTokenUtility;
 import com.springgoals.service.impl.UserServiceImpl;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.*;
@@ -41,26 +43,46 @@ public class AuthenFilter implements javax.servlet.Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
 
+        httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
+        httpServletResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        httpServletResponse.setHeader("Access-Control-Allow-Headers", "*");
 
-        final String jwtToken = httpServletRequest.getHeader("Authorization");
-
-        System.out.println("jwt token in AuthFilter = " + jwtToken);
-
-        if (jwtToken == null) {
-            System.out.println("jwt token is missing");
-            httpServletResponse.getWriter().write("jwt token is missing");
+        if(httpServletRequest.getMethod().equals("OPTIONS")) {
+            chain.doFilter(httpServletRequest, httpServletResponse);
             return;
         }
 
-        if (userService.isJWTnotValidOrExpired(jwtToken)) {
+         String jwtToken = httpServletRequest.getHeader("Authorization");
+
+
+            System.out.println("jwtTokenFromHeader in AuthenFilter: " + jwtToken);
+
+        if (jwtToken == null) {
+            System.out.println("jwt token from header is missing");
+            httpServletResponse.getWriter().write("jwt token from header is missing");
+            return;
+        }
+
+        if (jwtToken.startsWith("Bearer ")) {
+            jwtToken = jwtToken.substring(7);
+        }
+
+        System.out.println("jwtToken in AuthenFilter: " + jwtToken);
+        Claims claims = null;
+        try {
+            claims = userService.isJWTnotValidOrExpired( jwtToken);
+        } catch (AuthenticationException e) {
+            throw new RuntimeException(e);
+        }
+        if (claims == null) {
             System.out.println("jwt token is not valid or expired");
             httpServletResponse.getWriter().write("jwt token is not valid or expired");
             return;
         }
 
-        String[] jwtClaims = jwtTokenUtilitator.getSubject(jwtToken).split(",");
+        //String[] jwtClaims = jwtTokenUtilitator.getSubject(jwtToken).split(",");
 
-        String emailFromToken = jwtClaims[1];
+        String emailFromToken = claims.getIssuer();
 
         if (emailFromToken != null) {
 
@@ -77,16 +99,11 @@ public class AuthenFilter implements javax.servlet.Filter {
             List<GrantedAuthority> authorities = new ArrayList<>();
 
             for(Role role : userDTO.getRoles()) {
-
                 for(Permission permission : role.getPermissions()) {
                     authorities.add(new SimpleGrantedAuthority(permission.getName()));
-
                 }
-
             }
-
-            SecurityContext context = SecurityContextHolder.createEmptyContext();
-
+            SecurityContext context = SecurityContextHolder.getContext();
             context.setAuthentication(
                     new UsernamePasswordAuthenticationToken( userDTO, jwtToken, authorities ));
             System.out.println("User is authenticated.");

@@ -9,6 +9,7 @@ import com.springgoals.model.User;
 import com.springgoals.model.dto.UserDTO;
 import com.springgoals.security.JwtTokenUtility;
 import com.springgoals.service.UserService;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -139,9 +140,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean isJWTnotValidOrExpired(String jwtToken) {
+    public Claims isJWTnotValidOrExpired(String jwtToken) throws AuthenticationException {
 
-        return !jwtTokenUtilitator.validateJwtToken(jwtToken);
+        return jwtTokenUtilitator.validateJwtToken(jwtToken);
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.springgoals.exception.EmailExistsException;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.User;
 import com.springgoals.model.dto.UserDTO;
+import io.jsonwebtoken.Claims;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -23,7 +24,7 @@ public interface UserService {
 
     boolean checkUsers(String email) throws SQLException;
 
-    boolean isJWTnotValidOrExpired(String jwtToken);
+    Claims isJWTnotValidOrExpired(String jwtToken) throws AuthenticationException;
 
     String loginUser(String email, String password) throws SQLException, AuthenticationException;
 
