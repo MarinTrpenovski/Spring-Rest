@@ -28,24 +28,17 @@ public class JwtTokenUtility {
         Claims body = null;
         try {
             body = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(jwtToken).getBody();
-
         } catch (ExpiredJwtException expiredJwtException) {
             throw new AuthenticationException(expiredJwtException.getMessage());
-
         } catch (IllegalArgumentException illegalArgumentException) {
             throw new AuthenticationException(illegalArgumentException.getMessage());
-
         } catch (MalformedJwtException malformedJwtException) {
             throw new AuthenticationException(malformedJwtException.getMessage());
-
         } catch (UnsupportedJwtException unsupportedJwtException) {
             throw new AuthenticationException(unsupportedJwtException.getMessage());
-
         } catch (SignatureException signatureException) {
             throw new AuthenticationException(signatureException.getMessage());
-
         }
-
         return body;
     }
 
