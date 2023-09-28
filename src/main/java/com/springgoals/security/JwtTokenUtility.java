@@ -10,9 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtTokenUtility {
     private static final long EXPIRE_DURATION = 24 * 60 * 60 * 1000; // 24 hour
-
     private String SECRET_KEY = "abcdefghijklmnOPQRSTUVWXYZ";
-
 
     public String generateJWTToken(User user) {
         return Jwts.builder().claim(Claims.ISSUER, user.getEmail())
@@ -21,11 +19,10 @@ public class JwtTokenUtility {
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRE_DURATION))
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
                 .compact();
-
     }
 
     public Claims validateJwtToken(String jwtToken) throws AuthenticationException {
-        Claims body = null;
+        Claims body;
         try {
             body = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(jwtToken).getBody();
         } catch (ExpiredJwtException expiredJwtException) {
@@ -52,5 +49,4 @@ public class JwtTokenUtility {
                 .parseClaimsJws(jwtToken)
                 .getBody();
     }
-
 }

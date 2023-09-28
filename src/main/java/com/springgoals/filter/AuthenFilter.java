@@ -80,7 +80,6 @@ public class AuthenFilter implements javax.servlet.Filter {
             return;
         }
 
-        //String[] jwtClaims = jwtTokenUtilitator.getSubject(jwtToken).split(",");
 
         String emailFromToken = claims.getIssuer();
 
