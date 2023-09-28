@@ -37,7 +37,7 @@ public class FacultyController {
         return ResponseEntity.status(HttpStatus.OK).body(faculties);
     }
 
-    //@PreAuthorize("isAuthenticated()")
+
     @RequestMapping(value = "/map", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<Integer, Faculty>> mapFaculties() throws SQLException {
 
