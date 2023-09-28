@@ -1,12 +1,15 @@
 package com.springgoals.controller;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.springgoals.exception.AuthenticationException;
 import com.springgoals.exception.EntityNotFoundException;
 import com.springgoals.exception.QueryException;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.User;
 import com.springgoals.model.dto.UserDTO;
 import com.springgoals.service.impl.UserServiceImpl;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,8 +21,9 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletRequest;
 import java.sql.SQLException;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -78,14 +82,34 @@ public class UserController {
     }
     @Secured("Admin")
     @RequestMapping(value = "/permissions", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<GrantedAuthority>> userPermissions()  {
+    public ResponseEntity<List<String>> userPermissions()  {
 
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
 
         List<GrantedAuthority> authorities = (List<GrantedAuthority>) authentication.getAuthorities();
 
-        return ResponseEntity.status(HttpStatus.OK).body( authorities );
+        List<String> permissions = new ArrayList<>();
+        for (GrantedAuthority authority : authorities) {
+            permissions.add(authority.getAuthority());
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body( permissions );
+    }
+
+    @RequestMapping(value = "/verify", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> verifyToken(ServletRequest servletRequest) throws JWTVerificationException, AuthenticationException {
+
+        String jwtToken = SecurityContextHolder.getContext().getAuthentication().getCredentials().toString();
+
+        System.out.println("jwtToken in verifyToken: " + jwtToken);
+        Claims claims =  userService.isJWTnotValidOrExpired( jwtToken);
+
+        if (claims == null ){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body( "jwtToken is expired or not valid" );
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body( jwtToken );
     }
 
 }

@@ -1,6 +1,5 @@
 package com.springgoals.controller;
 
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springgoals.exception.AuthenticationException;
@@ -15,8 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 
 @RestController
@@ -56,23 +53,5 @@ public class AuthenticationController {
                 body( objectMapper.writeValueAsString( loginUserToken ) );
     }
 
-    @RequestMapping(value = "/verify", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> verifyToken(ServletRequest servletRequest) throws JWTVerificationException, AuthenticationException {
 
-        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
-
-        String jwtToken = httpServletRequest.getHeader("Authorization")  ;
-
-        System.out.println( "jwt token in verifyToken = " + jwtToken );
-
-        if (jwtToken == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body( "jwtToken is missing" );
-        }
-
-        if ( userService.isJWTnotValidOrExpired( jwtToken) ){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body( "jwtToken is expired or not valid" );
-        }
-
-        return ResponseEntity.status(HttpStatus.OK).body( jwtToken );
-    }
 }
