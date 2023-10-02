@@ -48,7 +48,7 @@ public class AuthenFilter implements javax.servlet.Filter {
         httpServletResponse.setHeader("Access-Control-Allow-Headers", "*");
 
         if(httpServletRequest.getMethod().equals("OPTIONS")) {
-            chain.doFilter(httpServletRequest, httpServletResponse);
+            chain.doFilter(httpServletRequest, httpServletResponse); //check if request is cors
             return;
         }
 

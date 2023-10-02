@@ -42,7 +42,6 @@ com\springgoals\filter\Filter.class
 com\springgoals\service\SubjectService.class
 com\springgoals\model\dto\UserDTO.class
 com\springgoals\controller\SubjectController.class
-com\springgoals\filter\AuthorFilter.class
 com\springgoals\service\impl\ProfessorServiceImpl.class
 com\springgoals\model\dto\StudentSubjectsOddDTO.class
 com\springgoals\controller\UniversityController.class
