@@ -22,7 +22,6 @@ C:\Users\angjela.milosavljevi\Desktop\github\Spring-Rest\src\main\java\com\sprin
 C:\Users\angjela.milosavljevi\Desktop\github\Spring-Rest\src\main\java\com\springgoals\controller\SubjectController.java
 C:\Users\angjela.milosavljevi\Desktop\github\Spring-Rest\src\main\java\com\springgoals\exception\AuthenticationException.java
 C:\Users\angjela.milosavljevi\Desktop\github\Spring-Rest\src\main\java\com\springgoals\dao\SingletonConnection.java
-C:\Users\angjela.milosavljevi\Desktop\github\Spring-Rest\src\main\java\com\springgoals\filter\AuthorFilter.java
 C:\Users\angjela.milosavljevi\Desktop\github\Spring-Rest\src\main\java\com\springgoals\exception\ValidationsException.java
 C:\Users\angjela.milosavljevi\Desktop\github\Spring-Rest\src\main\java\com\springgoals\exception\EntityNotFoundException.java
 C:\Users\angjela.milosavljevi\Desktop\github\Spring-Rest\src\main\java\com\springgoals\filter\CustomAccessDeniedHandler.java
