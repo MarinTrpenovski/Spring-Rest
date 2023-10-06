@@ -1,11 +1,14 @@
 package com.springgoals.dao.impl;
 
+import com.springgoals.controller.LogController;
 import com.springgoals.dao.SingletonConnection;
 import com.springgoals.dao.StudentDAO;
 import com.springgoals.model.Student;
 import com.springgoals.model.Subject;
 import com.springgoals.model.dto.StudentSubjectDTO;
 import com.springgoals.model.dto.StudentSubjectsOddDTO;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -18,6 +21,7 @@ import java.util.Map;
 
 public class StudentDAOImpl implements StudentDAO {
 
+    private static final Logger logger = LogManager.getLogger(StudentDAOImpl.class);
     static Connection connection;
 
     static {
@@ -47,7 +51,8 @@ public class StudentDAOImpl implements StudentDAO {
                 student.setIndeks(resultSet.getInt("indeks"));
             }
         } catch (SQLException e) {
-            System.out.println("error occured " + e.getMessage());
+            System.out.println("error occurred in StudentDAOImpl getById " + e.getMessage());
+            logger.error("error occurred in StudentDAOImpl getById " + e.getMessage());
             throw e;
         }
         return student;
@@ -72,7 +77,8 @@ public class StudentDAOImpl implements StudentDAO {
                 studentList.add(student);
             }
         } catch (SQLException e) {
-            System.out.println("error occured " + e.getMessage());
+            System.out.println("error occurred in StudentDAOImpl getAll " + e.getMessage());
+            logger.error("error occurred in StudentDAOImpl getAll " + e.getMessage());
             throw e;
         }
         return studentList;
@@ -96,7 +102,8 @@ public class StudentDAOImpl implements StudentDAO {
                 studentMap.put(student.getId(), student);
             }
         } catch (SQLException e) {
-            System.out.println("error occured " + e.getMessage());
+            System.out.println("error occurred in StudentDAOImpl getMap " + e.getMessage());
+            logger.error("error occurred in StudentDAOImpl getMap " + e.getMessage());
             throw e;
         }
         return studentMap;
@@ -123,7 +130,8 @@ public class StudentDAOImpl implements StudentDAO {
                 studentList.add(student);
             }
         } catch (SQLException e) {
-            System.out.println("error" + e.getMessage());
+            System.out.println("error occurred in StudentDAOImpl searchStudents " + e.getMessage());
+            logger.error("error occurred in StudentDAOImpl searchStudents " + e.getMessage());
             throw e;
         }
         return studentList;
@@ -147,7 +155,8 @@ public class StudentDAOImpl implements StudentDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("error occured " + e.getMessage());
+            System.out.println("error occurred in StudentDAOImpl update " + e.getMessage());
+            logger.error("error occurred in StudentDAOImpl update " + e.getMessage());
             throw e;
         }
     }
@@ -166,11 +175,13 @@ public class StudentDAOImpl implements StudentDAO {
             int affectedRows = statement1.executeUpdate();
 
             if (affectedRows == 0) {
-                throw new SQLException("error");
+                logger.error("Error with affectedRows in StudentDAOImpl save");
+                throw new SQLException("Error with affectedRows in StudentDAOImpl save");
             }
 
         } catch (SQLException e) {
-            System.out.println("error occured " + e.getMessage());
+            System.out.println("error occurred in StudentDAOImpl save " + e.getMessage());
+            logger.error("error occurred in StudentDAOImpl save " + e.getMessage());
             throw e;
         }
     }
@@ -191,18 +202,21 @@ public class StudentDAOImpl implements StudentDAO {
             int affectedRows = statement1.executeUpdate();
 
             if (affectedRows == 0) {
-                throw new SQLException("error");
+                logger.error("Error with affectedRows in StudentDAOImpl saveReturnId");
+                throw new SQLException("Error with affectedRows in StudentDAOImpl saveReturnId");
             }
 
             try (ResultSet generatedKeys = statement1.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     id = generatedKeys.getInt(1);
                 } else {
-                    throw new SQLException("error2");
+                    logger.error("Error with generatedKeys in StudentDAOImpl saveReturnId");
+                    throw new SQLException("Error with generatedKeys in StudentDAOImpl saveReturnId");
                 }
             }
         } catch (SQLException e) {
-            System.out.println("error occured " + e.getMessage());
+            System.out.println("error occurred in StudentDAOImpl saveReturnId " + e.getMessage());
+            logger.error("error occurred in StudentDAOImpl saveReturnId " + e.getMessage());
             throw e;
         }
         return id;
@@ -222,7 +236,8 @@ public class StudentDAOImpl implements StudentDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("error occured in delete student: " + e.getMessage());
+            System.out.println("error occurred in StudentDAOImpl delete " + e.getMessage());
+            logger.error("error occurred in StudentDAOImpl delete " + e.getMessage());
             throw e;
         }
     }
@@ -262,7 +277,8 @@ public class StudentDAOImpl implements StudentDAO {
             studentSubjectDTO.setLengthOfList(subjectList.size());
 
         } catch (SQLException e) {
-            System.out.println("error occured " + e.getMessage());
+            System.out.println("error in StudentDAOImpl getSubjectsByStudId " + e.getMessage());
+            logger.error("error in StudentDAOImpl getSubjectsByStudId " + e.getMessage());
             throw e;
         }
 
@@ -316,7 +332,8 @@ public class StudentDAOImpl implements StudentDAO {
             studentSubjectsOddDTO.setSumOfCredits(sumOfOddCredits);
 
         } catch (SQLException e) {
-            System.out.println("error in getOddSubjectsByStudId " + e.getMessage());
+            System.out.println("error in StudentDAOImpl getOddSubjectsByStudId " + e.getMessage());
+            logger.error("error in StudentDAOImpl getOddSubjectsByStudId " + e.getMessage());
             throw e;
         }
 
@@ -336,16 +353,16 @@ public class StudentDAOImpl implements StudentDAO {
             statement1.setInt(2, subjectId);
             int affectedRows = statement1.executeUpdate();
             if (affectedRows == 0) {
-                throw new SQLException("error with subject id " + subjectId);
+                logger.error("Error with affectedRows in StudentDAOImpl saveStudentSubjectsIds");
+                throw new SQLException("Error with affectedRows in StudentDAOImpl saveStudentSubjectsIds");
             }
 
-
         } catch (SQLException e) {
-            System.out.println("error occured " + e.getMessage());
+            System.out.println("error in StudentDAOImpl saveStudentSubjectsIds " + e.getMessage());
+            logger.error("error in StudentDAOImpl saveStudentSubjectsIds " + e.getMessage());
             throw e;
 
         }
     }
-
 
 }

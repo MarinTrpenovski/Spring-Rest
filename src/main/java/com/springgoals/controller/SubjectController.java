@@ -8,6 +8,8 @@ import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Subject;
 import com.springgoals.service.StudentService;
 import com.springgoals.service.impl.SubjectServiceImpl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,6 +27,7 @@ import java.util.Map;
 @RequestMapping("/api/subject")
 public class SubjectController {
 
+    private static final Logger logger = LogManager.getLogger(SubjectController.class);
     @Autowired
     private SubjectServiceImpl subjectService;
     @Autowired
@@ -55,6 +58,7 @@ public class SubjectController {
     ) throws SQLException, QueryException {
         List<Subject> subjects = null;
         if ((name == null || name.equals("")) && (semester == null || semester.equals("")) && (credits == null || credits.equals(""))) {
+            logger.error("Error occurred: not enough query parameters");
             throw new QueryException("Error occurred: not enough query parameters");
         } else {
             subjects = subjectService.searchSubjects(name, semester, credits);
@@ -66,6 +70,7 @@ public class SubjectController {
     public ResponseEntity<Subject> getById(@PathVariable("id") Integer id) throws SQLException {
         Subject subject = subjectService.getById(id);
         if (subject.getId() == null) {
+            logger.error("Subject with id " + id + " not found in DB ");
             throw new EntityNotFoundException("Subject with id " + id + " not found in DB ");
         }
         return ResponseEntity.status(HttpStatus.OK).body(subject);
@@ -75,6 +80,7 @@ public class SubjectController {
     public ResponseEntity<String> add(@RequestBody Subject subject) throws SQLException, ValidationsException, JsonProcessingException {
 
         if (subject == null) {
+            logger.error("Missing subject payload");
             throw new ValidationsException("Missing subject payload");
         }
         subjectService.save(subject);
@@ -85,6 +91,7 @@ public class SubjectController {
     public ResponseEntity<String> update(@RequestBody Subject subject) throws SQLException, ValidationsException {
 
         if (subject == null) {
+            logger.error("Missing subject payload");
             throw new ValidationsException("Missing subject payload");
         }
         subjectService.update(subject);

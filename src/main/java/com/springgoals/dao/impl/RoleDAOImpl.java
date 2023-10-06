@@ -3,6 +3,8 @@ package com.springgoals.dao.impl;
 import com.springgoals.dao.SingletonConnection;
 import com.springgoals.dao.RoleDAO;
 import com.springgoals.model.Role;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.List;
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 
 public class RoleDAOImpl implements RoleDAO{
 
+    private static final Logger logger = LogManager.getLogger(RoleDAOImpl.class);
     static Connection connection;
 
     static {
@@ -38,7 +41,8 @@ public class RoleDAOImpl implements RoleDAO{
 
             }
         } catch (SQLException e) {
-            System.out.println("error occurred in role getById " + e.getMessage());
+            System.out.println("error occurred in RoleDAOImpl getById " + e.getMessage());
+            logger.error("error occurred in RoleDAOImpl getById " + e.getMessage());
             throw e;
 
         }
@@ -62,7 +66,8 @@ public class RoleDAOImpl implements RoleDAO{
                 roleList.add(role);
             }
         } catch (SQLException e) {
-            System.out.println("error occurred in role getAll " + e.getMessage());
+            System.out.println("error occurred in RoleDAOImpl getAll " + e.getMessage());
+            logger.error("error occurred in RoleDAOImpl getAll " + e.getMessage());
             throw e;
 
         }
@@ -86,7 +91,8 @@ public class RoleDAOImpl implements RoleDAO{
             }
 
         } catch (SQLException e) {
-            System.out.println("error occurred " + e.getMessage());
+            System.out.println("error occurred in RoleDAOImpl save " + e.getMessage());
+            logger.error("error occurred in RoleDAOImpl save " + e.getMessage());
             throw e;
 
         }
@@ -109,7 +115,8 @@ public class RoleDAOImpl implements RoleDAO{
             }
 
         } catch (SQLException e) {
-            System.out.println("error in DAO update" + e.getMessage());
+            System.out.println("error occurred in RoleDAOImpl update " + e.getMessage());
+            logger.error("error occurred in RoleDAOImpl update " + e.getMessage());
             throw e;
         }
 
@@ -129,7 +136,8 @@ public class RoleDAOImpl implements RoleDAO{
             }
 
         } catch (SQLException e) {
-            System.out.println("error occurred " + e.getMessage());
+            System.out.println("error occurred in RoleDAOImpl delete " + e.getMessage());
+            logger.error("error occurred in RoleDAOImpl delete " + e.getMessage());
             throw e;
 
         }

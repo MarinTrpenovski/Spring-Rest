@@ -8,6 +8,8 @@ import com.springgoals.exception.QueryException;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.User;
 import com.springgoals.service.impl.UserServiceImpl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,6 +22,7 @@ import java.sql.SQLException;
 @RequestMapping("/auth")
 public class AuthenticationController {
 
+    private static final Logger logger = LogManager.getLogger(LogController.class);
     @Autowired
     private UserServiceImpl userService ;
 
@@ -28,6 +31,7 @@ public class AuthenticationController {
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> add(@RequestBody User user) throws SQLException, ValidationsException, JsonProcessingException, EmailExistsException {
         if (user == null) {
+            logger.error("Missing user payload");
             throw new ValidationsException("Missing user payload");
         }
         String signupUserToken = userService.save(user);
@@ -43,6 +47,7 @@ public class AuthenticationController {
     ) throws SQLException, QueryException, JsonProcessingException, AuthenticationException {
 
         if ( (email == null || email.equals("")) || (password == null || password.equals("")) ){
+            logger.error("Error occurred: no email or password parameter present");
             throw new QueryException("Error occurred: no email or password parameter present");
         }
         String loginUserToken =  userService.loginUser( email, password ) ;

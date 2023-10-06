@@ -45,6 +45,7 @@ public class UserController {
     @Secured("Admin")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> getById(@PathVariable("id") Integer id)  throws SQLException{
+
         User user = userService.getById(id);
         if (user.getId() == null) {
             throw new EntityNotFoundException("User with id " + id + " not found in DB ");

@@ -1,9 +1,12 @@
 package com.springgoals.service.impl;
 
+import com.springgoals.controller.LogController;
 import com.springgoals.dao.impl.ProfessorDAOImpl;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Professor;
 import com.springgoals.service.ProfessorService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,8 @@ import javax.validation.Validator;
 @Service
 
 public class ProfessorServiceImpl implements ProfessorService {
+
+    private static final Logger logger = LogManager.getLogger(ProfessorServiceImpl.class);
 
     @Autowired
     private Validator validator;
@@ -86,8 +91,8 @@ public class ProfessorServiceImpl implements ProfessorService {
             for (ConstraintViolation<Professor> constraintViolation : violations) {
                 sb.append(constraintViolation.getMessage());
             }
-
-            throw new ValidationsException("Error occurred: " + sb.toString());
+            logger.error("Error in ProfessorServiceImpl update: " + sb.toString());
+            throw new ValidationsException("Error in ProfessorServiceImpl update: " + sb.toString());
         }
         professorDAO.update(professor);
     }
@@ -102,8 +107,8 @@ public class ProfessorServiceImpl implements ProfessorService {
             for (ConstraintViolation<Professor> constraintViolation : violations) {
                 sb.append(constraintViolation.getMessage());
             }
-
-            throw new ValidationsException("Error occurred: " + sb.toString());
+            logger.error("Error in ProfessorServiceImpl save: " + sb.toString());
+            throw new ValidationsException("Error in ProfessorServiceImpl save: " + sb.toString());
         }
         professorDAO.save(professor);
     }

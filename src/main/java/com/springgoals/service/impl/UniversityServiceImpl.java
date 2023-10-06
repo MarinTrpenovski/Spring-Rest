@@ -1,5 +1,6 @@
 package com.springgoals.service.impl;
 
+import com.springgoals.controller.LogController;
 import com.springgoals.dao.impl.FacultyDAOImpl;
 import com.springgoals.dao.impl.UniversityDAOImpl;
 import com.springgoals.exception.ValidationsException;
@@ -8,6 +9,8 @@ import com.springgoals.model.University;
 import com.springgoals.model.dto.UniversityFacultiesDTO;
 import com.springgoals.model.dto.UniversityFacultyDTO;
 import com.springgoals.service.UniversityService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +25,8 @@ import javax.validation.Validator;
 
 @Service
 public class UniversityServiceImpl implements UniversityService {
+
+    private static final Logger logger = LogManager.getLogger(UniversityServiceImpl.class);
 
     @Autowired
     private Validator validator;
@@ -77,8 +82,8 @@ public class UniversityServiceImpl implements UniversityService {
             for (ConstraintViolation<University> constraintViolation : violations) {
                 sb.append(constraintViolation.getMessage());
             }
-
-            throw new ValidationsException("Error occurred: " + sb.toString());
+            logger.error("Error in UniversityServiceImpl update: " + sb.toString());
+            throw new ValidationsException("Error in UniversityServiceImpl update: " + sb.toString());
         }
         universityDAO.update(university);
     }
@@ -93,8 +98,8 @@ public class UniversityServiceImpl implements UniversityService {
             for (ConstraintViolation<University> constraintViolation : violations) {
                 sb.append(constraintViolation.getMessage());
             }
-
-            throw new ValidationsException("Error occurred: " + sb.toString());
+            logger.error("Error in UniversityServiceImpl save: " + sb.toString());
+            throw new ValidationsException("Error in UniversityServiceImpl save: " + sb.toString());
         }
         universityDAO.save(university);
     }
@@ -131,8 +136,8 @@ public class UniversityServiceImpl implements UniversityService {
             for (ConstraintViolation<Faculty> constraintViolation : violationFaculty) {
                 sb.append(constraintViolation.getMessage());
             }
-
-            throw new ValidationsException("Error occurred: " + sb.toString());
+            logger.error("Error in UniversityServiceImpl saveUniversityFaculties: " + sb.toString());
+            throw new ValidationsException("Error in UniversityServiceImpl saveUniversityFaculties: " + sb.toString());
         }
 
         Integer universityId =universityDAO.saveReturnId(updateUniversityFacultiesDTO.getUniversity());

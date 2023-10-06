@@ -11,6 +11,8 @@ import com.springgoals.model.dto.StudentSubjectsOddDTO;
 import com.springgoals.model.dto.UpdateStudentSubjectDTO;
 import com.springgoals.service.impl.StudentServiceImpl;
 import com.springgoals.service.impl.SubjectServiceImpl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,6 +29,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/student")
 public class StudentController {
+
+    private static final Logger logger = LogManager.getLogger(LogController.class);
 
     @Autowired
     private StudentServiceImpl studentService;
@@ -58,6 +62,7 @@ public class StudentController {
     ) throws SQLException, QueryException {
         List<Student> students ;
         if ((name == null || name.equals("")) && (surname == null || surname.equals("")) && (location == null || location.equals("")) && (indeks == null || indeks.equals(""))) {
+            logger.error("Error occurred: not enough query parameters");
             throw new QueryException("Error occurred: not enough query parameters");
         } else {
             students = studentService.searchStudents(name, surname, location, indeks);
@@ -70,6 +75,7 @@ public class StudentController {
 
         Student student = studentService.getById(id);
         if (student.getId() == null) {
+            logger.error("Student with id " + id + " not found in DB ");
             throw new EntityNotFoundException("Student with id " + id + " not found in DB ");
         }
         return ResponseEntity.status(HttpStatus.OK).body(student);
@@ -83,10 +89,12 @@ public class StudentController {
         StudentSubjectDTO studentSubjectDTO;
 
         if (id == null || id == 0) {
+            logger.error("Error occurred:studentId can not be zero or null");
             throw new ValidationsException("Error occurred:studentId can not be zero or null");
         }
         Student student = studentService.getById(id);
         if (student == null) {
+            logger.error("student with id doesn't exist in db");
             throw new ValidationsException("student with id doesn't exist in db");
         }
         studentSubjectDTO = studentService.getSubjectsByStudId(id);
@@ -102,10 +110,12 @@ public class StudentController {
         StudentSubjectsOddDTO studentSubjectsOddDTO;
 
         if (id == null || id == 0) {
+            logger.error("Error occurred:studentId can not be zero or null");
             throw new ValidationsException("Error occurred:studentId can not be zero or null");
         }
         Student student = studentService.getById(id);
         if (student == null) {
+            logger.error("Missing student payload");
             throw new ValidationsException("Missing student payload");
         }
         studentSubjectsOddDTO = studentService.getOddSubjectsByStudId(id);
@@ -117,6 +127,7 @@ public class StudentController {
     public ResponseEntity<String> add(@RequestBody Student student) throws SQLException, ValidationsException, JsonProcessingException {
 
         if (student == null) {
+            logger.error("Missing student payload");
             throw new ValidationsException("Missing student payload");
         }
         studentService.save(student);
@@ -127,6 +138,7 @@ public class StudentController {
     public ResponseEntity<String> update(@RequestBody Student student) throws SQLException, ValidationsException {
 
         if (student == null) {
+            logger.error("Missing student payload");
             throw new ValidationsException("Missing student payload");
         }
         studentService.update(student);
@@ -137,10 +149,11 @@ public class StudentController {
     public ResponseEntity<String> addStudentSubjects(@RequestBody UpdateStudentSubjectDTO updateStudentSubjectDTO) throws SQLException, ValidationsException {
 
         if (updateStudentSubjectDTO.getStudent().getId() == null || updateStudentSubjectDTO.getStudent().getId() == 0) {
+            logger.error("Error occurred:studentId can not be zero or null");
             throw new ValidationsException("Error occurred:studentId can not be zero or null");
         } else if (updateStudentSubjectDTO.getSubjectList() == null || updateStudentSubjectDTO.getSubjectList().size() == 0) {
+            logger.error("Error in addStudentSubjects: SubjectList can not be zero or null");
             throw new ValidationsException("Error in addStudentSubjects: SubjectList can not be zero or null");
-
         }
         studentService.saveStudentSubjects(updateStudentSubjectDTO);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully created");
@@ -171,6 +184,7 @@ public class StudentController {
 
         Student student = studentService.getById(id);
         if (student.getId() == null) {
+            logger.error("Student with id " + id + " not found in DB ");
             throw new EntityNotFoundException("Student with id " + id + " not found in DB ");
         }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted");

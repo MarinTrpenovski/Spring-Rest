@@ -6,6 +6,8 @@ import com.springgoals.model.Permission;
 import com.springgoals.model.Role;
 import com.springgoals.model.User;
 import com.springgoals.model.dto.UserDTO;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -14,6 +16,8 @@ import java.util.ArrayList;
 
 @Repository
 public class UserDAOImpl implements UserDAO {
+
+    private static final Logger logger = LogManager.getLogger(UserDAOImpl.class);
 
     static Connection connection;
 
@@ -46,7 +50,8 @@ public class UserDAOImpl implements UserDAO {
 
             }
         } catch (SQLException e) {
-            System.out.println("error occurred in user getById " + e.getMessage());
+            System.out.println("error occurred in UserDAOImpl getById " + e.getMessage());
+            logger.error("error occurred in UserDAOImpl getById " + e.getMessage());
             throw e;
 
         }
@@ -70,11 +75,11 @@ public class UserDAOImpl implements UserDAO {
                 user.setPassword(rs.getString("password"));
                 user.setSurname(rs.getString("surname"));
 
-
                 userList.add(user);
             }
         } catch (SQLException e) {
-            System.out.println("error occurred in user getAll " + e.getMessage());
+            System.out.println("error occurred in UserDAOImpl getAll " + e.getMessage());
+            logger.error("error occurred in UserDAOImpl getAll " + e.getMessage());
             throw e;
 
         }
@@ -94,19 +99,17 @@ public class UserDAOImpl implements UserDAO {
             statement1.setString(3, user.getPassword());
             statement1.setString(4, user.getSurname());
 
-
             int affectedRows = statement1.executeUpdate();
-
             if (affectedRows == 0) {
-                throw new SQLException("error");
+                logger.error("Error with affectedRows in UserDAOImpl save");
+                throw new SQLException("Error with affectedRows in UserDAOImpl save");
             }
 
         } catch (SQLException e) {
-            System.out.println("error occurred " + e.getMessage());
+            System.out.println("error occurred in UserDAOImpl save " + e.getMessage());
+            logger.error("error occurred in UserDAOImpl save " + e.getMessage());
             throw e;
-
         }
-
     }
 
     @Override
@@ -122,14 +125,14 @@ public class UserDAOImpl implements UserDAO {
             statement1.setString(4, user.getSurname());
             statement1.setInt(5, user.getId());
 
-
             int rowsUpdated = statement1.executeUpdate();
             if (rowsUpdated > 0) {
                 System.out.println("An existing user was updated");
             }
 
         } catch (SQLException e) {
-            System.out.println("error in DAO update" + e.getMessage());
+            System.out.println("error occurred in UserDAOImpl update " + e.getMessage());
+            logger.error("error occurred in UserDAOImpl update " + e.getMessage());
             throw e;
         }
 
@@ -149,7 +152,8 @@ public class UserDAOImpl implements UserDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("error occurred " + e.getMessage());
+            System.out.println("error occurred in UserDAOImpl delete " + e.getMessage());
+            logger.error("error occurred in UserDAOImpl delete " + e.getMessage());
             throw e;
 
         }
@@ -171,7 +175,8 @@ public class UserDAOImpl implements UserDAO {
                 return false;
             }
         } catch (SQLException e) {
-            System.out.println("error" + e.getMessage());
+            System.out.println("error occurred in UserDAOImpl checkUsers " + e.getMessage());
+            logger.error("error occurred in UserDAOImpl checkUsers " + e.getMessage());
             throw e;
         }
 
@@ -196,7 +201,8 @@ public class UserDAOImpl implements UserDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("error: " + "Invalid username or password" + e.getMessage());
+            System.out.println("error in UserDAOImpl loginUser " + "Invalid username or password" + e.getMessage());
+            logger.error("error in UserDAOImpl loginUser " + "Invalid username or password" + e.getMessage());
             throw e;
         }
         return user;
@@ -252,7 +258,8 @@ public class UserDAOImpl implements UserDAO {
             userDTO.setRoles(roles);
 
         } catch (SQLException e) {
-            System.out.println("error occurred " + e.getMessage());
+            System.out.println("error occurred in UserDAOImpl getUserRolePermissionsByEmail " + e.getMessage());
+            logger.error("error occurred in UserDAOImpl getUserRolePermissionsByEmail " + e.getMessage());
             throw e;
         }
 
