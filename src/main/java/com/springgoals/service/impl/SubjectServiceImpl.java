@@ -1,9 +1,12 @@
 package com.springgoals.service.impl;
 
+import com.springgoals.controller.LogController;
 import com.springgoals.dao.impl.SubjectDAOImpl;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Subject;
 import com.springgoals.service.SubjectService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +23,13 @@ import javax.validation.Validator;
 
 public class SubjectServiceImpl implements SubjectService {
 
+    private static final Logger logger = LogManager.getLogger(SubjectServiceImpl.class);
+
     @Autowired
     private Validator validator;
 
     @Autowired
     private SubjectDAOImpl subjectDAO;
-
 
     @Override
     public Subject getById(Integer id) throws SQLException {
@@ -76,8 +80,8 @@ public class SubjectServiceImpl implements SubjectService {
             for (ConstraintViolation<Subject> constraintViolation : violations) {
                 sb.append(constraintViolation.getMessage());
             }
-
-            throw new ValidationsException("Error occurred: " + sb.toString());
+            logger.error("Error in SubjectServiceImpl update: " + sb.toString());
+            throw new ValidationsException("Error in SubjectServiceImpl update: " + sb.toString());
         }
         subjectDAO.update(subject);
     }
@@ -92,8 +96,8 @@ public class SubjectServiceImpl implements SubjectService {
             for (ConstraintViolation<Subject> constraintViolation : violations) {
                 sb.append(constraintViolation.getMessage());
             }
-
-            throw new ValidationsException("Error occurred: " + sb.toString());
+            logger.error("Error in SubjectServiceImpl save: " + sb.toString());
+            throw new ValidationsException("Error in SubjectServiceImpl save: " + sb.toString());
         }
         subjectDAO.save(subject);
     }

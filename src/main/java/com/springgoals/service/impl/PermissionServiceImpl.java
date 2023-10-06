@@ -1,10 +1,13 @@
 package com.springgoals.service.impl;
 
+import com.springgoals.controller.LogController;
 import com.springgoals.dao.impl.PermissionDAOImpl;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Permission;
 
 import com.springgoals.service.PermissionService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolation;
@@ -15,6 +18,7 @@ import java.util.Set;
 
 public class PermissionServiceImpl implements PermissionService {
 
+    private static final Logger logger = LogManager.getLogger(PermissionServiceImpl.class);
 
     @Autowired
     private Validator validator;
@@ -44,8 +48,8 @@ public class PermissionServiceImpl implements PermissionService {
             for (ConstraintViolation<Permission> constraintViolation : violations) {
                 sb.append(constraintViolation.getMessage());
             }
-
-            throw new ValidationsException("Error occurred: " + sb.toString());
+            logger.error("Error in PermissionServiceImpl update: " + sb.toString());
+            throw new ValidationsException("Error in PermissionServiceImpl update: " + sb.toString());
         }
         permissionDAO.update(permission);
     }
@@ -60,8 +64,8 @@ public class PermissionServiceImpl implements PermissionService {
             for (ConstraintViolation<Permission> constraintViolation : violations) {
                 sb.append(constraintViolation.getMessage());
             }
-
-            throw new ValidationsException("Error occurred: " + sb.toString());
+            logger.error("Error in PermissionServiceImpl save: " + sb.toString());
+            throw new ValidationsException("Error in PermissionServiceImpl save: " + sb.toString());
         }
         permissionDAO.save(permission);
     }

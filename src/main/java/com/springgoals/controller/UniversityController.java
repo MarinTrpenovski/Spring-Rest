@@ -9,6 +9,8 @@ import com.springgoals.model.dto.UniversityFacultiesDTO;
 import com.springgoals.model.dto.UniversityFacultyDTO;
 import com.springgoals.model.University;
 import com.springgoals.service.impl.UniversityServiceImpl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,6 +28,7 @@ import java.util.Map;
 @RequestMapping("/api/university")
 public class UniversityController {
 
+    private static final Logger logger = LogManager.getLogger(UniversityController.class);
     @Autowired
     private UniversityServiceImpl universityService;
 
@@ -52,6 +55,7 @@ public class UniversityController {
     ) throws SQLException, QueryException {
         List<University> universities = null;
         if ((name == null || name.equals("")) && (description == null || description.equals(""))) {
+            logger.error("Error occurred: not enough query parameters");
             throw new QueryException("Error occurred: not enough query parameters");
         } else {
             universities = universityService.searchUniversities(name, description);
@@ -64,6 +68,7 @@ public class UniversityController {
 
         University university = universityService.getById(id);
         if (university.getId() == null) {
+            logger.error("University with id " + id + " not found in DB ");
             throw new EntityNotFoundException("University with id " + id + " not found in DB ");
         }
         return ResponseEntity.status(HttpStatus.OK).body(university);
@@ -76,6 +81,7 @@ public class UniversityController {
         UniversityFacultyDTO universityFacultyDTO;
 
         if (id == null || id == 0) {
+            logger.error("Error occurred:id can not be zero or null");
             throw new ValidationsException("Error occurred:id can not be zero or null");
         } else {
             universityFacultyDTO = universityService.getFacultiesByUniId(id);
@@ -87,7 +93,9 @@ public class UniversityController {
     public ResponseEntity<String> add(@RequestBody University university)
             throws SQLException, ValidationsException, JsonProcessingException {
         if (university == null) {
-            throw new ValidationsException("Missing university payload");}
+            logger.error("Missing university payload");
+            throw new ValidationsException("Missing university payload");
+        }
         universityService.save(university);
         return ResponseEntity.status(HttpStatus.CREATED).
                 body(objectMapper.writeValueAsString("Successfully Created"));
@@ -97,7 +105,9 @@ public class UniversityController {
     public ResponseEntity<String> update(@RequestBody University university)
             throws SQLException, ValidationsException {
         if (university == null) {
-            throw new ValidationsException("Missing university payload");}
+            logger.error("Missing university payload");
+            throw new ValidationsException("Missing university payload");
+        }
         universityService.update(university);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }

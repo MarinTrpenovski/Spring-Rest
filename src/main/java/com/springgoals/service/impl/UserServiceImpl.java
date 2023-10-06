@@ -1,6 +1,7 @@
 package com.springgoals.service.impl;
 
 import com.auth0.jwt.JWTVerifier;
+import com.springgoals.controller.LogController;
 import com.springgoals.dao.impl.UserDAOImpl;
 import com.springgoals.exception.AuthenticationException;
 import com.springgoals.exception.EmailExistsException;
@@ -10,6 +11,8 @@ import com.springgoals.model.dto.UserDTO;
 import com.springgoals.security.JwtTokenUtility;
 import com.springgoals.service.UserService;
 import io.jsonwebtoken.Claims;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,6 +28,8 @@ import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
 
     @Autowired
     private Validator validator;
@@ -54,7 +59,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getById(Integer id) throws SQLException {
+
         User user = userDAO.getById(id);
+        if(user.getPassword().equals("")) {
+
+        }
         return user;
     }
 
@@ -68,8 +77,8 @@ public class UserServiceImpl implements UserService {
             for (ConstraintViolation<User> constraintViolation : violations) {
                 sb.append(constraintViolation.getMessage());
             }
-
-            throw new ValidationsException("Error occurred: " + sb.toString());
+            logger.error("Error in UserServiceImpl update: " + sb.toString());
+            throw new ValidationsException("Error in UserServiceImpl update: " + sb.toString());
         }
         userDAO.update(user);
     }
@@ -89,8 +98,8 @@ public class UserServiceImpl implements UserService {
             for (ConstraintViolation<User> constraintViolation : violations) {
                 sb.append(constraintViolation.getMessage());
             }
-
-            throw new ValidationsException("Error occurred: " + sb.toString());
+            logger.error("Error in UserServiceImpl save: " + sb.toString());
+            throw new ValidationsException("Error in UserServiceImpl save: " + sb.toString());
         }
 
         System.out.println("user from service save: " + user );
@@ -113,6 +122,7 @@ public class UserServiceImpl implements UserService {
         User user =  userDAO.loginUser(sql.toString());
 
         if (user.getId() == null || (user.getPassword() != null && !passwordEncoder.matches(password, user.getPassword()))) {
+            logger.error("Error in UserServiceImpl loginUser, invalid credentials");
             throw new AuthenticationException("invalid credentials");
         }
 

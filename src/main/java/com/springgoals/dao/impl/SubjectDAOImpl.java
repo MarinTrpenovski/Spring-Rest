@@ -1,8 +1,11 @@
 package com.springgoals.dao.impl;
 
+import com.springgoals.controller.LogController;
 import com.springgoals.dao.SingletonConnection;
 import com.springgoals.dao.SubjectDAO;
 import com.springgoals.model.Subject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -14,6 +17,8 @@ import java.util.Map;
 @Repository
 
 public class SubjectDAOImpl implements SubjectDAO {
+
+    private static final Logger logger = LogManager.getLogger(SubjectDAOImpl.class);
 
     static Connection connection;
 
@@ -44,7 +49,8 @@ public class SubjectDAOImpl implements SubjectDAO {
                 subject.setSubject_professor(resultSet.getInt("subject_professor"));
             }
         } catch (SQLException e) {
-            System.out.println("error occured " + e.getMessage());
+            System.out.println("error occurred in SubjectDAOImpl getById " + e.getMessage());
+            logger.error("error occurred in SubjectDAOImpl getById " + e.getMessage());
             throw e;
         }
 
@@ -72,7 +78,8 @@ public class SubjectDAOImpl implements SubjectDAO {
                 subjectList.add(subject);
             }
         } catch (SQLException e) {
-            System.out.println("error" + e.getMessage());
+            System.out.println("error occurred in SubjectDAOImpl getAll " + e.getMessage());
+            logger.error("error occurred in SubjectDAOImpl getAll " + e.getMessage());
             throw e;
         }
         return subjectList;
@@ -96,7 +103,8 @@ public class SubjectDAOImpl implements SubjectDAO {
                 subjectMap.put(subject.getId(), subject);
             }
         } catch (SQLException e) {
-            System.out.println("error occured " + e.getMessage());
+            System.out.println("error occurred in SubjectDAOImpl getMap " + e.getMessage());
+            logger.error("error occurred in SubjectDAOImpl getMap " + e.getMessage());
             throw e;
         }
         return subjectMap;
@@ -123,7 +131,8 @@ public class SubjectDAOImpl implements SubjectDAO {
                 subjectList.add(subject);
             }
         } catch (SQLException e) {
-            System.out.println("error" + e.getMessage());
+            System.out.println("error occurred in SubjectDAOImpl searchSubjects " + e.getMessage());
+            logger.error("error occurred in SubjectDAOImpl searchSubjects " + e.getMessage());
             throw e;
         }
         return subjectList;
@@ -140,14 +149,14 @@ public class SubjectDAOImpl implements SubjectDAO {
             statement1.setInt(3, subject.getCredits());
             statement1.setInt(4, subject.getId());
 
-
             int rowsUpdated = statement1.executeUpdate();
             if (rowsUpdated > 0) {
                 System.out.println("An existing subject was updated");
             }
 
         } catch (SQLException e) {
-            System.out.println("error occured " + e.getMessage());
+            System.out.println("error occurred in SubjectDAOImpl update " + e.getMessage());
+            logger.error("error occurred in SubjectDAOImpl update " + e.getMessage());
             throw e;
         }
     }
@@ -167,11 +176,13 @@ public class SubjectDAOImpl implements SubjectDAO {
             int affectedRows = statement1.executeUpdate();
 
             if (affectedRows == 0) {
-                throw new SQLException("error");
+                logger.error("Error with affectedRows in SubjectDAOImpl save");
+                throw new SQLException("Error with affectedRows in SubjectDAOImpl save");
             }
 
         } catch (SQLException e) {
-            System.out.println("error occured " + e.getMessage());
+            System.out.println("error occurred in SubjectDAOImpl save " + e.getMessage());
+            logger.error("error occurred in SubjectDAOImpl save " + e.getMessage());
             throw e;
         }
     }
@@ -191,18 +202,21 @@ public class SubjectDAOImpl implements SubjectDAO {
             int affectedRows = statement1.executeUpdate();
 
             if (affectedRows == 0) {
-                throw new SQLException("error");
+                logger.error("Error with affectedRows in SubjectDAOImpl saveReturnId");
+                throw new SQLException("Error with affectedRows in SubjectDAOImpl saveReturnId");
             }
 
             try (ResultSet generatedKeys = statement1.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     id = generatedKeys.getInt(1);
                 } else {
-                    throw new SQLException("error2");
+                    logger.error("Error with generatedKeys in SubjectDAOImpl saveReturnId");
+                    throw new SQLException("Error with generatedKeys in SubjectDAOImpl saveReturnId");
                 }
             }
         } catch (SQLException e) {
-            System.out.println("error occured " + e.getMessage());
+            System.out.println("error occurred in SubjectDAOImpl saveReturnId " + e.getMessage());
+            logger.error("error occurred in SubjectDAOImpl saveReturnId " + e.getMessage());
             throw e;
 
         }
@@ -222,7 +236,8 @@ public class SubjectDAOImpl implements SubjectDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("error happened in delete subject: " + e.getMessage());
+            System.out.println("error occurred in SubjectDAOImpl delete " + e.getMessage());
+            logger.error("error occurred in SubjectDAOImpl delete " + e.getMessage());
             throw e;
         }
 
@@ -244,7 +259,8 @@ public class SubjectDAOImpl implements SubjectDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("error happened in deleteDTO " + e.getMessage());
+            System.out.println("error in SubjectDAOImpl removeSubjectStudentRelation " + e.getMessage());
+            logger.error("error in SubjectDAOImpl removeSubjectStudentRelation " + e.getMessage());
             throw e;
         }
 
@@ -269,7 +285,8 @@ public class SubjectDAOImpl implements SubjectDAO {
 
             System.out.println("number of students is " + numberOfStudents);
         } catch (SQLException e) {
-            System.out.println("error in getSubjectStudents " + e.getMessage());
+            System.out.println("error in SubjectDAOImpl getSubjectStudents " + e.getMessage());
+            logger.error("error in SubjectDAOImpl getSubjectStudents " + e.getMessage());
             throw e;
         }
         return numberOfStudents;

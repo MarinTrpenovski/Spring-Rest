@@ -8,6 +8,8 @@ import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Faculty;
 import com.springgoals.model.dto.FacultySubjectDTO;
 import com.springgoals.service.impl.FacultyServiceImpl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,6 +26,7 @@ import java.util.Map;
 @RequestMapping("/api/faculty")
 public class FacultyController {
 
+    private static final Logger logger = LogManager.getLogger(FacultyController.class);
     @Autowired
     private FacultyServiceImpl facultyService;
 
@@ -54,6 +57,7 @@ public class FacultyController {
     ) throws SQLException, QueryException {
         List<Faculty> faculties ;
         if ((name == null || name.equals("")) && (location == null || location.equals("")) && (study_field == null || study_field.equals(""))) {
+            logger.error("Error occurred: not enough query parameters");
             throw new QueryException("Error occurred: not enough query parameters");
         } else {
             faculties = facultyService.searchFaculties(name, location, study_field);
@@ -66,7 +70,8 @@ public class FacultyController {
     public ResponseEntity<Faculty> getById(@PathVariable("id") Integer id) throws SQLException {
         Faculty faculty = facultyService.getById(id);
         if (faculty.getId() == null) {
-            throw new EntityNotFoundException("Faculty with id " + id + " not found in DB ");
+            logger.error("Faculty with id" + id + " not found in DB");
+            throw new EntityNotFoundException("Faculty with id " + id + " not found in DB");
         }
         return ResponseEntity.status(HttpStatus.OK).body(faculty);
     }
@@ -78,6 +83,7 @@ public class FacultyController {
 
         FacultySubjectDTO facultySubjectDTO;
         if (id == null || id == 0) {
+            logger.error("Error occurred:id can not be zero or null");
             throw new ValidationsException("Error occurred:id can not be zero or null");
         } else {
             facultySubjectDTO = facultyService.getSubjectsByFacId(id);
@@ -90,6 +96,7 @@ public class FacultyController {
     public ResponseEntity<String> add(@RequestBody Faculty faculty) throws SQLException, ValidationsException, JsonProcessingException {
 
         if (faculty == null) {
+            logger.error("Missing faculty payload");
             throw new ValidationsException("Missing faculty payload");
         }
         facultyService.save(faculty);
@@ -101,6 +108,7 @@ public class FacultyController {
     public ResponseEntity<String> update(@RequestBody Faculty faculty) throws SQLException, ValidationsException {
 
         if (faculty == null) {
+            logger.error("Missing faculty payload");
             throw new ValidationsException("Missing faculty payload");
         }
         facultyService.update(faculty);

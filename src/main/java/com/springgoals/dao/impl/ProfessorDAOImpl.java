@@ -3,6 +3,8 @@ package com.springgoals.dao.impl;
 import com.springgoals.dao.ProfessorDAO;
 import com.springgoals.dao.SingletonConnection;
 import com.springgoals.model.Professor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -14,6 +16,8 @@ import java.util.Map;
 @Repository
 
 public class ProfessorDAOImpl implements ProfessorDAO {
+
+    private static final Logger logger = LogManager.getLogger(ProfessorDAOImpl.class);
 
     static Connection connection;
 
@@ -45,10 +49,10 @@ public class ProfessorDAOImpl implements ProfessorDAO {
                 professor.setAge(resultSet.getInt("age"));
                 professor.setProfessor_faculty(resultSet.getInt("professor_faculty"));
 
-
             }
         } catch (SQLException e) {
-            System.out.println("error occured " + e.getMessage());
+            System.out.println("error occurred in ProfessorDAOImpl getById " + e.getMessage());
+            logger.error("error occurred in ProfessorDAOImpl getById " + e.getMessage());
             throw e;
         }
         return professor;
@@ -75,7 +79,8 @@ public class ProfessorDAOImpl implements ProfessorDAO {
                 professorList.add(professor);
             }
         } catch (SQLException e) {
-            System.out.println("error occured " + e.getMessage());
+            System.out.println("error occurred in ProfessorDAOImpl getAll " + e.getMessage());
+            logger.error("error occurred in ProfessorDAOImpl getAll " + e.getMessage());
             throw e;
         }
         return professorList;
@@ -102,7 +107,8 @@ public class ProfessorDAOImpl implements ProfessorDAO {
                 professorMap.put(professor.getId(), professor);
             }
         } catch (SQLException e) {
-            System.out.println("error occured " + e.getMessage());
+            System.out.println("error occurred in ProfessorDAOImpl getMap " + e.getMessage());
+            logger.error("error occurred in ProfessorDAOImpl getMap " + e.getMessage());
             throw e;
         }
         return professorMap;
@@ -131,7 +137,8 @@ public class ProfessorDAOImpl implements ProfessorDAO {
                 professorList.add(professor);
             }
         } catch (SQLException e) {
-            System.out.println("error" + e.getMessage());
+            System.out.println("error occurred in ProfessorDAOImpl searchProfessors " + e.getMessage());
+            logger.error("error occurred in ProfessorDAOImpl searchProfessors " + e.getMessage());
             throw e;
         }
         return professorList;
@@ -156,7 +163,8 @@ public class ProfessorDAOImpl implements ProfessorDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("error occured " + e.getMessage());
+            System.out.println("error occurred in ProfessorDAOImpl update " + e.getMessage());
+            logger.error("error occurred in ProfessorDAOImpl update " + e.getMessage());
             throw e;
         }
     }
@@ -179,11 +187,13 @@ public class ProfessorDAOImpl implements ProfessorDAO {
             int affectedRows = statement1.executeUpdate();
 
             if (affectedRows == 0) {
-                throw new SQLException("error in DAO save, affectedRows");
+                logger.error("Error with affectedRows in ProfessorDAOImpl save");
+                throw new SQLException("Error with affectedRows in ProfessorDAOImpl save");
             }
 
         } catch (SQLException e) {
-            System.out.println("error " + e.getMessage());
+            System.out.println("error occurred in ProfessorDAOImpl save " + e.getMessage());
+            logger.error("error occurred in ProfessorDAOImpl save " + e.getMessage());
             throw e;
         }
 
@@ -203,7 +213,8 @@ public class ProfessorDAOImpl implements ProfessorDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("error occured " + e.getMessage());
+            System.out.println("error occurred in ProfessorDAOImpl delete " + e.getMessage());
+            logger.error("error occurred in ProfessorDAOImpl delete " + e.getMessage());
             throw e;
 
         }

@@ -1,10 +1,13 @@
 package com.springgoals.service.impl;
 
+import com.springgoals.controller.LogController;
 import com.springgoals.dao.impl.FacultyDAOImpl;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Faculty;
 import com.springgoals.model.dto.FacultySubjectDTO;
 import com.springgoals.service.FacultyService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +25,7 @@ import javax.validation.Validator;
 @Service
 public class FacultyServiceImpl implements FacultyService {
 
+    private static final Logger logger = LogManager.getLogger(FacultyServiceImpl.class);
     @Autowired
     private Validator validator;
 
@@ -77,8 +81,8 @@ public class FacultyServiceImpl implements FacultyService {
             for (ConstraintViolation<Faculty> constraintViolation : violations) {
                 sb.append(constraintViolation.getMessage());
             }
-
-            throw new ValidationsException("Error occurred: " + sb.toString());
+            logger.error("Error in FacultyServiceImpl update: " + sb.toString());
+            throw new ValidationsException("Error in FacultyServiceImpl update: " + sb.toString());
         }
         facultyDAO.update(faculty);
     }
@@ -93,8 +97,8 @@ public class FacultyServiceImpl implements FacultyService {
             for (ConstraintViolation<Faculty> constraintViolation : violations) {
                 sb.append(constraintViolation.getMessage());
             }
-
-            throw new ValidationsException("Error occurred: " + sb.toString());
+            logger.error("Error in FacultyServiceImpl save: " + sb.toString());
+            throw new ValidationsException("Error in FacultyServiceImpl save: " + sb.toString());
         }
         facultyDAO.save(faculty);
     }

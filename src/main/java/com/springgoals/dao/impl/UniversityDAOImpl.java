@@ -1,10 +1,13 @@
 package com.springgoals.dao.impl;
 
+import com.springgoals.controller.LogController;
 import com.springgoals.dao.SingletonConnection;
 import com.springgoals.dao.UniversityDAO;
 import com.springgoals.model.Faculty;
 import com.springgoals.model.University;
 import com.springgoals.model.dto.UniversityFacultyDTO;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -16,6 +19,7 @@ import java.util.Map;
 @Repository
 public class UniversityDAOImpl implements UniversityDAO {
 
+    private static final Logger logger = LogManager.getLogger(UniversityDAOImpl.class);
     static Connection connection;
 
     static {
@@ -45,7 +49,8 @@ public class UniversityDAOImpl implements UniversityDAO {
 
             }
         } catch (SQLException e) {
-            System.out.println("error occured in university getById " + e.getMessage());
+            System.out.println("error occurred in UniversityDAOImpl getById " + e.getMessage());
+            logger.error("error occurred in UniversityDAOImpl getById " + e.getMessage());
             throw e;
 
         }
@@ -70,7 +75,8 @@ public class UniversityDAOImpl implements UniversityDAO {
                 universityList.add(university);
             }
         } catch (SQLException e) {
-            System.out.println("error occured in university getAll " + e.getMessage());
+            System.out.println("error occurred in UniversityDAOImpl getAll " + e.getMessage());
+            logger.error("error occurred in UniversityDAOImpl getAll " + e.getMessage());
             throw e;
 
         }
@@ -94,7 +100,8 @@ public class UniversityDAOImpl implements UniversityDAO {
                 universityMap.put(university.getId(), university);
             }
         } catch (SQLException e) {
-            System.out.println("error occured " + e.getMessage());
+            System.out.println("error occurred in UniversityDAOImpl getMap " + e.getMessage());
+            logger.error("error occurred in UniversityDAOImpl getMap " + e.getMessage());
             throw e;
         }
         return universityMap;
@@ -120,7 +127,8 @@ public class UniversityDAOImpl implements UniversityDAO {
                 universityList.add(university);
             }
         } catch (SQLException e) {
-            System.out.println("error" + e.getMessage());
+            System.out.println("error occurred in UniversityDAOImpl searchUniversities " + e.getMessage());
+            logger.error("error occurred in UniversityDAOImpl searchUniversities " + e.getMessage());
             throw e;
         }
         return universityList;
@@ -144,7 +152,8 @@ public class UniversityDAOImpl implements UniversityDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("error in DAO update" + e.getMessage());
+            System.out.println("error occurred in UniversityDAOImpl update " + e.getMessage());
+            logger.error("error occurred in UniversityDAOImpl update " + e.getMessage());
             throw e;
         }
 
@@ -163,11 +172,13 @@ public class UniversityDAOImpl implements UniversityDAO {
             int affectedRows = statement1.executeUpdate();
 
             if (affectedRows == 0) {
-                throw new SQLException("error");
+                logger.error("Error with affectedRows in UniversityDAOImpl save");
+                throw new SQLException("Error with affectedRows in UniversityDAOImpl save");
             }
 
         } catch (SQLException e) {
-            System.out.println("error occured " + e.getMessage());
+            System.out.println("error occurred in UniversityDAOImpl save " + e.getMessage());
+            logger.error("error occurred in UniversityDAOImpl save " + e.getMessage());
             throw e;
 
         }
@@ -188,18 +199,21 @@ public class UniversityDAOImpl implements UniversityDAO {
             int affectedRows = statement1.executeUpdate();
 
             if (affectedRows == 0) {
-                throw new SQLException("error");
+                logger.error("Error with affectedRows in UniversityDAOImpl saveReturnId");
+                throw new SQLException("Error with affectedRows in UniversityDAOImpl saveReturnId");
             }
 
             try (ResultSet generatedKeys = statement1.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     id = generatedKeys.getInt(1);
                 } else {
-                    throw new SQLException("error2");
+                    logger.error("Error with generatedKeys in UniversityDAOImpl saveReturnId");
+                    throw new SQLException("Error with generatedKeys in UniversityDAOImpl saveReturnId");
                 }
             }
         } catch (SQLException e) {
-            System.out.println("error occurred " + e.getMessage());
+            System.out.println("error occurred in UniversityDAOImpl saveReturnId " + e.getMessage());
+            logger.error("error occurred in UniversityDAOImpl saveReturnId " + e.getMessage());
             throw e;
         }
         return id;
@@ -218,7 +232,8 @@ public class UniversityDAOImpl implements UniversityDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("error occured " + e.getMessage());
+            System.out.println("error occurred in UniversityDAOImpl delete " + e.getMessage());
+            logger.error("error occurred in UniversityDAOImpl delete " + e.getMessage());
             throw e;
 
         }
@@ -264,7 +279,8 @@ public class UniversityDAOImpl implements UniversityDAO {
             universityFacultyDTO.setLengthOfList(facultyList.size());
 
         } catch (SQLException e) {
-            System.out.println("error occured " + e.getMessage());
+            System.out.println("error in UniversityDAOImpl getFacultiesByUniId " + e.getMessage());
+            logger.error("error in UniversityDAOImpl getFacultiesByUniId " + e.getMessage());
             throw e;
         }
 

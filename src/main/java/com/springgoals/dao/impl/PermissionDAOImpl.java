@@ -2,6 +2,8 @@ package com.springgoals.dao.impl;
 import com.springgoals.dao.SingletonConnection;
 import com.springgoals.dao.PermissionDAO;
 import com.springgoals.model.Permission;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.List;
@@ -9,6 +11,8 @@ import java.util.ArrayList;
 
 
 public class PermissionDAOImpl implements PermissionDAO{
+
+    private static final Logger logger = LogManager.getLogger(PermissionDAOImpl.class);
 
     static Connection connection;
 
@@ -38,7 +42,8 @@ public class PermissionDAOImpl implements PermissionDAO{
 
             }
         } catch (SQLException e) {
-            System.out.println("error occurred in permission getById " + e.getMessage());
+            System.out.println("error occurred in PermissionDAOImpl getById " + e.getMessage());
+            logger.error("error occurred in PermissionDAOImpl getById " + e.getMessage());
             throw e;
 
         }
@@ -62,7 +67,8 @@ public class PermissionDAOImpl implements PermissionDAO{
                 permissionList.add(permission);
             }
         } catch (SQLException e) {
-            System.out.println("error occurred in permission getAll " + e.getMessage());
+            System.out.println("error occurred in PermissionDAOImpl getAll " + e.getMessage());
+            logger.error("error occurred in PermissionDAOImpl getAll " + e.getMessage());
             throw e;
 
         }
@@ -86,7 +92,8 @@ public class PermissionDAOImpl implements PermissionDAO{
             }
 
         } catch (SQLException e) {
-            System.out.println("error occurred " + e.getMessage());
+            System.out.println("error occurred in PermissionDAOImpl save " + e.getMessage());
+            logger.error("error occurred in PermissionDAOImpl save " + e.getMessage());
             throw e;
 
         }
@@ -109,7 +116,8 @@ public class PermissionDAOImpl implements PermissionDAO{
             }
 
         } catch (SQLException e) {
-            System.out.println("error in DAO update" + e.getMessage());
+            System.out.println("error occurred in PermissionDAOImpl update " + e.getMessage());
+            logger.error("error occurred in PermissionDAOImpl update " + e.getMessage());
             throw e;
         }
 
@@ -129,7 +137,8 @@ public class PermissionDAOImpl implements PermissionDAO{
             }
 
         } catch (SQLException e) {
-            System.out.println("error occurred " + e.getMessage());
+            System.out.println("error occurred in PermissionDAOImpl delete " + e.getMessage());
+            logger.error("error occurred in PermissionDAOImpl delete " + e.getMessage());
             throw e;
 
         }

@@ -1,5 +1,6 @@
 package com.springgoals.service.impl;
 
+import com.springgoals.controller.LogController;
 import com.springgoals.dao.impl.StudentDAOImpl;
 import com.springgoals.dao.impl.SubjectDAOImpl;
 import com.springgoals.exception.ValidationsException;
@@ -9,6 +10,8 @@ import com.springgoals.model.dto.StudentSubjectDTO;
 import com.springgoals.model.dto.StudentSubjectsOddDTO;
 import com.springgoals.model.dto.UpdateStudentSubjectDTO;
 import com.springgoals.service.StudentService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +28,7 @@ import javax.validation.Validator;
 
 public class StudentServiceImpl implements StudentService {
 
+    private static final Logger logger = LogManager.getLogger(StudentServiceImpl.class);
     @Autowired
     private Validator validator;
 
@@ -85,8 +89,8 @@ public class StudentServiceImpl implements StudentService {
             for (ConstraintViolation<Student> constraintViolation : violations) {
                 sb.append(constraintViolation.getMessage());
             }
-
-            throw new ValidationsException("Error occurred: " + sb.toString());
+            logger.error("Error in StudentServiceImpl update: " + sb.toString());
+            throw new ValidationsException("Error in StudentServiceImpl update: " + sb.toString());
         }
 
         studentDAO.update(student);
@@ -102,8 +106,8 @@ public class StudentServiceImpl implements StudentService {
             for (ConstraintViolation<Student> constraintViolation : violations) {
                 sb.append(constraintViolation.getMessage());
             }
-
-            throw new ValidationsException("Error occurred: " + sb.toString());
+            logger.error("Error in StudentServiceImpl save: " + sb.toString());
+            throw new ValidationsException("Error in StudentServiceImpl save: " + sb.toString());
         }
         studentDAO.save(student);
     }
@@ -130,8 +134,8 @@ public class StudentServiceImpl implements StudentService {
             for (ConstraintViolation<Subject> constraintViolation : violationSubject) {
                 sb.append(constraintViolation.getMessage());
             }
-
-            throw new ValidationsException("Error occurred: " + sb.toString());
+            logger.error("Error in StudentServiceImpl updateSubjectStudent: " + sb.toString());
+            throw new ValidationsException("Error in StudentServiceImpl updateSubjectStudent: " + sb.toString());
         }
 
         studentDAO.update(updateStudentSubjectDTO.getStudent());
@@ -159,8 +163,8 @@ public class StudentServiceImpl implements StudentService {
             for (ConstraintViolation<Subject> constraintViolation : violationSubject) {
                 sb.append(constraintViolation.getMessage());
             }
-
-            throw new ValidationsException("Error occurred: " + sb.toString());
+            logger.error("Error in StudentServiceImpl saveStudentSubjects: " + sb.toString());
+            throw new ValidationsException("Error in StudentServiceImpl saveStudentSubjects: " + sb.toString());
         }
 
         Integer subjectId;

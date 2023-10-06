@@ -7,6 +7,8 @@ import com.springgoals.exception.QueryException;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Professor;
 import com.springgoals.service.impl.ProfessorServiceImpl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,6 +25,7 @@ import java.util.Map;
 @RequestMapping("/api/professor")
 public class ProfessorController {
 
+    private static final Logger logger = LogManager.getLogger(ProfessorController.class);
     @Autowired
     private ProfessorServiceImpl professorService;
 
@@ -55,6 +58,7 @@ public class ProfessorController {
         if ((name == null || name.equals("")) && (surname == null || surname.equals("")) &&
                 (age == null || age.equals("")) && (primary_subject1 == null || primary_subject1.equals(""))
                 && (primary_subject2 == null || primary_subject2.equals(""))) {
+            logger.error("Error occurred: not enough query parameters");
             throw new QueryException("Error occurred: not enough query parameters");
         } else {
             professors = professorService.searchProfessors(name, surname, age, primary_subject1, primary_subject2);
@@ -66,6 +70,7 @@ public class ProfessorController {
     public ResponseEntity<Professor> getById(@PathVariable("id") Integer id) throws SQLException {
         Professor professor = professorService.getById(id);
         if (professor.getId() == null) {
+            logger.error("Professor with id " + id + " not found in DB ");
             throw new EntityNotFoundException("Professor with id " + id + " not found in DB ");
         }
         return ResponseEntity.status(HttpStatus.OK).body(professor);
@@ -75,6 +80,7 @@ public class ProfessorController {
     public ResponseEntity<String> add(@RequestBody Professor professor) throws SQLException, ValidationsException, JsonProcessingException {
 
         if (professor == null) {
+            logger.error("Missing professor payload");
             throw new ValidationsException("Missing professor payload");
         }
         professorService.save(professor);
@@ -85,6 +91,7 @@ public class ProfessorController {
     public ResponseEntity<String> update(@RequestBody Professor professor) throws SQLException, ValidationsException {
 
         if (professor == null) {
+            logger.error("Missing professor payload");
             throw new ValidationsException("Missing professor payload");
         }
         professorService.update(professor);
