@@ -17,11 +17,16 @@ public class LogController {
     @RequestMapping("/log") public String log()
     {
         // Logging various log level messages
-        // logger.trace("Log level: TRACE");
+        if(logger.isTraceEnabled())
+         logger.trace("Log level from LogController: TRACE");
+        if(logger.isInfoEnabled())
          logger.info("Log level from LogController: INFO");
-        // logger.debug("Log level: DEBUG");
-        // logger.error("Log level: ERROR");
-        // logger.warn("Log level: WARN");
+        if(logger.isDebugEnabled())
+         logger.debug("Log level from LogController: DEBUG");
+        if(logger.isErrorEnabled())
+         logger.error("Log level from LogController: ERROR");
+        if(logger.isWarnEnabled())
+         logger.warn("Log level from LogController: WARN");
 
         return "Hey! You can check the output in the logs";
     }
