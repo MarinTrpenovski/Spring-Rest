@@ -51,8 +51,8 @@ public class FacultyDAOImpl implements FacultyDAO {
 
             }
         } catch (SQLException e) {
-            System.out.println("error occurred " + e.getMessage());
-            logger.error("error occurred " + e.getMessage());
+            System.out.println("error occurred in FacultyDAOImpl getById " + e.getMessage());
+            logger.error("error occurred in FacultyDAOImpl getById " + e.getMessage());
             throw e;
         }
 
@@ -77,8 +77,8 @@ public class FacultyDAOImpl implements FacultyDAO {
                 facultyList.add(faculty);
             }
         } catch (SQLException e) {
-            System.out.println("error occured " + e.getMessage());
-            logger.error("error occurred " + e.getMessage());
+            System.out.println("error occurred in FacultyDAOImpl getAll " + e.getMessage());
+            logger.error("error occurred in FacultyDAOImpl getAll " + e.getMessage());
             throw e;
         }
         return facultyList;
@@ -101,8 +101,8 @@ public class FacultyDAOImpl implements FacultyDAO {
                 facultyMap.put(faculty.getId(), faculty);
             }
         } catch (SQLException e) {
-            System.out.println("error occured " + e.getMessage());
-            logger.error("error occurred " + e.getMessage());
+            System.out.println("error occurred in FacultyDAOImpl getMap " + e.getMessage());
+            logger.error("error occurred in FacultyDAOImpl getMap " + e.getMessage());
             throw e;
         }
         return facultyMap;
@@ -130,8 +130,8 @@ public class FacultyDAOImpl implements FacultyDAO {
                 facultyList.add(faculty);
             }
         } catch (SQLException e) {
-            System.out.println("error occured " + e.getMessage());
-            logger.error("error occurred " + e.getMessage());
+            System.out.println("error occurred in FacultyDAOImpl searchFaculties " + e.getMessage());
+            logger.error("error occurred in FacultyDAOImpl searchFaculties " + e.getMessage());
             throw e;
 
         }
@@ -155,8 +155,8 @@ public class FacultyDAOImpl implements FacultyDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("error occured " + e.getMessage());
-            logger.error("error occurred " + e.getMessage());
+            System.out.println("error occurred in FacultyDAOImpl update " + e.getMessage());
+            logger.error("error occurred in FacultyDAOImpl update " + e.getMessage());
             throw e;
         }
     }
@@ -174,13 +174,13 @@ public class FacultyDAOImpl implements FacultyDAO {
 
             int affectedRows = statement1.executeUpdate();
             if (affectedRows == 0) {
-                logger.error("Error with affectedRows in facultyDAO save");
-                throw new SQLException("Error with affectedRows in facultyDAO save");
+                logger.error("Error with affectedRows in FacultyDAOImpl save");
+                throw new SQLException("Error with affectedRows in FacultyDAOImpl save");
             }
 
         } catch (SQLException e) {
-            System.out.println("Error in facultyDAO save: " + e.getMessage());
-            logger.error("Error in facultyDAO save: " + e.getMessage());
+            System.out.println("Error in FacultyDAOImpl save: " + e.getMessage());
+            logger.error("Error in FacultyDAOImpl save: " + e.getMessage());
             throw e;
         }
     }
@@ -201,21 +201,21 @@ public class FacultyDAOImpl implements FacultyDAO {
             int affectedRows = statement1.executeUpdate();
 
             if (affectedRows == 0) {
-                logger.error("Error with affectedRows in facultyDAO saveReturnId");
-                throw new SQLException("Error with affectedRows in facultyDAO saveReturnId");
+                logger.error("Error with affectedRows in FacultyDAOImpl saveReturnId");
+                throw new SQLException("Error with affectedRows in FacultyDAOImpl saveReturnId");
             }
 
             try (ResultSet generatedKeys = statement1.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     id = generatedKeys.getInt(1);
                 } else {
-                    logger.error("Error with generatedKeys in facultyDAO saveReturnId");
-                    throw new SQLException("Error with generatedKeys in facultyDAO saveReturnId");
+                    logger.error("Error with generatedKeys in FacultyDAOImpl saveReturnId");
+                    throw new SQLException("Error with generatedKeys in FacultyDAOImpl saveReturnId");
                 }
             }
         } catch (SQLException e) {
-            System.out.println("Error in facultyDAO saveReturnId: " + e.getMessage());
-            logger.error("Error in facultyDAO saveReturnId: " + e.getMessage());
+            System.out.println("Error in FacultyDAOImpl saveReturnId: " + e.getMessage());
+            logger.error("Error in FacultyDAOImpl saveReturnId: " + e.getMessage());
             throw e;
         }
         return id;
@@ -235,8 +235,8 @@ public class FacultyDAOImpl implements FacultyDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("Error in delete faculty " + e.getMessage());
-            logger.error("Error in delete faculty " + e.getMessage());
+            System.out.println("Error in FacultyDAOImpl delete " + e.getMessage());
+            logger.error("Error in FacultyDAOImpl delete " + e.getMessage());
             throw e;
         }
     }
@@ -279,8 +279,8 @@ public class FacultyDAOImpl implements FacultyDAO {
             facultySubjectDTO.setLengthOfList(subjectList.size());
 
         } catch (SQLException e) {
-            logger.error("error occured " + e.getMessage());
-            System.out.println("error occured " + e.getMessage());
+            System.out.println("Error in FacultyDAOImpl getSubjectsByFacId: " + e.getMessage());
+            logger.error("Error in FacultyDAOImpl getSubjectsByFacId: " + e.getMessage());
             throw e;
         }
 
