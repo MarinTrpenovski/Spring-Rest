@@ -23,4 +23,6 @@ public interface UserDAO {
     User loginUser(String sql) throws SQLException;
 
     UserDTO getUserRolePermissionsByEmail(String email) throws SQLException;
+
+    void setUserRole(Integer userId, Integer roleId) throws SQLException;
 }
