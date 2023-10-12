@@ -1,6 +1,7 @@
 package com.springgoals.controller;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springgoals.exception.AuthenticationException;
 import com.springgoals.exception.EntityNotFoundException;
@@ -66,7 +67,7 @@ public class UserController {
     public ResponseEntity<String> deleteUser(@PathVariable("id") Integer id) throws SQLException {
 
         userService.delete(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }
     @Secured("Admin")
     @RequestMapping(value = "/roles", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -111,6 +112,21 @@ public class UserController {
         }
 
         return ResponseEntity.status(HttpStatus.OK).body( jwtToken );
+    }
+
+    @Secured("Admin")
+    @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> setRole(
+            @RequestParam("userId") Integer userId,
+            @RequestParam("roleId") Integer roleId
+    ) throws SQLException, QueryException, JsonProcessingException {
+        if ( ( (userId == null) || (userId.equals("")) ) && ( (roleId  == null) || (roleId.equals(""))) ) {
+            throw new QueryException("Error occurred: not enough query parameters");
+        } else {
+            userService.setUserRole(userId, roleId);
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                objectMapper.writeValueAsString("Successfully set user role and permissions"));
     }
 
 }

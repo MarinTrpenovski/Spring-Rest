@@ -1,7 +1,6 @@
 package com.springgoals.service.impl;
 
 import com.auth0.jwt.JWTVerifier;
-import com.springgoals.controller.LogController;
 import com.springgoals.dao.impl.UserDAOImpl;
 import com.springgoals.exception.AuthenticationException;
 import com.springgoals.exception.EmailExistsException;
@@ -159,6 +158,11 @@ public class UserServiceImpl implements UserService {
     public UserDTO getUserRolePermissionsByEmail(String email) throws SQLException {
 
         return userDAO.getUserRolePermissionsByEmail(email);
+    }
+
+    @Override
+    public void setUserRole(Integer userId, Integer roleId) throws SQLException  {
+        userDAO.setUserRole(userId, roleId);
     }
 
 }

@@ -56,7 +56,6 @@ public class UserDAOImpl implements UserDAO {
 
         }
         return user;
-
     }
 
     @Override
@@ -264,6 +263,31 @@ public class UserDAOImpl implements UserDAO {
         }
 
         return userDTO;
+    }
+
+    @Override
+    public void setUserRole(Integer userId, Integer roleId) throws SQLException  {
+
+        try {
+            connection = SingletonConnection.getInstance().getConnection();
+            Statement statement = connection.createStatement();
+            StringBuilder sql = new StringBuilder("INSERT INTO user_role_relation (user_id, role_id) VALUES (");
+            sql.append(userId);
+            sql.append(", ");
+            sql.append(roleId);
+            sql.append(");");
+
+            int affectedRows = statement.executeUpdate(sql.toString());
+            if (affectedRows == 0) {
+                logger.error("Error with affectedRows in UserDAOImpl setUserRole");
+                throw new SQLException("Error with affectedRows in UserDAOImpl setUserRole");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("error in UserDAOImpl setUserRole " + e.getMessage());
+            logger.error("error in UserDAOImpl setUserRole " + e.getMessage());
+            throw e;
+        }
     }
 
 }
