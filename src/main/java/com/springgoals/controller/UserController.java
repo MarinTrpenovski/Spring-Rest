@@ -1,31 +1,34 @@
 package com.springgoals.controller;
 
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.springgoals.exception.AuthenticationException;
-import com.springgoals.exception.EntityNotFoundException;
-import com.springgoals.exception.QueryException;
-import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.User;
 import com.springgoals.model.dto.UserDTO;
 import com.springgoals.service.impl.UserServiceImpl;
-import io.jsonwebtoken.Claims;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.ServletRequest;
 import java.sql.SQLException;
+import com.springgoals.exception.AuthenticationException;
+import com.springgoals.exception.EntityNotFoundException;
+import com.springgoals.exception.QueryException;
+import com.springgoals.exception.ValidationsException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.ServletRequest;
+import io.jsonwebtoken.Claims;
 
 @RestController
 @RequestMapping("/api/user")
@@ -36,14 +39,14 @@ public class UserController {
 
     ObjectMapper objectMapper = new ObjectMapper();
 
-    @Secured("Admin")
+    @PreAuthorize("hasAuthority('SUPERUSER')")
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<User>> getUsers() throws SQLException {
         List<User> users = userService.getAll();
 
         return ResponseEntity.status(HttpStatus.OK).body( users );
     }
-    @Secured("Admin")
+    @PreAuthorize("hasAuthority('SUPERUSER')")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> getById(@PathVariable("id") Integer id)  throws SQLException{
 
@@ -53,36 +56,36 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
-    @Secured("Admin")
+    @PreAuthorize("hasAuthority('SUPERUSER')")
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> update(@RequestBody User user) throws SQLException, ValidationsException  {
         if (user == null) {
-            throw new ValidationsException("Missing user payload");
+            throw new ValidationsException("Error in user update: Missing user payload");
         }
         userService.update(user);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }
-    @Secured("Admin")
+    @PreAuthorize("hasAuthority('SUPERUSER')")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteUser(@PathVariable("id") Integer id) throws SQLException {
 
         userService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated");
     }
-    @Secured("Admin")
+    @PreAuthorize("hasAuthority('SUPERUSER')")
     @RequestMapping(value = "/roles", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDTO> userRoles(
             @RequestParam("email") String email
     ) throws SQLException, QueryException {
         UserDTO userDTO;
         if (email == null || email.equals("")) {
-            throw new QueryException("Error occurred: not enough query parameters");
+            throw new QueryException("Error in userRoles: no email query parameter");
         } else {
             userDTO = userService.getUserRolePermissionsByEmail(email);
         }
         return ResponseEntity.status(HttpStatus.OK).body(userDTO);
     }
-    @Secured("Admin")
+    @PreAuthorize("hasAuthority('SUPERUSER')")
     @RequestMapping(value = "/permissions", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<String>> userPermissions()  {
 
@@ -99,6 +102,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body( permissions );
     }
 
+    @PreAuthorize("hasAuthority('SUPERUSER')")
     @RequestMapping(value = "/verify", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> verifyToken(ServletRequest servletRequest) throws JWTVerificationException, AuthenticationException {
 
@@ -114,15 +118,19 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body( jwtToken );
     }
 
-    @Secured("Admin")
+    @PreAuthorize("hasAuthority('SUPERUSER')")
     @RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> setRole(
             @RequestParam("userId") Integer userId,
             @RequestParam("roleId") Integer roleId
     ) throws SQLException, QueryException, JsonProcessingException {
-        if ( ( (userId == null) || (userId.equals("")) ) && ( (roleId  == null) || (roleId.equals(""))) ) {
-            throw new QueryException("Error occurred: not enough query parameters");
-        } else {
+        if ( (userId == null) || (userId.equals("")) ) {
+            throw new QueryException("Error in user edit: no userId query parameter");
+        }
+        else if ( (roleId  == null) || (roleId.equals("")) ) {
+            throw new QueryException("Error in user edit: no roleId query parameter");
+        }
+        else {
             userService.setUserRole(userId, roleId);
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(

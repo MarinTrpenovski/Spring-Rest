@@ -269,15 +269,12 @@ public class UserDAOImpl implements UserDAO {
     public void setUserRole(Integer userId, Integer roleId) throws SQLException  {
 
         try {
-            connection = SingletonConnection.getInstance().getConnection();
-            Statement statement = connection.createStatement();
-            StringBuilder sql = new StringBuilder("INSERT INTO user_role_relation (user_id, role_id) VALUES (");
-            sql.append(userId);
-            sql.append(", ");
-            sql.append(roleId);
-            sql.append(");");
+            String sql = "INSERT INTO user_role_relation (user_id, role_id) VALUES (?,?);";
+            PreparedStatement statement1 = connection.prepareStatement(sql);
+            statement1.setInt(1, userId );
+            statement1.setInt(2, roleId );
 
-            int affectedRows = statement.executeUpdate(sql.toString());
+            int affectedRows = statement1.executeUpdate();
             if (affectedRows == 0) {
                 logger.error("Error with affectedRows in UserDAOImpl setUserRole");
                 throw new SQLException("Error with affectedRows in UserDAOImpl setUserRole");
