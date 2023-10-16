@@ -1,23 +1,25 @@
 package com.springgoals.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.springgoals.exception.EntityNotFoundException;
-import com.springgoals.exception.QueryException;
-import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Faculty;
 import com.springgoals.model.dto.FacultySubjectDTO;
 import com.springgoals.service.impl.FacultyServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
+import com.springgoals.exception.EntityNotFoundException;
+import com.springgoals.exception.QueryException;
+import com.springgoals.exception.ValidationsException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +31,6 @@ public class FacultyController {
     private static final Logger logger = LogManager.getLogger(FacultyController.class);
     @Autowired
     private FacultyServiceImpl facultyService;
-
     ObjectMapper objectMapper = new ObjectMapper();
 
     @PreAuthorize("isAuthenticated()")
@@ -40,7 +41,7 @@ public class FacultyController {
         return ResponseEntity.status(HttpStatus.OK).body(faculties);
     }
 
-
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/map", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<Integer, Faculty>> mapFaculties() throws SQLException {
 
@@ -57,8 +58,8 @@ public class FacultyController {
     ) throws SQLException, QueryException {
         List<Faculty> faculties ;
         if ((name == null || name.equals("")) && (location == null || location.equals("")) && (study_field == null || study_field.equals(""))) {
-            logger.error("Error occurred: not enough query parameters");
-            throw new QueryException("Error occurred: not enough query parameters");
+            logger.error("Error in searchFaculties: not enough query parameters");
+            throw new QueryException("Error in searchFaculties: not enough query parameters");
         } else {
             faculties = facultyService.searchFaculties(name, location, study_field);
         }
@@ -83,8 +84,8 @@ public class FacultyController {
 
         FacultySubjectDTO facultySubjectDTO;
         if (id == null || id == 0) {
-            logger.error("Error occurred:id can not be zero or null");
-            throw new ValidationsException("Error occurred:id can not be zero or null");
+            logger.error("Error in getSubjectsByFacId:id can not be zero or null");
+            throw new ValidationsException("Error in getSubjectsByFacId:id can not be zero or null");
         } else {
             facultySubjectDTO = facultyService.getSubjectsByFacId(id);
         }
