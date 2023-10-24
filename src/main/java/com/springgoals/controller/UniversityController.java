@@ -3,23 +3,32 @@ package com.springgoals.controller;
 import com.springgoals.model.dto.UniversityFacultiesDTO;
 import com.springgoals.model.dto.UniversityFacultyDTO;
 import com.springgoals.model.University;
+import com.springgoals.service.impl.FileServiceImpl;
 import com.springgoals.service.impl.UniversityServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import com.springgoals.exception.QueryException;
 import com.springgoals.exception.EntityNotFoundException;
 import com.springgoals.exception.ValidationsException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.Resource;
 
 import java.util.List;
 import java.util.Map;
@@ -31,6 +40,8 @@ public class UniversityController {
     private static final Logger logger = LogManager.getLogger(UniversityController.class);
     @Autowired
     private UniversityServiceImpl universityService;
+    @Autowired
+    private FileServiceImpl fileServiceImpl;
     ObjectMapper objectMapper = new ObjectMapper();
 
     @PreAuthorize("isAuthenticated()")
@@ -104,6 +115,66 @@ public class UniversityController {
         universityService.save(university);
         return ResponseEntity.status(HttpStatus.CREATED).
                 body(objectMapper.writeValueAsString("Successfully Created"));
+    }
+
+    @PreAuthorize("hasAuthority('CREATE')")
+    @RequestMapping(value = "/save-img", method = RequestMethod.POST,
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> addImg( University university,
+            @RequestParam("image") MultipartFile multipartFile
+    ) throws SQLException, ValidationsException, IOException {
+        if (university == null) {
+            logger.error("Missing university payload");
+            throw new ValidationsException("Missing university payload");
+        }
+        if (multipartFile == null) {
+            logger.error("Missing university picture");
+            throw new ValidationsException("Missing university picture");
+        }
+        String fileName = multipartFile.getOriginalFilename();
+        Path filePathAndName = Paths.get(fileServiceImpl.uploadDirectory, "/university/" + fileName);
+
+        Files.write(filePathAndName, multipartFile.getBytes());
+        university.setImagePath(fileName);
+        // universityService.save(university);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PreAuthorize("hasAuthority('VIEW')")
+    @RequestMapping(value = "/img/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Resource> getImageById(@PathVariable("id") Integer id) throws SQLException, IOException {
+
+        University university = universityService.getById(id);
+        if (university.getId() == null) {
+            logger.error("University with id " + id + " not found in DB ");
+            throw new EntityNotFoundException("University with id " + id + " not found in DB ");
+        }
+        Path imagePath = Paths.get(fileServiceImpl.uploadDirectory, "/university/" + university.getImagePath());
+        Resource resource = new FileSystemResource(imagePath.toFile());
+        String contentType = Files.probeContentType(imagePath);
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType.parseMediaType(contentType)).body(resource);
+    }
+
+    @PreAuthorize("hasAuthority('UPDATE')")
+    @RequestMapping(value = "/update-img", method = RequestMethod.PUT,
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> updateImg( University university,
+            @RequestParam("image") MultipartFile multipartFile
+    ) throws SQLException, ValidationsException, IOException {
+        if (university == null) {
+            logger.error("Missing university payload");
+            throw new ValidationsException("Missing university payload");
+        }
+        if (multipartFile == null) {
+            logger.error("Missing university picture");
+            throw new ValidationsException("Missing university picture");
+        }
+        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        fileServiceImpl.saveFile(fileName, multipartFile, "/university/");
+        university.setImagePath(fileName);
+        //universityService.update(university);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully added image for university");
     }
 
     @PreAuthorize("hasAuthority('UPDATE')")

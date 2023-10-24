@@ -1,24 +1,34 @@
 package com.springgoals.controller;
 
 import com.springgoals.model.Faculty;
+import com.springgoals.model.University;
 import com.springgoals.model.dto.FacultySubjectDTO;
 import com.springgoals.service.impl.FacultyServiceImpl;
+import com.springgoals.service.impl.FileServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import com.springgoals.exception.EntityNotFoundException;
 import com.springgoals.exception.QueryException;
 import com.springgoals.exception.ValidationsException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.Resource;
 
 import java.util.List;
 import java.util.Map;
@@ -31,6 +41,8 @@ public class FacultyController {
     private static final Logger logger = LogManager.getLogger(FacultyController.class);
     @Autowired
     private FacultyServiceImpl facultyService;
+    @Autowired
+    private FileServiceImpl fileServiceImpl;
     ObjectMapper objectMapper = new ObjectMapper();
 
     @PreAuthorize("isAuthenticated()")
@@ -101,7 +113,60 @@ public class FacultyController {
             throw new ValidationsException("Missing faculty payload");
         }
         facultyService.save(faculty);
-        return ResponseEntity.status(HttpStatus.CREATED).body(objectMapper.writeValueAsString("Successfully Created"));
+        return ResponseEntity.status(HttpStatus.CREATED).body(objectMapper.writeValueAsString("Successfully created new faculty"));
+    }
+
+    @PreAuthorize("hasAuthority('CREATE')")
+    @RequestMapping(value = "/save-img", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> addImg(Faculty faculty,
+            @RequestParam("image") MultipartFile multipartFile
+    ) throws SQLException, ValidationsException, IOException {
+        if(faculty == null){
+            logger.error("Missing faculty payload");
+            throw new ValidationsException("Missing faculty payload");
+        }
+        if(multipartFile == null) {
+            logger.error("Missing faculty picture");
+            throw new ValidationsException("Missing faculty picture");
+        }
+        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        fileServiceImpl.saveFile(fileName, multipartFile, "/faculty/");
+        //facultyService.save(faculty);
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                objectMapper.writeValueAsString("Successfully created new faculty with image"));
+    }
+
+    @PreAuthorize("hasAuthority('VIEW')")
+    @RequestMapping(value = "/img/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Resource> getImageById(@PathVariable("id") Integer id) throws SQLException, IOException {
+        Faculty faculty = facultyService.getById(id);
+        if (faculty.getId() == null) {
+            logger.error("Faculty with id" + id + " not found in DB");
+            throw new EntityNotFoundException("Faculty with id " + id + " not found in DB");
+        }
+        Path imagePath = Paths.get(fileServiceImpl.uploadDirectory, "/faculty/" + faculty.getImagePath());
+        Resource resource = new FileSystemResource(imagePath.toFile());
+        String contentType = Files.probeContentType(imagePath);
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType.parseMediaType(contentType)).body(resource);
+    }
+
+    @PreAuthorize("hasAuthority('UPDATE')")
+    @RequestMapping(value = "/update-img", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> updateImg( Faculty faculty,
+            @RequestParam("image") MultipartFile multipartFile) throws SQLException, ValidationsException, IOException {
+        if(faculty == null){
+            logger.error("Missing faculty payload");
+            throw new ValidationsException("Missing faculty payload");
+        }
+        if(multipartFile == null) {
+            logger.error("Missing faculty picture");
+            throw new ValidationsException("Missing faculty picture");
+        }
+        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        fileServiceImpl.saveFile(fileName, multipartFile, "/faculty/");
+        //facultyService.update(faculty);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully added image for the faculty");
     }
 
     @PreAuthorize("hasAuthority('UPDATE')")
