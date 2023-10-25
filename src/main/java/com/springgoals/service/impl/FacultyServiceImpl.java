@@ -1,6 +1,5 @@
 package com.springgoals.service.impl;
 
-import com.springgoals.controller.LogController;
 import com.springgoals.dao.impl.FacultyDAOImpl;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Faculty;

@@ -46,7 +46,7 @@ public class UniversityDAOImpl implements UniversityDAO {
                 university.setId(resultSet.getInt("id"));
                 university.setName(resultSet.getString("name"));
                 university.setDescription(resultSet.getString("description"));
-
+                university.setImagePath(resultSet.getString("photo"));
             }
         } catch (SQLException e) {
             System.out.println("error occurred in UniversityDAOImpl getById " + e.getMessage());
@@ -71,7 +71,7 @@ public class UniversityDAOImpl implements UniversityDAO {
                 university.setName(rs.getString("name"));
                 university.setId(rs.getInt("id"));
                 university.setDescription(rs.getString("description"));
-
+                university.setImagePath(rs.getString("photo"));
                 universityList.add(university);
             }
         } catch (SQLException e) {
@@ -116,14 +116,13 @@ public class UniversityDAOImpl implements UniversityDAO {
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery(sql);
 
-
             while (rs.next()) {
                 University university = new University();
 
                 university.setId(rs.getInt("id"));
                 university.setName(rs.getString("name"));
                 university.setDescription(rs.getString("description"));
-
+                university.setImagePath(rs.getString("photo"));
                 universityList.add(university);
             }
         } catch (SQLException e) {
@@ -134,40 +133,16 @@ public class UniversityDAOImpl implements UniversityDAO {
         return universityList;
     }
 
-    @Override
-    public void update(University university) throws SQLException {
-
-        try {
-            connection = SingletonConnection.getInstance().getConnection();
-            String sql = "UPDATE education.university SET name=?, description=? WHERE id=?";
-            PreparedStatement statement1 = connection.prepareStatement(sql);
-            statement1.setString(1, university.getName());
-            statement1.setString(2, university.getDescription());
-            statement1.setInt(3, university.getId());
-
-
-            int rowsUpdated = statement1.executeUpdate();
-            if (rowsUpdated > 0) {
-                System.out.println("An existing university was updated");
-            }
-
-        } catch (SQLException e) {
-            System.out.println("error occurred in UniversityDAOImpl update " + e.getMessage());
-            logger.error("error occurred in UniversityDAOImpl update " + e.getMessage());
-            throw e;
-        }
-
-    }
 
     @Override
     public void save(University university) throws SQLException {
 
         try {
-            String sql = "INSERT INTO university (name, description) VALUES (?, ?)";
+            String sql = "INSERT INTO university (name, description, photo) VALUES (?, ?, ?)";
             PreparedStatement statement1 = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement1.setString(1, university.getName());
             statement1.setString(2, university.getDescription());
-
+            statement1.setString(3, university.getImagePath());
 
             int affectedRows = statement1.executeUpdate();
 
@@ -182,7 +157,6 @@ public class UniversityDAOImpl implements UniversityDAO {
             throw e;
 
         }
-
     }
 
     @Override
@@ -191,10 +165,11 @@ public class UniversityDAOImpl implements UniversityDAO {
         Integer id;
 
         try {
-            String sql = "INSERT INTO university (name, description) VALUES (?, ?)";
+            String sql = "INSERT INTO university (name, description, photo) VALUES (?, ?,?)";
             PreparedStatement statement1 = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement1.setString(1, university.getName());
             statement1.setString(2, university.getDescription());
+            statement1.setString(3, university.getImagePath());
 
             int affectedRows = statement1.executeUpdate();
 
@@ -217,6 +192,30 @@ public class UniversityDAOImpl implements UniversityDAO {
             throw e;
         }
         return id;
+    }
+
+    @Override
+    public void update(University university) throws SQLException {
+
+        try {
+            connection = SingletonConnection.getInstance().getConnection();
+            String sql = "UPDATE education.university SET name=?, description=?, photo=? WHERE id=?";
+            PreparedStatement statement1 = connection.prepareStatement(sql);
+            statement1.setString(1, university.getName());
+            statement1.setString(2, university.getDescription());
+            statement1.setString(3, university.getImagePath());
+            statement1.setInt(4, university.getId());
+
+            int rowsUpdated = statement1.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("An existing university was updated");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("error occurred in UniversityDAOImpl update " + e.getMessage());
+            logger.error("error occurred in UniversityDAOImpl update " + e.getMessage());
+            throw e;
+        }
     }
 
     @Override
@@ -287,9 +286,4 @@ public class UniversityDAOImpl implements UniversityDAO {
         return universityFacultyDTO;
     }
 
-
 }
-
-
-
-

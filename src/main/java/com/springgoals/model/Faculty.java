@@ -24,6 +24,8 @@ public class Faculty {
     @NotNull(message = "university_id must not be null")
     private Integer university_id;
 
+    private String imagePath;
+
     public Faculty(int i, String location, String study_field) {
     }
 
@@ -88,6 +90,14 @@ public class Faculty {
 
     public void setStudy_field(String study_field) {
         this.study_field = study_field;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public Integer getUniversity_id() {

@@ -47,8 +47,8 @@ public class FacultyDAOImpl implements FacultyDAO {
                 faculty.setId(resultSet.getInt("id"));
                 faculty.setLocation(resultSet.getString("location"));
                 faculty.setStudy_field(resultSet.getString("study_field"));
+                faculty.setImagePath(resultSet.getString("photo"));
                 faculty.setUniversity_id(resultSet.getInt("university_id"));
-
             }
         } catch (SQLException e) {
             System.out.println("error occurred in FacultyDAOImpl getById " + e.getMessage());
@@ -72,6 +72,7 @@ public class FacultyDAOImpl implements FacultyDAO {
                 faculty.setName(rs.getString("name"));
                 faculty.setLocation(rs.getString("location"));
                 faculty.setStudy_field(rs.getString("study_field"));
+                faculty.setImagePath(rs.getString("photo"));
                 faculty.setUniversity_id(rs.getInt("university_id"));
 
                 facultyList.add(faculty);
@@ -125,6 +126,7 @@ public class FacultyDAOImpl implements FacultyDAO {
                 faculty.setName(rs.getString("name"));
                 faculty.setLocation(rs.getString("location"));
                 faculty.setStudy_field(rs.getString("study_field"));
+                faculty.setImagePath(rs.getString("photo"));
                 faculty.setUniversity_id(rs.getInt("university_id"));
 
                 facultyList.add(faculty);
@@ -140,37 +142,16 @@ public class FacultyDAOImpl implements FacultyDAO {
     }
 
     @Override
-    public void update(Faculty faculty) throws SQLException {
-        try {
-            String sql = "UPDATE faculty SET name=?, location=?, study_field=? WHERE id=?";
-            PreparedStatement statement1 = connection.prepareStatement(sql);
-            statement1.setString(1, faculty.getName());
-            statement1.setString(2, faculty.getLocation());
-            statement1.setString(3, faculty.getStudy_field());
-            statement1.setInt(4, faculty.getId());
-
-            int rowsUpdated = statement1.executeUpdate();
-            if (rowsUpdated > 0) {
-                System.out.println("An existing faculty was updated!");
-            }
-
-        } catch (SQLException e) {
-            System.out.println("error occurred in FacultyDAOImpl update " + e.getMessage());
-            logger.error("error occurred in FacultyDAOImpl update " + e.getMessage());
-            throw e;
-        }
-    }
-
-    @Override
     public void save(Faculty faculty) throws SQLException {
 
         try {
-            String sql = "INSERT INTO faculty(name, location, study_field, university_id) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO faculty (name,location,study_field,photo,university_id) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement statement1 = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement1.setString(1, faculty.getName());
             statement1.setString(2, faculty.getLocation());
             statement1.setString(3, faculty.getStudy_field());
-            statement1.setInt(4, faculty.getUniversity_id());
+            statement1.setString(4, faculty.getImagePath());
+            statement1.setInt(5, faculty.getUniversity_id());
 
             int affectedRows = statement1.executeUpdate();
             if (affectedRows == 0) {
@@ -191,12 +172,13 @@ public class FacultyDAOImpl implements FacultyDAO {
         Integer id;
 
         try {
-            String sql = "INSERT INTO faculty (name, location, study_field,university_id) VALUES (?, ?, ?,?)";
+            String sql = "INSERT INTO faculty (name,location,study_field,photo,university_id) VALUES (?, ?, ?, ? ,?)";
             PreparedStatement statement1 = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement1.setString(1, faculty.getName());
             statement1.setString(2, faculty.getLocation());
             statement1.setString(3, faculty.getStudy_field());
-            statement1.setInt(4, faculty.getUniversity_id());
+            statement1.setString(4, faculty.getImagePath());
+            statement1.setInt(5, faculty.getUniversity_id());
 
             int affectedRows = statement1.executeUpdate();
 
@@ -219,7 +201,29 @@ public class FacultyDAOImpl implements FacultyDAO {
             throw e;
         }
         return id;
+    }
 
+    @Override
+    public void update(Faculty faculty) throws SQLException {
+        try {
+            String sql = "UPDATE faculty SET name=?, location=?, study_field=?, photo=? WHERE id=?";
+            PreparedStatement statement1 = connection.prepareStatement(sql);
+            statement1.setString(1, faculty.getName());
+            statement1.setString(2, faculty.getLocation());
+            statement1.setString(3, faculty.getStudy_field());
+            statement1.setString(4, faculty.getImagePath());
+            statement1.setInt(5, faculty.getId());
+
+            int rowsUpdated = statement1.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("An existing faculty was updated!");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("error occurred in FacultyDAOImpl update " + e.getMessage());
+            logger.error("error occurred in FacultyDAOImpl update " + e.getMessage());
+            throw e;
+        }
     }
 
     @Override
