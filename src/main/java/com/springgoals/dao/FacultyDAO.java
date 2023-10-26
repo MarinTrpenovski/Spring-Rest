@@ -28,4 +28,5 @@ public interface FacultyDAO {
 
     FacultySubjectDTO getSubjectsByFacId(Integer id) throws SQLException;
 
+    void deleteImages() throws SQLException;
 }

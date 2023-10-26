@@ -1,6 +1,5 @@
 package com.springgoals.dao.impl;
 
-import com.springgoals.controller.LogController;
 import com.springgoals.dao.SingletonConnection;
 import com.springgoals.dao.UniversityDAO;
 import com.springgoals.model.Faculty;
@@ -155,7 +154,6 @@ public class UniversityDAOImpl implements UniversityDAO {
             System.out.println("error occurred in UniversityDAOImpl save " + e.getMessage());
             logger.error("error occurred in UniversityDAOImpl save " + e.getMessage());
             throw e;
-
         }
     }
 
@@ -285,5 +283,25 @@ public class UniversityDAOImpl implements UniversityDAO {
 
         return universityFacultyDTO;
     }
+    @Override
+    public void deleteImages() throws SQLException {
+        try {
+            String sql = "INSERT INTO university ( photo ) VALUES (?)";
+            PreparedStatement statement1 = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
+            statement1.setString(1, null);
+
+            int affectedRows = statement1.executeUpdate();
+
+            if (affectedRows == 0) {
+                logger.error("Error with affectedRows in UniversityDAOImpl deleteImages");
+                throw new SQLException("Error with affectedRows in UniversityDAOImpl deleteImages");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("error SQLException in UniversityDAOImpl deleteImages " + e.getMessage());
+            logger.error("error SQLException in UniversityDAOImpl deleteImages " + e.getMessage());
+            throw e;
+        }
+    }
 }

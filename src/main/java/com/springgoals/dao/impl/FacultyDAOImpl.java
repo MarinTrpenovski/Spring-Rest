@@ -1,6 +1,5 @@
 package com.springgoals.dao.impl;
 
-import com.springgoals.controller.LogController;
 import com.springgoals.dao.FacultyDAO;
 import com.springgoals.dao.SingletonConnection;
 import com.springgoals.model.Faculty;
@@ -289,5 +288,27 @@ public class FacultyDAOImpl implements FacultyDAO {
         }
 
         return facultySubjectDTO;
+    }
+
+    @Override
+    public void deleteImages() throws SQLException {
+        try {
+            String sql = "INSERT INTO faculty ( photo ) VALUES (?)";
+            PreparedStatement statement1 = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+            statement1.setString(1, null);
+
+            int affectedRows = statement1.executeUpdate();
+
+            if (affectedRows == 0) {
+                logger.error("Error with affectedRows in FacultyDAOImpl deleteImages");
+                throw new SQLException("Error with affectedRows in FacultyDAOImpl deleteImages");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("error SQLException in FacultyDAOImpl deleteImages " + e.getMessage());
+            logger.error("error SQLException in FacultyDAOImpl deleteImages " + e.getMessage());
+            throw e;
+        }
     }
 }

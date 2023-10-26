@@ -1,6 +1,5 @@
 package com.springgoals.dao.impl;
 
-import com.springgoals.controller.LogController;
 import com.springgoals.dao.SingletonConnection;
 import com.springgoals.dao.StudentDAO;
 import com.springgoals.model.Student;
@@ -49,6 +48,7 @@ public class StudentDAOImpl implements StudentDAO {
                 student.setSurname(resultSet.getString("surname"));
                 student.setLocation(resultSet.getString("location"));
                 student.setIndeks(resultSet.getInt("indeks"));
+                student.setImagePath(resultSet.getString("photo"));
             }
         } catch (SQLException e) {
             System.out.println("error occurred in StudentDAOImpl getById " + e.getMessage());
@@ -74,6 +74,7 @@ public class StudentDAOImpl implements StudentDAO {
                 student.setName(rs.getString("name"));
                 student.setSurname(rs.getString("surname"));
                 student.setLocation(rs.getString("location"));
+                student.setImagePath(rs.getString("photo"));
                 studentList.add(student);
             }
         } catch (SQLException e) {
@@ -126,6 +127,7 @@ public class StudentDAOImpl implements StudentDAO {
                 student.setSurname(rs.getString("surname"));
                 student.setLocation(rs.getString("location"));
                 student.setIndeks(rs.getInt("indeks"));
+                student.setImagePath(rs.getString("photo"));
 
                 studentList.add(student);
             }
@@ -138,39 +140,16 @@ public class StudentDAOImpl implements StudentDAO {
     }
 
     @Override
-    public void update(Student student) throws SQLException {
-
-        try {
-            String sql = "UPDATE student SET name=?, surname=?, indeks=? ,location=? WHERE id=?";
-            PreparedStatement statement1 = connection.prepareStatement(sql);
-            statement1.setString(1, student.getName());
-            statement1.setString(2, student.getSurname());
-            statement1.setInt(3, student.getIndeks());
-            statement1.setString(4, student.getLocation());
-            statement1.setInt(5, student.getId());
-
-            int rowsUpdated = statement1.executeUpdate();
-            if (rowsUpdated > 0) {
-                System.out.println("An existing student was updated");
-            }
-
-        } catch (SQLException e) {
-            System.out.println("error occurred in StudentDAOImpl update " + e.getMessage());
-            logger.error("error occurred in StudentDAOImpl update " + e.getMessage());
-            throw e;
-        }
-    }
-
-    @Override
     public void save(Student student) throws SQLException {
 
         try {
-            String sql = "INSERT INTO student (name, surname, indeks, location) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO student (name, surname, indeks, location, photo) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement statement1 = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement1.setString(1, student.getName());
             statement1.setString(2, student.getSurname());
             statement1.setInt(3, student.getIndeks());
             statement1.setString(4, student.getLocation());
+            statement1.setString(5, student.getImagePath());
 
             int affectedRows = statement1.executeUpdate();
 
@@ -192,12 +171,14 @@ public class StudentDAOImpl implements StudentDAO {
         Integer id;
 
         try {
-            String sql = "INSERT INTO student (name, surname, indeks, location) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO student (name, surname, indeks, location, photo) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement statement1 = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement1.setString(1, student.getName());
             statement1.setString(2, student.getSurname());
-            statement1.setString(4, student.getLocation());
             statement1.setInt(3, student.getIndeks());
+            statement1.setString(4, student.getLocation());
+            statement1.setString(5, student.getImagePath());
+
 
             int affectedRows = statement1.executeUpdate();
 
@@ -220,6 +201,32 @@ public class StudentDAOImpl implements StudentDAO {
             throw e;
         }
         return id;
+    }
+
+    @Override
+    public void update(Student student) throws SQLException {
+
+        try {
+            String sql = "UPDATE student SET name=?, surname=?, indeks=? ,location=?" +
+                    ", photo=?  WHERE id=?";
+            PreparedStatement statement1 = connection.prepareStatement(sql);
+            statement1.setString(1, student.getName());
+            statement1.setString(2, student.getSurname());
+            statement1.setInt(3, student.getIndeks());
+            statement1.setString(4, student.getLocation());
+            statement1.setString(5, student.getImagePath());
+            statement1.setInt(6, student.getId());
+
+            int rowsUpdated = statement1.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("An existing student was updated");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("error occurred in StudentDAOImpl update " + e.getMessage());
+            logger.error("error occurred in StudentDAOImpl update " + e.getMessage());
+            throw e;
+        }
     }
 
     @Override
@@ -365,4 +372,25 @@ public class StudentDAOImpl implements StudentDAO {
         }
     }
 
+    @Override
+    public void deleteImages() throws SQLException {
+        try {
+            String sql = "INSERT INTO student ( photo ) VALUES (?)";
+            PreparedStatement statement1 = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+            statement1.setString(1, null);
+
+            int affectedRows = statement1.executeUpdate();
+
+            if (affectedRows == 0) {
+                logger.error("Error with affectedRows in StudentDAOImpl deleteImages");
+                throw new SQLException("Error with affectedRows in StudentDAOImpl deleteImages");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("error SQLException in StudentDAOImpl deleteImages " + e.getMessage());
+            logger.error("error SQLException in StudentDAOImpl deleteImages " + e.getMessage());
+            throw e;
+        }
+    }
 }

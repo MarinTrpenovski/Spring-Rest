@@ -1,6 +1,7 @@
 package com.springgoals.controller;
 
 import com.springgoals.model.Faculty;
+import com.springgoals.model.FileInfo;
 import com.springgoals.model.University;
 import com.springgoals.model.dto.FacultySubjectDTO;
 import com.springgoals.service.impl.FacultyServiceImpl;
@@ -29,9 +30,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.core.io.Resource;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -151,6 +154,21 @@ public class FacultyController {
                 .contentType(MediaType.parseMediaType(contentType)).body(resource);
     }
 
+    @PreAuthorize("hasAuthority('VIEW')")
+    @GetMapping("/faculty/images")
+    public ResponseEntity<List<FileInfo>> getListFiles() {
+        List<FileInfo> fileInfos = fileServiceImpl.loadAll("/faculty/").map(path -> {
+            String filename = path.getFileName().toString();
+            String url = MvcUriComponentsBuilder
+                    .fromMethodName(FacultyController.class, "getImageById", path.getFileName().toString()).build().toString();
+
+            return new FileInfo(filename, url);
+        }).collect(Collectors.toList());
+
+        return ResponseEntity.status(HttpStatus.OK).body(fileInfos);
+    }
+
+
     @PreAuthorize("hasAuthority('UPDATE')")
     @RequestMapping(value = "/update-img", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> updateImg( Faculty faculty,
@@ -187,6 +205,15 @@ public class FacultyController {
 
         facultyService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted");
+    }
+
+    @PreAuthorize("hasAuthority('DELETE')")
+    @RequestMapping(value = "/delete/images", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> deleteImagesFaculty()
+            throws SQLException {
+        fileServiceImpl.deleteAll("/faculty/");
+        facultyService.deleteImages();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted all images of faculties");
     }
 
 }

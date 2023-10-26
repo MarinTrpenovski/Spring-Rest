@@ -29,4 +29,5 @@ public interface UniversityDAO {
     UniversityFacultyDTO getFacultiesByUniId(Integer id) throws SQLException;
 
 
+    void deleteImages() throws SQLException;
 }

@@ -39,4 +39,6 @@ public interface StudentService {
     void deleteStudentSubjects(Integer studentId, Integer [] subjectsIds ) throws SQLException;
 
      StudentSubjectsOddDTO getOddSubjectsByStudId(Integer id) throws SQLException;
+
+    void deleteImages() throws SQLException;
 }

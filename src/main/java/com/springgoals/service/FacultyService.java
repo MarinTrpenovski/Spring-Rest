@@ -25,4 +25,6 @@ public interface FacultyService {
     void delete(Integer id) throws SQLException;
 
     FacultySubjectDTO getSubjectsByFacId(Integer id) throws SQLException;
+
+    void deleteImages() throws SQLException;
 }

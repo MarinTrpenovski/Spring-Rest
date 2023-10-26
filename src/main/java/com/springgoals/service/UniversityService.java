@@ -32,4 +32,5 @@ public interface UniversityService {
     void saveUniversityFaculties(UniversityFacultiesDTO updateUniversityFacultiesDTO) throws ValidationsException, SQLException;
 
 
+    void deleteImages() throws SQLException;
 }

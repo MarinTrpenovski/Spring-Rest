@@ -23,7 +23,10 @@ public interface ProfessorDAO {
     void delete(Integer id) throws SQLException;
 
 
+    Integer saveReturnId(Professor professor) throws SQLException;
+
     void update(Professor professor) throws SQLException;
 
 
+    void deleteImages() throws SQLException;
 }

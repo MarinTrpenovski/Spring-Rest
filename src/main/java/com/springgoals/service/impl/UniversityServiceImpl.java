@@ -1,6 +1,5 @@
 package com.springgoals.service.impl;
 
-import com.springgoals.controller.LogController;
 import com.springgoals.dao.impl.FacultyDAOImpl;
 import com.springgoals.dao.impl.UniversityDAOImpl;
 import com.springgoals.exception.ValidationsException;
@@ -149,5 +148,8 @@ public class UniversityServiceImpl implements UniversityService {
 
     }
 
-
+    @Override
+    public void deleteImages() throws SQLException {
+        this.universityDAO.deleteImages();
+    }
 }

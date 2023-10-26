@@ -25,4 +25,5 @@ public interface ProfessorService {
     void delete(Integer id) throws SQLException;
 
 
+    void deleteImages() throws SQLException;
 }
