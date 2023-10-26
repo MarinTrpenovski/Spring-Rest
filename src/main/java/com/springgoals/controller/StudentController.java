@@ -1,30 +1,43 @@
 package com.springgoals.controller;
 
+import com.springgoals.model.FileInfo;
 import com.springgoals.model.Student;
+import com.springgoals.model.University;
 import com.springgoals.model.dto.StudentSubjectDTO;
 import com.springgoals.model.dto.StudentSubjectsOddDTO;
 import com.springgoals.model.dto.UpdateStudentSubjectDTO;
+import com.springgoals.service.impl.FileServiceImpl;
 import com.springgoals.service.impl.StudentServiceImpl;
 import com.springgoals.service.impl.SubjectServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import com.springgoals.exception.EntityNotFoundException;
 import com.springgoals.exception.QueryException;
 import com.springgoals.exception.ValidationsException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -36,6 +49,9 @@ public class StudentController {
     private StudentServiceImpl studentService;
     @Autowired
     private SubjectServiceImpl subjectService;
+
+    private FileServiceImpl fileServiceImpl;
+
     ObjectMapper objectMapper = new ObjectMapper();
 
     @PreAuthorize("isAuthenticated()")
@@ -136,6 +152,81 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(objectMapper.writeValueAsString("Successfully Created"));
     }
 
+
+    @PreAuthorize("hasAuthority('CREATE')")
+    @RequestMapping(value = "/save-img", method = RequestMethod.POST,
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> addImg( Student student,
+                                     @RequestParam("image") MultipartFile multipartFile
+    ) throws SQLException, ValidationsException, IOException {
+        if (student == null) {
+            logger.error("Missing student payload");
+            throw new ValidationsException("Missing student payload");
+        }
+        if (multipartFile == null) {
+            logger.error("Missing student picture");
+            throw new ValidationsException("Missing student picture");
+        }
+        String fileName = multipartFile.getOriginalFilename();
+        Path filePathAndName = Paths.get(fileServiceImpl.uploadDirectory, "/student/" + fileName);
+
+        Files.write(filePathAndName, multipartFile.getBytes());
+        student.setImagePath(fileName);
+        // studentService.save(student);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PreAuthorize("hasAuthority('VIEW')")
+    @RequestMapping(value = "/img/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Resource> getImageById(@PathVariable("id") Integer id) throws SQLException, IOException {
+
+        Student student = studentService.getById(id);
+        if (student.getId() == null) {
+            logger.error("Student with id " + id + " not found in DB ");
+            throw new EntityNotFoundException("Student with id " + id + " not found in DB ");
+        }
+        Path imagePath = Paths.get(fileServiceImpl.uploadDirectory, "/student/" + student.getImagePath());
+        Resource resource = new FileSystemResource(imagePath.toFile());
+        String contentType = Files.probeContentType(imagePath);
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType.parseMediaType(contentType)).body(resource);
+    }
+    @PreAuthorize("hasAuthority('VIEW')")
+    @GetMapping("/images")
+    public ResponseEntity<List<FileInfo>> getListFiles() {
+        List<FileInfo> fileInfos = fileServiceImpl.loadAll("/student/").map(path -> {
+            String filename = path.getFileName().toString();
+            String url = MvcUriComponentsBuilder
+                    .fromMethodName(StudentController.class, "getImageById", path.getFileName().toString()).build().toString();
+
+            return new FileInfo(filename, url);
+        }).collect(Collectors.toList());
+
+        return ResponseEntity.status(HttpStatus.OK).body(fileInfos);
+    }
+
+    @PreAuthorize("hasAuthority('UPDATE')")
+    @RequestMapping(value = "/update-img", method = RequestMethod.PUT,
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> updateImg( Student student,
+                                             @RequestParam("image") MultipartFile multipartFile
+    ) throws SQLException, ValidationsException, IOException {
+        if (student == null) {
+            logger.error("Missing student payload");
+            throw new ValidationsException("Missing student payload");
+        }
+        if (multipartFile == null) {
+            logger.error("Missing student picture");
+            throw new ValidationsException("Missing student picture");
+        }
+        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        fileServiceImpl.saveFile(fileName, multipartFile, "/student/");
+        student.setImagePath(fileName);
+        //studentService.update(student);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully added image for student");
+    }
+
+
     @PreAuthorize("hasAuthority('UPDATE')")
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> update(@RequestBody Student student) throws SQLException, ValidationsException {
@@ -192,5 +283,14 @@ public class StudentController {
             throw new EntityNotFoundException("Error in deleteStudentSubjects: student with id " + id + " not found in DB ");
         }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted");
+    }
+
+    @PreAuthorize("hasAuthority('DELETE')")
+    @RequestMapping(value = "/delete/images", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> deleteImagesStudent()
+            throws SQLException {
+        fileServiceImpl.deleteAll("/student/");
+        studentService.deleteImages();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully deleted all images of students");
     }
 }

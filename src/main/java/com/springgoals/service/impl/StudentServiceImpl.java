@@ -1,6 +1,5 @@
 package com.springgoals.service.impl;
 
-import com.springgoals.controller.LogController;
 import com.springgoals.dao.impl.StudentDAOImpl;
 import com.springgoals.dao.impl.SubjectDAOImpl;
 import com.springgoals.exception.ValidationsException;
@@ -220,5 +219,10 @@ public class StudentServiceImpl implements StudentService {
         return studentDAO.getOddSubjectsByStudId(id);
 
 
+    }
+
+    @Override
+    public void deleteImages() throws SQLException {
+        this.studentDAO.deleteImages();
     }
 }

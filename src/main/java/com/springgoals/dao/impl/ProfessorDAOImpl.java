@@ -48,7 +48,7 @@ public class ProfessorDAOImpl implements ProfessorDAO {
                 professor.setPrimary_subject2(resultSet.getString("primary_subject2"));
                 professor.setAge(resultSet.getInt("age"));
                 professor.setProfessor_faculty(resultSet.getInt("professor_faculty"));
-
+                professor.setImagePath(resultSet.getString("photo"));
             }
         } catch (SQLException e) {
             System.out.println("error occurred in ProfessorDAOImpl getById " + e.getMessage());
@@ -75,7 +75,7 @@ public class ProfessorDAOImpl implements ProfessorDAO {
                 professor.setPrimary_subject1(rs.getString("primary_subject1"));
                 professor.setPrimary_subject2(rs.getString("primary_subject2"));
                 professor.setProfessor_faculty(rs.getInt("professor_faculty"));
-
+                professor.setImagePath(rs.getString("photo"));
                 professorList.add(professor);
             }
         } catch (SQLException e) {
@@ -132,6 +132,7 @@ public class ProfessorDAOImpl implements ProfessorDAO {
                 professor.setAge(rs.getInt("age"));
                 professor.setPrimary_subject1(rs.getString("primary_subject1"));
                 professor.setPrimary_subject2(rs.getString("primary_subject2"));
+                professor.setImagePath(rs.getString("photo"));
                 professor.setProfessor_faculty(rs.getInt("professor_faculty"));
 
                 professorList.add(professor);
@@ -144,45 +145,21 @@ public class ProfessorDAOImpl implements ProfessorDAO {
         return professorList;
     }
 
-    @Override
-    public void update(Professor professor) throws SQLException {
-
-        try {
-            String sql = "UPDATE professor  SET name=?, surname=?, primary_subject1=?, primary_subject2 =?, age =? WHERE id=?";
-            PreparedStatement statement1 = connection.prepareStatement(sql);
-            statement1.setString(1, professor.getName());
-            statement1.setString(2, professor.getSurname());
-            statement1.setString(3, professor.getPrimary_subject1());
-            statement1.setString(4, professor.getPrimary_subject2());
-            statement1.setInt(5, professor.getAge());
-            statement1.setInt(6, professor.getId());
-
-            int rowsUpdated = statement1.executeUpdate();
-            if (rowsUpdated > 0) {
-                System.out.println("An existing professor was updated");
-            }
-
-        } catch (SQLException e) {
-            System.out.println("error occurred in ProfessorDAOImpl update " + e.getMessage());
-            logger.error("error occurred in ProfessorDAOImpl update " + e.getMessage());
-            throw e;
-        }
-    }
 
     @Override
     public void save(Professor professor) throws SQLException {
 
         try {
             String sql = "INSERT INTO professor (name, surname, primary_subject1, " +
-                    "primary_subject2, age,  professor_faculty) VALUES (?, ?, ?, ?, ?, ?)";
+                    "primary_subject2, age, photo, professor_faculty) VALUES (?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement statement1 = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement1.setString(1, professor.getName());
             statement1.setString(2, professor.getSurname());
             statement1.setString(3, professor.getPrimary_subject1());
             statement1.setString(4, professor.getPrimary_subject2());
             statement1.setInt(5, professor.getAge());
-            statement1.setInt(6, 1);
-
+            statement1.setString(6, professor.getImagePath());
+            statement1.setInt(7, 1);
 
             int affectedRows = statement1.executeUpdate();
 
@@ -196,7 +173,73 @@ public class ProfessorDAOImpl implements ProfessorDAO {
             logger.error("error occurred in ProfessorDAOImpl save " + e.getMessage());
             throw e;
         }
+    }
 
+    @Override
+    public Integer saveReturnId(Professor professor) throws SQLException {
+
+        Integer id;
+
+        try {
+            String sql = "INSERT INTO professor (name, surname, primary_subject1, " +
+                    "primary_subject2, age, photo, professor_faculty) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement statement1 = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            statement1.setString(1, professor.getName());
+            statement1.setString(2, professor.getSurname());
+            statement1.setString(3, professor.getPrimary_subject1());
+            statement1.setString(4, professor.getPrimary_subject2());
+            statement1.setInt(5, professor.getAge());
+            statement1.setString(6, professor.getImagePath());
+            statement1.setInt(7, 1);
+
+            int affectedRows = statement1.executeUpdate();
+
+            if (affectedRows == 0) {
+                logger.error("Error with affectedRows in ProfessorDAOImpl saveReturnId");
+                throw new SQLException("Error with affectedRows in ProfessorDAOImpl saveReturnId");
+            }
+
+            try (ResultSet generatedKeys = statement1.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    id = generatedKeys.getInt(1);
+                } else {
+                    logger.error("Error with generatedKeys in ProfessorDAOImpl saveReturnId");
+                    throw new SQLException("Error with generatedKeys in ProfessorDAOImpl saveReturnId");
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("error occurred in ProfessorDAOImpl saveReturnId " + e.getMessage());
+            logger.error("error occurred in ProfessorDAOImpl saveReturnId " + e.getMessage());
+            throw e;
+        }
+        return id;
+    }
+
+    @Override
+    public void update(Professor professor) throws SQLException {
+
+        try {
+            String sql = "UPDATE professor  SET name=?, surname=?, primary_subject1=?, primary_subject2 =?, age =?" +
+                    ", photo=?  WHERE id=?";
+            PreparedStatement statement1 = connection.prepareStatement(sql);
+            statement1.setString(1, professor.getName());
+            statement1.setString(2, professor.getSurname());
+            statement1.setString(3, professor.getPrimary_subject1());
+            statement1.setString(4, professor.getPrimary_subject2());
+            statement1.setInt(5, professor.getAge());
+            statement1.setString(6, professor.getImagePath());
+            statement1.setInt(7, professor.getId());
+
+            int rowsUpdated = statement1.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("An existing professor was updated");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("error occurred in ProfessorDAOImpl update " + e.getMessage());
+            logger.error("error occurred in ProfessorDAOImpl update " + e.getMessage());
+            throw e;
+        }
     }
 
     @Override
@@ -221,6 +264,27 @@ public class ProfessorDAOImpl implements ProfessorDAO {
     }
 
 
+    @Override
+    public void deleteImages() throws SQLException {
+        try {
+            String sql = "INSERT INTO professor ( photo ) VALUES (?)";
+            PreparedStatement statement1 = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+            statement1.setString(1, null);
+
+            int affectedRows = statement1.executeUpdate();
+
+            if (affectedRows == 0) {
+                logger.error("Error with affectedRows in ProfessorDAOImpl deleteImages");
+                throw new SQLException("Error with affectedRows in ProfessorDAOImpl deleteImages");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("error SQLException in ProfessorDAOImpl deleteImages " + e.getMessage());
+            logger.error("error SQLException in ProfessorDAOImpl deleteImages " + e.getMessage());
+            throw e;
+        }
+    }
 }
 
 

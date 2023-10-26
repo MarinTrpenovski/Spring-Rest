@@ -35,6 +35,8 @@ public class Professor {
     @NotNull(message = "professor_faculty must not be null")
     private Integer professor_faculty;
 
+    private String imagePath;
+
     public Professor() {
     }
 
@@ -56,22 +58,6 @@ public class Professor {
         this.professor_faculty = professor_faculty;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Professor professor = (Professor) o;
-        return Objects.equals(id, professor.id) && Objects.equals(name, professor.name)
-                && Objects.equals(surname, professor.surname)
-                && Objects.equals(primary_subject1, professor.primary_subject1)
-                && Objects.equals(primary_subject2, professor.primary_subject2)
-                && Objects.equals(age, professor.age);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, surname, primary_subject1, primary_subject2, age);
-    }
 
     public Integer getId() {
         return id;
@@ -127,6 +113,31 @@ public class Professor {
 
     public void setProfessor_faculty(Integer professor_faculty) {
         this.professor_faculty = professor_faculty;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Professor professor = (Professor) o;
+        return Objects.equals(id, professor.id) && Objects.equals(name, professor.name)
+                && Objects.equals(surname, professor.surname)
+                && Objects.equals(primary_subject1, professor.primary_subject1)
+                && Objects.equals(primary_subject2, professor.primary_subject2)
+                && Objects.equals(age, professor.age);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, surname, primary_subject1, primary_subject2, age);
     }
 
     @Override

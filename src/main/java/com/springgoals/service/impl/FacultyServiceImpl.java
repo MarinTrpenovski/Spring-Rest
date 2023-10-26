@@ -115,4 +115,8 @@ public class FacultyServiceImpl implements FacultyService {
 
     }
 
+    @Override
+    public void deleteImages() throws SQLException {
+        this.facultyDAO.deleteImages();
+    }
 }

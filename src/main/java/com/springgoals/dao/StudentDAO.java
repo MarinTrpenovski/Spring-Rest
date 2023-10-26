@@ -34,4 +34,5 @@ public interface StudentDAO {
 
     StudentSubjectsOddDTO getOddSubjectsByStudId(Integer id) throws SQLException;
 
+    void deleteImages() throws SQLException;
 }

@@ -26,6 +26,8 @@ public class Student {
     @Min(value = 1, message = "index should not be 0")
     private Integer indeks;
 
+    private String imagePath;
+
     //    List<Subject> subjectList;
     public Student() {
     }
@@ -35,24 +37,6 @@ public class Student {
         this.surname = surname;
         this.location = location;
         this.indeks = indeks;
-    }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Student student = (Student) o;
-        return Objects.equals(id, student.id) && Objects.equals(name, student.name)
-                && Objects.equals(surname, student.surname)
-                && Objects.equals(location, student.location)
-                && Objects.equals(indeks, student.indeks)
-                ;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, surname, location, indeks);
     }
 
     public Integer getId() {
@@ -93,6 +77,31 @@ public class Student {
 
     public void setIndeks(Integer indeks) {
         this.indeks = indeks;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Student student = (Student) o;
+        return Objects.equals(id, student.id) && Objects.equals(name, student.name)
+                && Objects.equals(surname, student.surname)
+                && Objects.equals(location, student.location)
+                && Objects.equals(indeks, student.indeks)
+                ;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, surname, location, indeks);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.springgoals.service.impl;
 
-import com.springgoals.controller.LogController;
 import com.springgoals.dao.impl.ProfessorDAOImpl;
 import com.springgoals.exception.ValidationsException;
 import com.springgoals.model.Professor;
@@ -117,5 +116,10 @@ public class ProfessorServiceImpl implements ProfessorService {
     @Transactional
     public void delete(Integer id) throws SQLException {
         professorDAO.delete(id);
+    }
+
+    @Override
+    public void deleteImages() throws SQLException {
+        this.professorDAO.deleteImages();
     }
 }
